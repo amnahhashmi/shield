@@ -1,0 +1,135 @@
+.h3_64 {
+	/* Shield */
+
+	position: absolute;
+	left: 9.06%;
+	right: 32.81%;
+	top: 16.23%;
+	bottom: 51.99%;
+
+	/* H3 64 */
+
+	font-family: Playfair Display;
+	font-style: normal;
+	font-weight: bold;
+	font-size: 64px;
+	line-height: 150%;
+	/* identical to box height, or 96px */
+
+
+	color: #000000;
+}
+
+.body_16 {
+	position: absolute;
+	left: 0%;
+	right: 0%;
+	top: 48.01%;
+	bottom: 26.82%;
+
+	font-family: Work Sans;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 16px;
+	line-height: 150%;
+	/* or 24px */
+
+
+	color: #000000;
+
+	white-space: pre-wrap;
+}
+
+
+.body_bold_16 {
+	/* Body Bold 16 */
+
+	font-family: Work Sans;
+	font-style: normal;
+	font-weight: 600;
+	font-size: 16px;
+	line-height: 150%;
+	/* identical to box height, or 24px */
+
+	letter-spacing: 0.03em;
+
+	color: #041C4F;
+}
+
+#volunteer_box {
+	/* Frame 11 */
+
+	/* Auto Layout */
+
+	display: flex;
+	flex-direction: column;
+	padding: 24px;
+
+	position: absolute;
+	left: 9.06%;
+	right: 32.81%;
+	top: 45%;
+	bottom: 40%;
+
+	background: #FFFFFF;
+	box-shadow: 0px 2px 16px rgba(0, 0, 0, 0.1);
+	border-radius: 8px;
+}
+
+#volunteer_header_text {
+	/* Be a volunteer */
+
+	position: static;
+	width: 221.35px;
+	height: 24px;
+	left: 24px;
+	top: 24px;
+
+	/* Body Bold 16 */
+	font-family: Work Sans;
+	font-style: normal;
+	font-weight: 600;
+	font-size: 16px;
+	line-height: 150%;
+	/* identical to box height, or 24px */
+
+	letter-spacing: 0.03em;
+
+	color: #041C4F;
+
+	/* Inside Auto Layout */
+
+	flex: none;
+	order: 0;
+	align-self: center;
+	margin: 0px 4px;
+}
+
+#volunteer_body_text {
+	/* Help protect the most vulnerable in your community */
+
+	position: static;
+	width: 221.35px;
+	height: 42px;
+	left: 24px;
+	top: 52px;
+
+	font-family: Work Sans;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 14px;
+	line-height: 150%;
+	/* or 21px */
+
+
+	color: #041C4F;
+
+
+	/* Inside Auto Layout */
+
+	flex: none;
+	order: 1;
+	align-self: center;
+	margin: 0px 4px;
+}
+
