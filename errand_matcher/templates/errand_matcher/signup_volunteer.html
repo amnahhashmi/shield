@@ -1,0 +1,70 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Shield</title>
+	<link href="https://fonts.googleapis.com/css?family=Playfair+Display" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Work+Sans" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="{% static 'errand_matcher/style.css' %}">
+</head>
+<body>
+	<h5 class="h5_32">
+		Do you meet the requirements?
+	</h5>
+	<p class="body_16">
+		To maintain the safety of our community, we ask that only low-risk people volunteer.
+	</p>
+	<br>
+	<p class="body_16">
+		In the past 14 days, you certify that you have...
+	</p>
+	<input type="checkbox" id="fever" name="fever" value="fever">
+	<label for="fever">No fever</label><br>
+	<input type="checkbox" id="cough" name="cough" value="cough">
+	<label for="cough">No cough</label><br>
+	<input type="checkbox" id="sob" name="sob" value="sob">
+	<label for="sob">No shortness of breath</label><br>
+	<input type="checkbox" id="positive_test" name="positive_test" value="positive_test">
+	<label for="positive_test">Not tested positive for COVID-19</label><br>
+	<input type="checkbox" id="contact" name="contact" value="contact">
+	<label for="contact">Not been in contact with someone who has tested positive for COVID-19</label><br>
+	<input type="checkbox" id="travel" name="travel" value="travel" onclick="displayLastCheckText()">
+	<label for="travel">Not traveled overseas</label><br>
+	<p id="one_last_check_text" style="display:none">Great, one last check to see if you're eligible to volunteer.</p>
+</body>
+<script>
+function wait(ms){
+   var start = new Date().getTime();
+   var end = start;
+   while(end < start + ms) {
+     end = new Date().getTime();
+  }
+}
+
+function displayLastCheckText() {
+	// Get the checkboxes
+	var checkbox_1 = document.getElementById("fever")
+	var checkbox_2 = document.getElementById("cough")
+	var checkbox_3 = document.getElementById("sob")
+	var checkbox_4 = document.getElementById("positive_test")
+	var checkbox_5 = document.getElementById("contact"
+		)
+	var checkbox_6 = document.getElementById("travel")
+	debugger;
+	// Get output text
+	var text = document.getElementById("one_last_check_text")
+	// If all checkboxes are checked, display output text
+
+	if (checkbox_1.checked == true && checkbox_2.checked == true && checkbox_3.checked == true && checkbox_4.checked == true && checkbox_5.checked == true && checkbox_6.checked == true){
+		text.style.display = "block";
+		wait(3000);
+		location.replace("https://www.w3schools.com")
+	} else {
+		text.style.display = "none";
+	}
+}
+</script>
+
+
+

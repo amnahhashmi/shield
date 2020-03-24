@@ -1,3 +1,47 @@
+.h5_32_box {
+	/* Auto Layout */
+
+	display: flex;
+	flex-direction: column;
+	padding: 8px 24px;
+
+	position: absolute;
+	width: 320px;
+	height: 142px;
+	left: 0px;
+	top: 0px;
+}
+
+.h5_32 {
+	/* When times get tough, we come together */
+
+	position: static;
+	left: 7.5%;
+	right: 7.5%;
+	top: 5.63%;
+	bottom: 5.63%;
+
+	/* H5 32 */
+
+	font-family: PT Serif;
+	font-style: normal;
+	font-weight: bold;
+	font-size: 32px;
+	line-height: 130%;
+	/* or 42px */
+
+
+	color: #000000;
+
+
+	/* Inside Auto Layout */
+
+	flex: none;
+	order: 0;
+	align-self: center;
+	margin: 0px 10px;
+}
+
 .h3_64 {
 	/* Shield */
 
@@ -21,11 +65,16 @@
 }
 
 .body_16 {
-	position: absolute;
-	left: 0%;
-	right: 0%;
-	top: 48.01%;
-	bottom: 26.82%;
+	/* Safe deliveries for the most at-risk community members facing COVID-19. */
+	/* Currently looking for volunteers in the Boston area. */
+
+	position: static;
+	left: 7.5%;
+	right: 7.5%;
+	top: 5%;
+	bottom: 5%;
+
+	/* Body 16 */
 
 	font-family: Work Sans;
 	font-style: normal;
@@ -37,8 +86,12 @@
 
 	color: #000000;
 
-	white-space: pre-wrap;
-}
+	/* Inside Auto Layout */
+
+	flex: none;
+	order: 0;
+	align-self: center;
+	margin: 0px 10px;
 
 
 .body_bold_16 {
@@ -57,35 +110,39 @@
 }
 
 #volunteer_box {
-	/* Frame 11 */
-
 	/* Auto Layout */
-
 	display: flex;
 	flex-direction: column;
 	padding: 24px;
 
-	position: absolute;
-	left: 9.06%;
-	right: 32.81%;
-	top: 45%;
-	bottom: 40%;
+	position: static;
+	left: 0%;
+	right: 0%;
+	top: 0%;
+	bottom: 0%;
 
-	background: #FFFFFF;
+	background: #000000;
 	box-shadow: 0px 2px 16px rgba(0, 0, 0, 0.1);
 	border-radius: 8px;
+
+	/* Inside Auto Layout */
+
+	flex: none;
+	order: 0;
+	align-self: center;
+	margin: 0px 0px;
 }
 
 #volunteer_header_text {
 	/* Be a volunteer */
 
+
 	position: static;
-	width: 221.35px;
+	width: 224px;
 	height: 24px;
 	left: 24px;
 	top: 24px;
 
-	/* Body Bold 16 */
 	font-family: Work Sans;
 	font-style: normal;
 	font-weight: 600;
@@ -95,21 +152,22 @@
 
 	letter-spacing: 0.03em;
 
-	color: #041C4F;
+	color: #FFFFFF;
+
 
 	/* Inside Auto Layout */
 
 	flex: none;
 	order: 0;
-	align-self: center;
 	margin: 0px 4px;
 }
 
 #volunteer_body_text {
 	/* Help protect the most vulnerable in your community */
 
+
 	position: static;
-	width: 221.35px;
+	width: 224px;
 	height: 42px;
 	left: 24px;
 	top: 52px;
@@ -122,14 +180,40 @@
 	/* or 21px */
 
 
-	color: #041C4F;
+	color: #FFFFFF;
 
 
 	/* Inside Auto Layout */
 
 	flex: none;
 	order: 1;
-	align-self: center;
 	margin: 0px 4px;
+}
+
+.form_radio_unchecked {
+		/* Auto Layout */
+
+	display: flex;
+	flex-direction: row;
+	padding: 24px 16px;
+
+	position: static;
+	left: 0%;
+	right: 0%;
+	top: 0%;
+	bottom: 0%;
+
+	background: #FFFFFF;
+	/* shadow */
+
+	box-shadow: 0px 2px 16px rgba(0, 0, 0, 0.1);
+	border-radius: 8px;
+
+	/* Inside Auto Layout */
+
+	flex: none;
+	order: 0;
+	align-self: center;
+	margin: 0px 0px;
 }
 
