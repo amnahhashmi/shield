@@ -33,3 +33,6 @@ class Volunteer(models.Model):
     # Certified that Volunteer has read Health and Safety Protocol
     consented = models.BooleanField()
 
+class Requestor(models.Model):
+    pass
+
