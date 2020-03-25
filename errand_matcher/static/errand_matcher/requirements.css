@@ -38,6 +38,10 @@ div {
 	align-self: center;
 }
 
+/*.option-box:hover {
+	background: #EFEFEF;
+}*/
+ 
 .option-box input {
 	position: absolute;
 	opacity: 0;
@@ -45,7 +49,6 @@ div {
 	height: 0;
 	width: 0;
 }
-
 
 .req-cbox {
 	display: inline;
@@ -62,7 +65,15 @@ div {
 	background: url(icons/checkbox_empty.svg)
 }
 
+.option-box input:checked ~ .req-cbox {
+	background: url(icons/checkbox_filled.svg);
+}
+
 .req-item {
 	margin-left: 16px;
+}
+
+.affirmative {
+	display: none;
 }
 
