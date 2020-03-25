@@ -8,7 +8,7 @@ class User(AbstractUser):
         (2, 'requestor')
     )
 
-    user_type = models.PositiveSmallIntegerField(choices=USER_TYPE_CHOICES)
+    user_type = models.PositiveSmallIntegerField(choices=USER_TYPE_CHOICES, default=1)
 
 
 # Create your models here.
