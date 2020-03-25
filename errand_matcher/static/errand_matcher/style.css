@@ -20,7 +20,27 @@
 	color: #000000;
 }
 
+.h5_32 {
+	display: flex;
+	flex-direction: column;
+
+	/* H5 32 */
+	font-family: PT Serif;
+	font-style: normal;
+	font-weight: bold;
+	font-size: 32px;
+	line-height: 130%;
+	/* or 42px */
+
+	color: #000000;
+
+	/* Inside Auto Layout */
+	flex: none;
+	align-self: center;
+}
+
 .body_16 {
+	/* SV: low priority--separate element positioning from font classes for integration across pages*/
 	position: absolute;
 	left: 0%;
 	right: 0%;
@@ -34,10 +54,21 @@
 	line-height: 150%;
 	/* or 24px */
 
-
 	color: #000000;
 
 	white-space: pre-wrap;
+}
+
+.body_16_fontonly {
+	/* Body 16 */
+	font-family: Work Sans;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 16px;
+	line-height: 150%;
+	/* or 24px */
+
+	color: #000000;
 }
 
 
@@ -53,7 +84,8 @@
 
 	letter-spacing: 0.03em;
 
-	color: #041C4F;
+	/*SV: [MINOR] I think black is probably default in the UI? */
+	color: #000000;
 }
 
 #volunteer_box {
@@ -121,9 +153,7 @@
 	line-height: 150%;
 	/* or 21px */
 
-
 	color: #041C4F;
-
 
 	/* Inside Auto Layout */
 

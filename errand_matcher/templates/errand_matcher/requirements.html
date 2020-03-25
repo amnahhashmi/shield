@@ -1,0 +1,77 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+		<!-- import fonts -->
+		<link href="https://fonts.googleapis.com/css?family=Work+Sans&display=swap" rel="stylesheet">
+
+		<!-- import jQuery -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+		<title>Volunteer Requirements</title>
+
+        <!-- CUSTOM STYLESHEETS -->
+        <link href="{% static 'errand_matcher/style.css' %}" rel="stylesheet"/>
+        <link href="{% static 'errand_matcher/requirements.css' %}" rel="stylesheet"/>
+
+        <!-- PAGE SOURCE -->
+        <script src="{% static 'errand_matcher/requirements.js' %}"></script>
+        
+	</head>
+	<body>
+		<div class="nav-bar">
+			<a href='#'>
+				<object type="image/svg+xml" data="{% static 'errand_matcher/icons/backarrow.svg' %}" class="button">
+				</object>
+			</a>
+		</div>
+		<div class="h5_32">
+				Do you meet the requirements?
+		</div>
+		<div class="body_16_fontonly subhead">
+			To maintain the safety of our community, we ask that only low-risk people volunteer.
+		</div>
+		<div class="body_16_fontonly subhead">
+			In the past 14 days, you certify that you have...
+		</div>
+		<div>
+			<label for="vol-reqs-fever-cbox" class="option-box">
+				<input type="checkbox" id="vol-reqs-fever-cbox" name="vol-reqs-fever-cbox"/> 
+				<span class="req-item req-cbox"></span>
+				<span class="req-item body_bold_16"> No fever </span>  
+			</label>
+
+
+			<label for="vol-reqs-cough-cbox" class="option-box">
+				<input type="checkbox" id="vol-reqs-cough-cbox" name="vol-reqs-cough-cbox"/>
+				<span class="req-item req-cbox"></span> 
+				<span class="req-item body_bold_16">No cough</span>
+			</label>
+
+
+			<label for="vol-reqs-shortness-cbox" class="option-box">
+				<input type="checkbox" id="vol-reqs-shortness-cbox" name="vol-reqs-shortness-cbox"/>
+				<span class="req-item req-cbox"></span>
+				<span class="req-item body_bold_16">No shortness of breath</span> 
+			</label>
+			
+			<label for="vol-reqs-contact-cbox" class="option-box">
+				<input type="checkbox" id="vol-reqs-contact-cbox" name="vol-reqs-contact-cbox"/>
+				<span class="req-item req-cbox"></span>  
+				<span class="req-item body_bold_16">No contact with someone who tested positive for COVID-19</span> 
+			</label>
+
+			
+			<label for="vol-reqs-travel-cbox" class="option-box">
+				<input type="checkbox" id="vol-reqs-travel-cbox" name="vol-reqs-travel-cbox"/>
+				<span class="req-item req-cbox"></span>  
+				<span class="req-item body_bold_16"> Not traveled overseas </span>
+			</label>
+				
+		</div>
+	</body>
+</html>
