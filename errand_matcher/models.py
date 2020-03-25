@@ -20,6 +20,7 @@ class Volunteer(models.Model):
     )
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    mobile_number = PhoneNumberField(default='555-555-5555')
     lon = models.FloatField()
     lat = models.FloatField()
     frequency = models.PositiveSmallIntegerField(choices=FREQUENCY_CHOICES)
