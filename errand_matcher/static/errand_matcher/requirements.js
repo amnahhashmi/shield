@@ -11,6 +11,7 @@ $(document).ready(function() {
     	if ($('.req-input:checked').length == $('.req-input').length) {
     		// Show affirmative
        		$('.affirmative').css('display','flex')
+       		$('.affirmative').focus()
        		// TODO: send to next view
     	} 
     	else {
