@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+		<!-- import fonts -->
+		<link href="https://fonts.googleapis.com/css?family=Work+Sans&display=swap" rel="stylesheet">
+
+		<!-- import jQuery -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+		<title>Livelyhood - Volunteer</title>
+
+        <!-- CUSTOM STYLESHEETS -->
+        <link href="{% static 'errand_matcher/style.css' %}" rel="stylesheet"/>
+        <link href="{% static 'errand_matcher/begin-signup.css' %}" rel="stylesheet"/>
+
+        <!-- PAGE SOURCE -->
+        <script src="{% static 'errand_matcher/begin-signup.js' %}"></script>
+	</head>
+	<body>
+		<div class="nav-bar">
+			<a href='#'>
+				<object type="image/svg+xml" data="{% static 'errand_matcher/icons/backarrow.svg' %}" class="button">
+				</object>
+			</a>
+		</div>
+		<div class="page" id="reqs-page">
+			{% include "errand_matcher/requirements.html" %}
+		</div>
+
+		<div class="page" id="email-page">
+			<!-- email entry view goes here -->
+		</div>
+	</body>
+</html>

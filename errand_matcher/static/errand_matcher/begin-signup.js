@@ -1,4 +1,4 @@
-// requirements.js
+// begin-signup.js
 // script for 'requirements' endpoint
 // SV: TODO
 
@@ -12,7 +12,12 @@ $(document).ready(function() {
     		// Show affirmative
        		$('.affirmative').css('display','flex')
        		$('.affirmative').focus()
-       		// TODO: send to next view
+
+       		// Change page displayed
+       		$('#reqs-page').css('display', 'none')
+       		$('#email-page').css('display', 'flex')
+
+       		// TODO change back-button event handler
     	} 
     	else {
     		// Hide affirmative

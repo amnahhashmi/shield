@@ -4,5 +4,5 @@ from django.http import HttpResponse
 def index(request):
     return render(request, 'errand_matcher/index.html')
 
-def requirements(request):
-	return render(request, 'errand_matcher/requirements.html')
+def begin_signup(request):
+	return render(request, 'errand_matcher/begin-signup.html')
