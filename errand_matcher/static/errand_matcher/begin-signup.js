@@ -6,18 +6,26 @@ $(document).ready(function() {
 	
 	console.log('Page source loaded.')
 
+	$('#reqs-page').css('display','block')
+
 	$(".req-input").change(function(){
 		// If all requirements are checked
     	if ($('.req-input:checked').length == $('.req-input').length) {
+
     		// Show affirmative
        		$('.affirmative').css('display','flex')
        		$('.affirmative').focus()
 
        		// Change page displayed
        		$('#reqs-page').css('display', 'none')
-       		$('#email-page').css('display', 'flex')
+       		$('#email-page').css('display', 'block')
 
-       		// TODO change back-button event handler
+       		// Activate back button
+       		$('#back-button').removeClass('disabled')
+       		$('#back-button').children().addBack().click(function(){
+       			$('#email-page').css('display', 'none')
+       			$('#reqs-page').css('display', 'block')
+       		})
     	} 
     	else {
     		// Hide affirmative

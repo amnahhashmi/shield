@@ -163,3 +163,12 @@
 	margin: 0px 4px;
 }
 
+.page {
+	display: none;
+}
+
+a.disabled {
+  pointer-events: none;
+  cursor: default;
+}
+

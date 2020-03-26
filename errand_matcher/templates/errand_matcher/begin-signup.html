@@ -23,16 +23,16 @@
 	</head>
 	<body>
 		<div class="nav-bar">
-			<a href='#'>
-				<object type="image/svg+xml" data="{% static 'errand_matcher/icons/backarrow.svg' %}" class="button">
-				</object>
+			<a href='#' id="back-button" class="disabled">
+				<img src="{% static 'errand_matcher/icons/backarrow.svg' %}" alt="back button" height="24px" width="24px">
+				</img>
 			</a>
 		</div>
 		<div class="page" id="reqs-page">
 			{% include "errand_matcher/requirements.html" %}
 		</div>
 
-		<div class="page" id="email-page">
+		<div class="page" id="email-page"> Include email entry template here.
 			<!-- email entry view goes here -->
 		</div>
 	</body>
