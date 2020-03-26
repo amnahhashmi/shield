@@ -8,7 +8,7 @@ class User(AbstractUser):
         (2, 'requestor')
     )
 
-    user_type = models.PositiveSmallIntegerField(choices=USER_TYPE_CHOICES)
+    user_type = models.PositiveSmallIntegerField(choices=USER_TYPE_CHOICES, default=1)
 
 
 # Create your models here.
@@ -20,6 +20,7 @@ class Volunteer(models.Model):
     )
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    mobile_number = PhoneNumberField(default='555-555-5555')
     lon = models.FloatField()
     lat = models.FloatField()
     frequency = models.PositiveSmallIntegerField(choices=FREQUENCY_CHOICES)
@@ -31,4 +32,7 @@ class Volunteer(models.Model):
     speaks_russian = models.BooleanField()
     # Certified that Volunteer has read Health and Safety Protocol
     consented = models.BooleanField()
+
+class Requestor(models.Model):
+    pass
 

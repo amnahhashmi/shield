@@ -6,3 +6,6 @@ def index(request):
 
 def begin_signup(request):
 	return render(request, 'errand_matcher/begin-signup.html')
+
+def matchable_volunteers(request, requestor_id):
+	pass
