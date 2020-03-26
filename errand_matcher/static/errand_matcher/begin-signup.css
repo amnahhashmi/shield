@@ -5,17 +5,6 @@ div {
 
 .subhead {
 
-	/* Body 16 */
-	font-family: Work Sans;
-	font-style: normal;
-	font-weight: normal;
-	font-size: 16px;
-	line-height: 150%;
-	/* or 24px */
-
-
-	color: #000000;
-
 	/* Inside Auto Layout */
 
 	flex: none;
