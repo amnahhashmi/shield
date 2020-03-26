@@ -8,3 +8,5 @@ shield_venv/
 .DS_store
 static/
 staticfiles/
+env/
+.vscode/
