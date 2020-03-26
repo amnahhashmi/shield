@@ -16,16 +16,19 @@ $(document).ready(function() {
        		$('.affirmative').css('display','flex')
        		$('.affirmative').focus()
 
-       		// Change page displayed
-       		$('#reqs-page').css('display', 'none')
-       		$('#email-page').css('display', 'block')
+       		window.setTimeout(function(){
+       			// Change page displayed
+	       		$('#reqs-page').css('display', 'none')
+	       		$('#email-page').css('display', 'block')
 
-       		// Activate back button
-       		$('#back-button').removeClass('disabled')
-       		$('#back-button').children().addBack().click(function(){
-       			$('#email-page').css('display', 'none')
-       			$('#reqs-page').css('display', 'block')
-       		})
+	       		// Activate back button
+	       		$('#back-button').removeClass('disabled')
+	       		$('#back-button').children().addBack().click(function(){
+	       			$('#email-page').css('display', 'none')
+	       			$('#reqs-page').css('display', 'block')
+	       			$('#back-button').addClass('disabled')
+	       		});
+       		}, 2000)
     	} 
     	else {
     		// Hide affirmative
