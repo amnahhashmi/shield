@@ -24,10 +24,17 @@
 </head>
 <body>
 	<div class="nav-bar">
-			<a href='#' class="nav-button">
-				<img src="{% static 'errand_matcher/icons/backarrow.svg' %}" alt="back button" height="24px" width="24px">
-				</img>
-			</a>
+			<img id="back-button" src="{% static 'errand_matcher/icons/backarrow.svg' %}" alt="back button" height="24px" width="24px" id="back-button" class="nav-item">
+			</img>
+			<svg id="progress-bar" class="nav-item" width="224" height="24" viewBox="0 0 224 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<linearGradient id="g">
+						<stop offset="0" stop-color="#848484"/>
+						<stop offset=".4" stop-color="#848484"/>
+						<stop offset=".4" stop-color="#EBEBEB"/>
+						<stop offset="1" stop-color="#EBEBEB"/>
+					</linearGradient> 
+					<rect width="224" height="12" rx="6" fill="url(#g)"/>
+			</svg>
 	</div>
 
 	<div class="page" id="name-page">

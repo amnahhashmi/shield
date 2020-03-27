@@ -171,7 +171,13 @@
 }
 
 .nav-bar {
-	padding: 28px 28px;
+	padding: 24px 0px;
+}
+
+.nav-item {
+	display: inline-block;
+	margin-left: 24px;
+
 }
 
 body {
