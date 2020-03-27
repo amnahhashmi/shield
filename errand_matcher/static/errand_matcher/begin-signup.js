@@ -1,6 +1,5 @@
 // begin-signup.js
-// script for 'requirements' endpoint
-// SV: TODO
+// script for 'begin_signup' endpoint
 
 $(document).ready(function() {
 

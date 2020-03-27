@@ -1,3 +1,7 @@
+.item {
+	padding: 8px 24px;
+}
+
 .h3_64 {
 	/* Shield */
 
@@ -84,7 +88,6 @@
 
 	letter-spacing: 0.03em;
 
-	/*SV: [MINOR] I think black is probably default in the UI? */
 	color: #000000;
 }
 
@@ -165,6 +168,14 @@
 
 .page {
 	display: none;
+}
+
+.nav-bar {
+	padding: 28px 28px;
+}
+
+body {
+	margin: 0px;
 }
 
 a.disabled {

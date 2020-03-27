@@ -1,8 +1,4 @@
 /*volunteer-requirements.css*/
-div {
-	padding: 8px 24px;
-}
-
 .subhead {
 
 	/* Inside Auto Layout */
@@ -22,6 +18,8 @@ div {
 	border-radius: 8px;
 
 	padding: 24px 16px;
+
+	margin: 16px 24px;
 
 	flex: none;
 	align-self: center;
