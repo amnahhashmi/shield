@@ -1,2 +1,2 @@
 web: gunicorn shield.wsgi --log-file -
-tasks: celery -A shield worker -l info
+tasks: celery -A shield worker --pool=solo -l info
