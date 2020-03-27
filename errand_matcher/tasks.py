@@ -20,5 +20,5 @@ def xsum(numbers):
 
 
 @shared_task
-def count_widgets():
+def count_users():
     return User.objects.count()
