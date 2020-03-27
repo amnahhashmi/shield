@@ -20,8 +20,7 @@ $(document).ready(function() {
 
 		// update progress bar
 		progressBarLocation = (3 + pageIndex)/ pages.length
-		console.log(progressBarLocation)
-		console.log(pageIndex)
+
 		$("stop").slice(1,3).attr("offset",progressBarLocation)
 
 		// todo handle button activation/deactivation
