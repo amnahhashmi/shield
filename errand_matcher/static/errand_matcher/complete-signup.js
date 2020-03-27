@@ -26,10 +26,12 @@ $(document).ready(function() {
 		// todo handle button activation/deactivation
 	})
 
+	// button behavior
 	$(".next-button").click(function(){
 		// todo form validation
 		$('body').trigger("pageEvent", pageIndex + 1)
 	})
+
 
 	$(".back-button").click(function(){
 		if (pageIndex == 0) {
@@ -38,6 +40,26 @@ $(document).ready(function() {
 			$('body').trigger("pageEvent", pageIndex - 1)
 		}
 	})
+
+	// phone input cleaning + validation 
+	$('#phone-input').blur(function(e){
+		phone = $(this).val();
+		phone = phone.replace(/[^0-9]/g,'');
+
+		$(this).val(
+			(phone.slice(0,3) ? "("+phone.slice(0,3)+")" : "") +
+			(phone.slice(3,6) ? "-"+phone.slice(3,6) : "") +
+			(phone.slice(6,10) ? "-"+phone.slice(6,10) : "")
+		);
+
+		if (phone.length==10) {
+			$('body').trigger("pageEvent", pageIndex + 1)
+		} else {
+			// display a warning message
+		}
+	})
+
+
 	
 	// display first page
 	$("body").trigger("pageEvent",0)
