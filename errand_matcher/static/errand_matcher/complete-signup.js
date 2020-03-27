@@ -41,6 +41,13 @@ $(document).ready(function() {
 		}
 	})
 
+	// If all name input fields are full on blur/defocus, automatically progress
+	$('#name-page').find(".text-input").blur(function(e){
+		if ($('#firstname-input').val().length > 0 && $('#lastname-input').val().length > 0){
+			$('body').trigger("pageEvent", pageIndex + 1)
+		}
+	});
+
 	// phone input cleaning + validation 
 	$('#phone-input').blur(function(e){
 		phone = $(this).val();
