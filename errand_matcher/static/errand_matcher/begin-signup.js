@@ -1,10 +1,7 @@
 // begin-signup.js
-// script for 'requirements' endpoint
-// SV: TODO
+// script for 'begin_signup' endpoint
 
 $(document).ready(function() {
-	
-	console.log('Page source loaded.')
 
 	$('#reqs-page').css('display','block')
 
