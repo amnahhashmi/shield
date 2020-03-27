@@ -3,8 +3,6 @@
 // SV: TODO
 
 $(document).ready(function() {
-	
-	console.log('Page source loaded.')
 
 	$('#reqs-page').css('display','block')
 
