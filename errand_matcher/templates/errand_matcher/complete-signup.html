@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+	<!-- import fonts -->
+	<link href="https://fonts.googleapis.com/css?family=Work+Sans&display=swap" rel="stylesheet">
+
+	<!-- import jQuery -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+	<title>Complete sign-up</title>
+
+    <!-- CUSTOM STYLESHEETS -->
+    <link href="{% static 'errand_matcher/style.css' %}" rel="stylesheet"/>
+    <link href="{% static 'errand_matcher/complete-signup.css' %}" rel="stylesheet"/>
+
+    <!-- PAGE SOURCE -->
+    <script src="{% static 'errand_matcher/complete-signup.js' %}"></script>
+    
+</head>
+<body>
+	<div class="nav-bar">
+			<a href='#' class="nav-button">
+				<img src="{% static 'errand_matcher/icons/backarrow.svg' %}" alt="back button" height="24px" width="24px">
+				</img>
+			</a>
+	</div>
+
+	<div class="page" id="name-page">
+		{% include "errand_matcher/volunteer-name.html" %}
+	</div>
+
+	<div class="page" id="phone-page">
+	</div>
+
+	<div class="page" id="phone-page">
+	</div>
+
+	<div class="page" id="address-page">
+	</div>
+
+	<div class="page" id="transport-page">
+	</div>
+
+	<div class="page" id="languages-page">
+	</div>
+
+	<div class="page" id="health-safety-page">
+	</div>
+
+	<div class="page" id="confirm-page">
+	</div>
+
+	<div class="page" id="phone-page">
+	</div>
+
+	<div class="page" id="welcome-page">
+	</div>
+</body>
+</html>
