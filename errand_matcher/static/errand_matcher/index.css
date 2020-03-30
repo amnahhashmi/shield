@@ -1,0 +1,297 @@
+/* TODO: confirm all font styles with UX */
+/* TODO: potentially consolidate some styles */
+
+.top-nav-bar {
+	position: fixed;
+	top: 0;
+	width: 100%;
+	height: 96px;
+
+	background: #FFFFFF;
+}
+
+ul.nav-list {
+    list-style-type: none;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    margin-right: 64px;
+    margin-left: 64px;
+    padding: 0;
+}
+
+li.nav-list-item {
+	display: inline-block;
+	margin-right: 56px;
+	margin-top: 36px;
+
+	font-family: Work Sans;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 150%;
+
+    text-align: center;
+}
+
+/* TODO: check hover behavior with UX */
+li.nav-list-item:hover {
+	cursor: pointer;
+}
+
+#livelyhood-list-item {
+	margin-right: 96px;
+
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.contents {
+	margin-top: 128px;
+	margin-left: 220px;
+	margin-right: 220px;
+	margin-bottom: 128px;
+}
+
+.main-heading {
+	position:static;
+	margin-bottom: 17px;
+
+	font-family: PT Serif;
+	font-style: normal;
+	font-weight: bold;
+	font-size: 64px;
+	line-height: 120%;
+	
+	color: #000000;
+}
+
+.subheading {
+	position:static;
+	margin-top: 96px;
+	margin-bottom: 12px;
+
+	font-family: PT Serif;
+	font-style: normal;
+	font-weight: bold;
+	font-size: 32px;
+	line-height: 130%;
+
+	color: #000000;
+}
+
+.main-text {
+	position:static;
+
+	font-family: Work Sans;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 23px;
+	line-height: 150%;
+
+	color: #000000;
+}
+
+.main-text-bold {
+	position:static;
+
+	font-family: Work Sans;
+	font-style: normal;
+	font-weight: bold;
+	font-size: 23px;
+	line-height: 150%;
+
+	color: #000000;
+}
+
+.button-box {
+	position: static;
+	padding:24px;
+	width: 272px;
+
+	background: #000000;
+	border-radius: 8px;
+}
+
+/* TODO: check hover behavior with UX */
+.button-box:hover {
+	background: #202124;
+	cursor: pointer;
+}
+
+.button-title {
+	position: static;
+	padding: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-left: 0px;
+	margin-bottom: 2px;
+
+	font-family: Work Sans;
+	font-style: normal;
+	font-weight: 600;
+	font-size: 16px;
+	line-height: 150%;
+	letter-spacing: 0.03em;
+
+	color: #FFFFFF;
+}
+
+.button-text {
+	position: static;
+	padding: 0px;
+	margin-bottom: 0px;
+	margin-right: 0px;
+	margin-left: 0px;
+	margin-top: 2px;
+
+	font-family: Work Sans;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 14px;
+	line-height: 150%;
+
+	color: #FFFFFF;
+}
+
+.horizontal-container {
+	position: static;
+
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+}
+
+.step-box {
+	padding:24px;
+	width: 180px;
+	margin-top: 12px;
+	margin-right: 32px;
+
+	background: #EAEAEA;
+	border-radius: 8px;
+}
+
+.step-title {
+	position: static;
+	margin-bottom: 2px;
+
+	font-family: Work Sans;
+	font-style: normal;
+	font-weight: 600;
+	font-size: 16px;
+	line-height: 150%;
+
+	color: #202124;
+}
+
+.step-text {
+	position: static;
+	margin-top: 2px;
+
+	font-family: Work Sans;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 14px;
+	line-height: 150%;
+
+	color: #202124;
+}
+
+.collapsible-container {
+	border-bottom-style: solid;
+	border-bottom-width: 1px;
+	border-bottom-color: #EAEAEA;
+}
+
+.collapsible {
+    color: rgba(0, 0, 0, 0.54);
+    cursor: pointer;
+    padding-top: 24px;
+    padding-bottom: 24px;
+    padding-left: 0px;
+    width: 100%;
+    outline: none;
+
+    display: flex;
+	flex-direction: row;
+
+    border: none;
+}
+
+.collapsible-content {
+	max-height:0;
+    overflow: hidden;
+
+    transition: max-height .25s ease-in-out;
+}
+
+img.collapsible-image {
+	vertical-align: middle;
+
+	margin-right: 30px;
+	width: 24px;
+	height: 24px;
+
+	transition: transform .25s ease-out;
+}
+
+.title-text {
+	position: static;
+	margin: 0px;
+
+	font-family: Work Sans;
+	font-style: normal;
+	font-weight: 600;
+	font-size: 16px;
+	line-height: 150%;
+	letter-spacing: 0.03em;
+
+	color: #000000;
+}
+
+.details-text {
+	font-family: Work Sans;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 14px;
+	line-height: 150%;
+
+	color: #000000;
+}
+
+#about-text {
+	width: 50%;
+}
+
+.footer {
+	position: static;
+
+	padding-top: 80px;
+	padding-left: 220px;
+	padding-right: 220px;
+	padding-bottom: 80px;
+
+	background: #F1F1F1;
+}
+
+.footer-text {
+	width: 40%;
+	margin-right: 58px;
+}
+
+#footer-box {
+	width: 40%;
+}
+
+.footer-copyright {
+	position:static;
+	margin-top: 67px;
+
+	font-family: Work Sans;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 11px;
+    line-height: 200%;
+
+    text-align: center;
+}
