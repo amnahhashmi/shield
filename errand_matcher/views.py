@@ -16,7 +16,6 @@ def complete_signup(request):
 
 def confirm_email(request):
     if request.method == 'POST':
-        import pdb; pdb.set_trace()
         current_email = request.POST.get('current-email')
         token = ConfirmationToken()
         token.save()
@@ -31,7 +30,7 @@ def confirm_email(request):
         #     response = sg.send(message)
         # except Exception as e:
         #     print(e.message)
-    return render(request, 'errand_matcher/email-end.html', {'current_email': current_email})
+    return render(request, 'errand_matcher/email_confirmation.html', {'current_email': current_email})
 
 
 def activate(request, token_id):

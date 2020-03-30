@@ -15,7 +15,7 @@ $(document).ready(function() {
 	})
 
 	$('.volunteer-button').click(function(){
-		window.location.href = "signup";
+		window.location.href = "volunteer";
 	})
 
 	$('.collapsible').click(function(){
