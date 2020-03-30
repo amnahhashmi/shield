@@ -3,23 +3,117 @@
 <html>
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<!-- import jQuery -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
 	<title>Shield</title>
 	<link href="https://fonts.googleapis.com/css?family=Playfair+Display" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css?family=Work+Sans&display=swap" rel="stylesheet">
-	<link rel="stylesheet" type="text/css" href="{% static 'errand_matcher/style.css' %}">
-</head>
-<body>
-	<div>
-		<div class="h3_64">Shield
-			<div class="body_16">Safe deliveries for the most at-risk community members facing Covid 19.
 
-We're currently looking for volunteers in the Boston area.
+	<!-- CUSTOM STYLESHEETS -->
+    <link href="{% static 'errand_matcher/style.css' %}" rel="stylesheet"/>
+    <link href="{% static 'errand_matcher/index.css' %}" rel="stylesheet"/>
+
+	<!-- PAGE SOURCE -->
+    <script src="{% static 'errand_matcher/index.js' %}"></script>
+</head>
+
+<body>
+	<div class="top-nav-bar">
+		<!-- TODO: Set link for Health and safety protocol, check other links are correct. -->
+		<ul class="nav-list">
+			<li class="nav-list-item button top-link" id="livelyhood-list-item">LivelyHood</li>
+			<li class="nav-list-item">Health and safety protocol</li>
+			<li class="nav-list-item button faq-link">FAQs</li>
+			<li class="nav-list-item button about-link">About</li>
+			<li class="nav-list-item button about-link">Contact</li>
+		</ul>
+	</div>
+	<div class="contents">
+		<h3 class="main-heading">When times get tough, we come together</h3>
+
+		<p class="main-text">Safe deliveries for the most at-risk community members facing COVID-19.<br><br><b>Currently in the Boston area.</b></p>
+		<!-- <p class="main-text-bold">Currently in the Boston area.</p> -->
+
+		<div class="button-box button volunteer-button">
+			<p class="button-title">Be a volunteer</p>
+			<p class="button-text">Help protect the most vulnerable in your community</p>
+		</div>
+
+		<h5 class="subheading">How it works</h5>
+
+		<div class="horizontal-container">
+			<div class="step-box">
+				<p class="step-title">1.<br>Get notified</p>
+				<p class="step-text">Get texted about a nearby delivery request</p>
+			</div>
+			<div class="step-box">
+				<p class="step-title">2.<br>Accept delivery</p>
+				<p class="step-text">Once you accept a delivery, reach out to the at-risk community member for details and delivery coordination</p>
+			</div>
+			<div class="step-box">
+				<p class="step-title">3.<br>Deliver the goods</p>
+				<p class="step-text">Go shopping for what they need and deliver it to their home, following our Health and Safety Protocol.</p>
 			</div>
 		</div>
+
+        <!-- For linking -->
+		<div id="above-faq"></div>
+
+		<h5 class="subheading">Frequently asked questions</h5>
+
+		<!-- TODO: Update to actual answers. -->
+	    <div class="collapsible-container">
+		    <div class="collapsible">
+		    	<!-- TODO: Use SVG instead of PNG. -->
+		  	    <img src="{% static 'errand_matcher/icons/expand_more_24px.png' %}" class="collapsible-image">
+		  	    <p class="title-text">How do I coordinate delivery with the requestor?</p>
+		    </div>
+		    <div class="collapsible-content">
+			    <p class="details-text">TODO: Question answer</p>
+		    </div>
+	    </div>
+	    <div class="collapsible-container">
+	    	<div class="collapsible">
+		  	    <img src="{% static 'errand_matcher/icons/expand_more_24px.png' %}" class="collapsible-image">
+		  	    <p class="title-text">How much time do I have to commit?</p>
+		    </div>
+		    <div class="collapsible-content">
+		  	    <p class="details-text">TODO: Question answer</p>
+		    </div>
+		</div>
+		<div class="collapsible-container">
+			<div class="collapsible">
+		  	    <img src="{% static 'errand_matcher/icons/expand_more_24px.png' %}" class="collapsible-image">
+		  	    <p class="title-text">What if I can’t complete my assigned task or the items requested are out of stock?</p>
+		    </div>
+		    <div class="collapsible-content">
+		  	    <p class="details-text">TODO: Question answer</p>
+		    </div>
+		</div>
+
+		<!-- For linking -->
+		<div id="above-about"></div>
+
+		<h5 class="subheading">About</h5>
+		
+		<!-- TODO: Update to actual text, add image. -->
+		<p class="details-text" id="about-text">Hi there! We are [TEAM NAMES]. We're a group of students from Harvard, designers and engineers across the country who are driven to help at-risk communities in this time of uncertainty.<br><br>Have questions? We're here to help.<br><br><b>Call:</b> (555) 123-4567<br><b>Email:</b> hi@shield.com</p>
 	</div>
-	<div id="volunteer_box">
-		<text id="volunteer_header_text">Be a volunteer</text>
-		<text id="volunteer_body_text">Help protect the most vulnerable in your community</text>
+
+	<div class="footer">
+		<div class="horizontal-container">
+		    <div class="footer-text">
+			    <p class="details-text">Volunteer to make deliveries for the most at-risk community members facing COVID-19.</p>
+		    </div>
+		    <!-- TODO: Add links. -->
+		    <div class="button-box button volunteer-button" id="footer-box">
+			    <p class="button-title">Be a volunteer</p>
+			    <p class="button-text">Currently recruiting volunteers in the Boston area.</p>
+		    </div>
+	    </div>
+	    <p class="footer-copyright">(c) 2020 Shield, All rights reserved</p>
 	</div>
 </body>
 
