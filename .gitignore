@@ -7,4 +7,5 @@ db.sqlite3
 shield_venv/
 .DS_store
 static/
-staticfiles/
+staticfiles/sendgrid.env
+sendgrid.env

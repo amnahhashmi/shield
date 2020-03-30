@@ -6,6 +6,8 @@ django-phonenumber-field==4.0.0
 gunicorn==20.0.4
 phonenumbers==8.12.0
 psycopg2-binary==2.8.4
+python-http-client==3.2.6
 pytz==2019.3
+sendgrid==6.2.0
 sqlparse==0.3.1
 whitenoise==5.0.1
