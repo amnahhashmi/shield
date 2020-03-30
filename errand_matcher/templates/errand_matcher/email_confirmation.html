@@ -1,3 +1,4 @@
+{% if current_email is None %}
 <div class="h5_32 item">
 	What's your school or work email?
 </div>
@@ -5,37 +6,31 @@
 	This extra verification helps ensure the safety of our community. In the next step, you'll choose which e-mail to link to your Shield account.
 </div>
 
-<label for="vol-reqs-fever-cbox" class="option-box">
-	<input type="checkbox" class="req-input" id="vol-reqs-fever-cbox" name="vol-reqs-fever-cbox"/> 
-	<span class="req-item req-cbox"></span>
-	<span class="req-item body_bold_16"> No fever </span>  
-</label>
+<form class="email-form" action="confirmation" method="post">
+	{% csrf_token %}
+	<label for="email-input" class="email-box">
+		<input type="email" name="current-email" id="email-input" placeholder="email address">
+	</label>
+	<label for="send-confirmation-email-button" class="email-button body_bold_16">
+		<input type="submit" id="send-confirmation-email-button" class="body_bold_15" value="Send confirmation email">
+	</label>
+</form>
+{% else %}
+	<div class="h5_32 item">
+		Got it!
+	</div>
+	<div class="body_16_fontonly subhead item">
+		Please check your email and follow the confirmation link to finish setup.
+	</div>
 
-<label for="vol-reqs-cough-cbox" class="option-box">
-	<input type="checkbox" class="req-input" id="vol-reqs-cough-cbox" name="vol-reqs-cough-cbox"/>
-	<span class="req-item req-cbox"></span> 
-	<span class="req-item body_bold_16">No cough</span>
-</label>
+	<form class="email-form" action="confirmation" method="post">
+		{% csrf_token %}
+		<label for="email-input" class="email-box">
+			<input type="hidden" name="current-email" id="email-input" placeholder="email address" value="{{ current_email}} ">
+		</label>
+		<label for="send-confirmation-email-button" class="email-button body_bold_16">
+			<input type="submit" id="send-confirmation-email-button" class="body_bold_15" value="Resend confirmation email">
+		</label>
+	</form>
+{% endif %}
 
-<label for="vol-reqs-shortness-cbox" class="option-box">
-	<input type="checkbox" class="req-input" id="vol-reqs-shortness-cbox" name="vol-reqs-shortness-cbox"/>
-	<span class="req-item req-cbox"></span>
-	<span class="req-item body_bold_16">No shortness of breath</span> 
-</label>
-
-<label for="vol-reqs-contact-cbox" class="option-box">
-	<input type="checkbox" class="req-input" id="vol-reqs-contact-cbox" name="vol-reqs-contact-cbox"/>
-	<span class="req-item req-cbox"></span>  
-	<span class="req-item body_bold_16">No contact with someone who tested positive for COVID-19</span> 
-</label>
-
-
-<label for="vol-reqs-travel-cbox" class="option-box">
-	<input type="checkbox" class="req-input" id="vol-reqs-travel-cbox" name="vol-reqs-travel-cbox"/>
-	<span class="req-item req-cbox"></span>  
-	<span class="req-item body_bold_16"> Not traveled overseas </span>
-</label>
-
-<div class="body_bold_16 affirmative item">
-	<b> Great! One last check to see if you're eligible to volunteer. </b>
-</div>
