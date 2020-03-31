@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'errand_matcher',
     'phonenumber_field',
-    'whitenoise.runserver_nostatic'
+    'whitenoise.runserver_nostatic',
+    # 'address'
 ]
 
 MIDDLEWARE = [

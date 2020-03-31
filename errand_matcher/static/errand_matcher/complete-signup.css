@@ -111,6 +111,35 @@ todo: radio example
 	}
 }
 
+.radio-box {
+	display: flex;
+	flex-direction: row;
+
+	background: #FFFFFF;
+	/* shadow */
+
+	box-shadow: 0px 2px 16px rgba(0, 0, 0, 0.1);
+	border-radius: 8px;
+
+	padding: 24px;
+	margin: 24px 24px;
+
+	flex: none;
+	align-self: center;
+}
+
+input[type="radio"]{
+    visibility:hidden;
+}
+
+input[type="radio"]:unchecked + label {
+	background: #FFFFFF;
+}
+
+input[type="radio"]:checked + label {
+	background: #C4C4C4;
+}
+
 
 
 

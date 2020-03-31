@@ -17,6 +17,7 @@
         <!-- CUSTOM STYLESHEETS -->
         <link href="{% static 'errand_matcher/style.css' %}" rel="stylesheet"/>
         <link href="{% static 'errand_matcher/begin-signup.css' %}" rel="stylesheet"/>
+        <link href="{% static 'errand_matcher/email_confirmation.css' %}" rel="stylesheet"/>
 
         <!-- PAGE SOURCE -->
         <script src="{% static 'errand_matcher/begin-signup.js' %}"></script>
@@ -32,8 +33,8 @@
 			{% include "errand_matcher/requirements.html" %}
 		</div>
 
-		<div class="page" id="email-page"> Include email entry template here.
-			<!-- email entry view goes here -->
+		<div class="page" id="email-page">
+			{% include "errand_matcher/email_confirmation.html" %}
 		</div>
 	</body>
 </html>
