@@ -18,6 +18,7 @@ def confirm_email(request):
     if request.method == 'POST':
         current_email = request.POST.get('current-email')
         token = ConfirmationToken()
+        print(token)
         token.save()
         url = request.META['HTTP_HOST'] + '/activate/' + str(token.id)
         message = Mail(
@@ -34,7 +35,7 @@ def confirm_email(request):
 
 
 def activate(request, token_id):
-    token = Content.objects.filter(id=token_id).first()
+    token = ConfirmationToken.objects.filter(id=token_id).first()
     if token is None:
         token_state = 'Does Not Exist'
     else:

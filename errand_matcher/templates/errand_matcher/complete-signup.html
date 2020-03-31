@@ -23,45 +23,56 @@
     
 </head>
 <body>
-	<div class="nav-bar">
-			<img src="{% static 'errand_matcher/icons/backarrow.svg' %}" alt="back button" height="24px" width="24px" id="back-button" class="nav-item back-button">
-			</img>
-			<svg id="progress-bar" class="nav-item" width="224" height="24" viewBox="0 0 224 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-					<linearGradient id="g">
-						<stop offset="0" stop-color="#848484"/>
-						<stop offset=".4" stop-color="#848484"/>
-						<stop offset=".4" stop-color="#EBEBEB"/>
-						<stop offset="1" stop-color="#EBEBEB"/>
-					</linearGradient> 
-					<rect width="224" height="12" rx="6" fill="url(#g)"/>
-			</svg>
-	</div>
+	{% if token_state == 'Active' %}
+		<div class="nav-bar">
+				<img src="{% static 'errand_matcher/icons/backarrow.svg' %}" alt="back button" height="24px" width="24px" id="back-button" class="nav-item back-button">
+				</img>
+				<svg id="progress-bar" class="nav-item" width="224" height="24" viewBox="0 0 224 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<linearGradient id="g">
+							<stop offset="0" stop-color="#848484"/>
+							<stop offset=".4" stop-color="#848484"/>
+							<stop offset=".4" stop-color="#EBEBEB"/>
+							<stop offset="1" stop-color="#EBEBEB"/>
+						</linearGradient> 
+						<rect width="224" height="12" rx="6" fill="url(#g)"/>
+				</svg>
+		</div>
 
-	<div class="page" id="name-page">
-		{% include "errand_matcher/volunteer-name.html" %}
-	</div>
+		<div class="page" id="name-page">
+			{% include "errand_matcher/volunteer-name.html" %}
+		</div>
 
-	<div class="page" id="phone-page">
-		{% include "errand_matcher/volunteer-phone.html" %}
-	</div>
+		<div class="page" id="phone-page">
+			{% include "errand_matcher/volunteer-phone.html" %}
+		</div>
 
-	<div class="page" id="address-page">
-	</div>
+		<div class="page" id="address-page">
+		</div>
 
-	<div class="page" id="transport-page">
-		{% include "errand_matcher/transport.html" %}
-	</div>
+		<div class="page" id="transport-page">
+			{% include "errand_matcher/transport.html" %}
+		</div>
 
-	<div class="page" id="languages-page">
-	</div>
+		<div class="page" id="frequency-page">
+			{% include "errand_matcher/frequency.html" %}
+		</div>
 
-	<div class="page" id="health-safety-page">
-	</div>
+		<div class="page" id="languages-page">
+			{% include "errand_matcher/language.html" %}
+		</div>
 
-	<div class="page" id="confirm-page">
-	</div>
+		<div class="page" id="health-safety-page">
+		</div>
 
-	<div class="page" id="welcome-page">
+		<div class="page" id="confirm-page">
+		</div>
+
+		<div class="page" id="welcome-page">
+		</div>
+	{% else %}
+	<div class="h5_32 item">
+		Sorry! We don't recognize your account. If you think this is a mistake, please contact X.
 	</div>
+	{% endif %}
 </body>
 </html>
