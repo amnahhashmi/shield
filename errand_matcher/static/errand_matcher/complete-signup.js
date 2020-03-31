@@ -20,8 +20,12 @@ $(document).ready(function() {
 
 		// update progress bar
 		progressBarLocation = (3 + pageIndex)/ pages.length
-
 		$("stop").slice(1,3).attr("offset",progressBarLocation)
+
+		// populate confirmation fields
+		$("#name-confirmation").text($("#firstname-input"+" "+$("#lastname-input")))
+		// todo: learnhow to retrieve email
+		$("#email-confirmation").text("")
 
 		// todo handle button activation/deactivation
 	})

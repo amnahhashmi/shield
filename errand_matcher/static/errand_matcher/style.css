@@ -75,6 +75,23 @@
 	color: #000000;
 }
 
+.body_13 {
+	
+	/* Body 13 */
+	font-family: Work Sans;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 13px;
+	line-height: 150%;
+	/* identical to box height, or 19px */
+
+
+	color: #000000;
+
+	opacity: 0.5;
+
+}
+
 
 .body_bold_16 {
 	/* Body Bold 16 */
