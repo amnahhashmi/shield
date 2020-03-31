@@ -26,11 +26,11 @@ def confirm_email(request):
             to_emails=current_email,
             subject='Thank you for signing up with Livelyhood!',
             html_content='<a href={}>Activation Link</a>'.format(url))
-        # try:
-        #     sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
-        #     response = sg.send(message)
-        # except Exception as e:
-        #     print(e.message)
+        try:
+            sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
+            response = sg.send(message)
+        except Exception as e:
+            print(e.message)
     return render(request, 'errand_matcher/email_confirmation.html', {'current_email': current_email})
 
 
