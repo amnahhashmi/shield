@@ -28,6 +28,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1', 'shieldcovid.herokuapp.com']
 
+# SECURE_SSL_REDIRECT = False
+# SESSION_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = True
 
 # Application definition
 
@@ -41,6 +44,7 @@ INSTALLED_APPS = [
     'errand_matcher',
     'phonenumber_field',
     'whitenoise.runserver_nostatic',
+    'django_extensions'
     # 'address'
 ]
 

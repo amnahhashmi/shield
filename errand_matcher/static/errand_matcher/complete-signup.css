@@ -140,6 +140,25 @@ input[type="radio"]:checked + label {
 	background: #C4C4C4;
 }
 
+.body-13 {
+	font-family: Work Sans;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 13px;
+	line-height: 150%;
+	/* identical to box height, or 19px */
+
+	color: #000000;
+
+	opacity: 0.5;
+
+	/* Inside Auto Layout */
+
+	flex: none;
+	align-self: center;
+	margin: 0px 4px;
+}
+
 
 
 

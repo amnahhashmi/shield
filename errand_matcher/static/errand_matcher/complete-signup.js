@@ -28,7 +28,6 @@ $(document).ready(function() {
 
 	// button behavior
 	$(".next-button").click(function(){
-		// todo form validation
 		$('body').trigger("pageEvent", pageIndex + 1)
 	})
 
@@ -44,6 +43,9 @@ $(document).ready(function() {
 	// If all name input fields are full on blur/defocus, automatically progress
 	$('#name-page').find(".text-input").blur(function(e){
 		if ($('#firstname-input').val().length > 0 && $('#lastname-input').val().length > 0){
+			// Set review field to user input
+			$('#name-review').text($('#firstname-input').val() + ' ' + $('#lastname-input').val());
+
 			$('body').trigger("pageEvent", pageIndex + 1)
 		}
 	});
@@ -60,13 +62,13 @@ $(document).ready(function() {
 		);
 
 		if (phone.length==10) {
+			// Set review field to user input
+			$('#phone-review').text(phone);
 			$('body').trigger("pageEvent", pageIndex + 1)
 		} else {
 			// display a warning message
 		}
 	})
-
-
 	
 	// display first page
 	$("body").trigger("pageEvent",0)
