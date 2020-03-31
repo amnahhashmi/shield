@@ -122,7 +122,7 @@ todo: radio example
 	border-radius: 8px;
 
 	padding: 24px;
-	margin: 0px 16px;
+	margin: 24px 24px;
 
 	flex: none;
 	align-self: center;
@@ -132,7 +132,11 @@ input[type="radio"]{
     visibility:hidden;
 }
 
-input[type="radio"]:checked + label{
+input[type="radio"]:unchecked + label {
+	background: #FFFFFF;
+}
+
+input[type="radio"]:checked + label {
 	background: #C4C4C4;
 }
 
