@@ -1,66 +1,67 @@
-{% if current_email is None %}
-<div class="h5_32 item">
-	What's your school or work email?
-</div>
-<div class="body_16_fontonly subhead item">
-	This extra verification helps ensure the safety of our community. In the next step, you'll choose which e-mail to link to your Shield account.
-</div>
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-<form class="email-form" action="confirmation" method="post">
-	{% csrf_token %}
-	<label for="email-input" class="email-box">
-		<input type="email" name="current-email" id="email-input" placeholder="email address">
-	</label>
-	<label for="send-confirmation-email-button" class="email-button body_bold_16">
-		<input type="submit" id="send-confirmation-email-button" class="body_bold_15" value="Send confirmation email">
-	</label>
-</form>
-{% else %}
-	{% load static %}
-	<!DOCTYPE html>
-	<html lang="en">
-		<head>
-			<meta charset="utf-8"/>
-			<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-			<meta name="viewport" content="width=device-width, initial-scale=1"/>
+		<!-- import fonts -->
+		<link href="https://fonts.googleapis.com/css?family=Work+Sans&display=swap" rel="stylesheet">
 
-			<!-- import fonts -->
-			<link href="https://fonts.googleapis.com/css?family=Work+Sans&display=swap" rel="stylesheet">
+		<!-- import jQuery -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
-			<!-- import jQuery -->
-			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<title>Livelyhood - Volunteer</title>
 
-			<title>Livelyhood - Volunteer</title>
+        <!-- CUSTOM STYLESHEETS -->
+        <link href="{% static 'errand_matcher/style.css' %}" rel="stylesheet"/>
+        <link href="{% static 'errand_matcher/begin-signup.css' %}" rel="stylesheet"/>
+        <link href="{% static 'errand_matcher/email_confirmation.css' %}" rel="stylesheet"/>
+	</head>
+	<body>
+	{% if current_email is None %}
+		<div class="h5_32 item">
+			What's your school or work email?
+		</div>
+		<div class="body_16_fontonly subhead item">
+			This extra verification helps ensure the safety of our community. In the next step, you'll choose which e-mail to link to your Shield account.
+		</div>
 
-	        <!-- CUSTOM STYLESHEETS -->
-	        <link href="{% static 'errand_matcher/style.css' %}" rel="stylesheet"/>
-	        <link href="{% static 'errand_matcher/begin-signup.css' %}" rel="stylesheet"/>
-	        <link href="{% static 'errand_matcher/email-confirmation.css' %}" rel="stylesheet"/>
-		</head>
-		<body>
-			<div class="nav-bar">
-				<a href='#' id="back-button" class="nav-button disabled">
-					<img src="{% static 'errand_matcher/icons/backarrow.svg' %}" alt="back button" height="24px" width="24px">
-					</img>
-				</a>
-			</div>
-			<div class="h5_32 item">
-				Got it!
-			</div>
-			<div class="body_16_fontonly subhead item">
-				Please check your email and follow the confirmation link to finish setup.
-			</div>
+		<form class="email-form" action="confirmation" method="post">
+			{% csrf_token %}
+			<label for="email-input" class="email-box">
+				<input type="email" name="current-email" id="email-input" placeholder="email address">
+			</label>
+			<label for="send-confirmation-email-button" class="email-button body_bold_16">
+				<input type="submit" id="send-confirmation-email-button" class="body_bold_15" value="Send confirmation email">
+			</label>
+		</form>
+	{% else %}
+		<div class="nav-bar">
+			<a href='#' id="back-button" class="nav-button disabled">
+				<img src="{% static 'errand_matcher/icons/backarrow.svg' %}" alt="back button" height="24px" width="24px">
+				</img>
+			</a>
+		</div>
+		<div class="h5_32 item">
+			Got it!
+		</div>
+		<div class="body_16_fontonly subhead item">
+			Please check your email and follow the confirmation link to finish setup.
+		</div>
 
-			<form class="email-form" action="confirmation" method="post">
-				{% csrf_token %}
-				<label for="email-input" class="email-box">
-					<input type="hidden" name="current-email" id="email-input" placeholder="email address" value="{{ current_email}} ">
-				</label>
-				<label for="send-confirmation-email-button" class="email-button body_bold_16">
-					<input type="submit" id="send-confirmation-email-button" class="body_bold_15" value="Resend confirmation email">
-				</label>
-			</form>
-		</body>
-	</html>
-{% endif %}
+		<form class="email-form" action="confirmation" method="post">
+			{% csrf_token %}
+			<label for="email-input" class="email-box">
+				<input type="hidden" name="current-email" id="email-input" placeholder="email address" value="{{ current_email}} ">
+			</label>
+			<label for="send-confirmation-email-button" class="email-button body_bold_16">
+				<input type="submit" id="send-confirmation-email-button" class="body_bold_15" value="Resend confirmation email">
+			</label>
+		</form>
+	{% endif %}
+	</body>
+</html>
+
 
