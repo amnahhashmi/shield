@@ -31,7 +31,7 @@ def confirm_email(request):
             response = sg.send(message)
         except Exception as e:
             print(e.message)
-    return render(request, 'errand_matcher/email-confirmation.html', {'current_email': current_email})
+    return render(request, 'errand_matcher/email-confirmation-end.html', {'current_email': current_email})
 
 
 def activate(request, token_id):

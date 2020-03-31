@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+		<!-- import fonts -->
+		<link href="https://fonts.googleapis.com/css?family=Work+Sans&display=swap" rel="stylesheet">
+
+		<!-- import jQuery -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+		<title>Livelyhood - Volunteer</title>
+
+        <!-- CUSTOM STYLESHEETS -->
+        <link href="{% static 'errand_matcher/style.css' %}" rel="stylesheet"/>
+        <link href="{% static 'errand_matcher/begin-signup.css' %}" rel="stylesheet"/>
+        <link href="{% static 'errand_matcher/email-confirmation.css' %}" rel="stylesheet"/>
+	</head>
+	<body>
+		<div class="nav-bar">
+			<a href='#' id="back-button" class="nav-button">
+				<img src="{% static 'errand_matcher/icons/backarrow.svg' %}" alt="back button" height="24px" width="24px">
+				</img>
+			</a>
+		</div>
+	<div class="h5_32 item">
+		Got it!
+	</div>
+	<div class="body_16_fontonly subhead item">
+		Please check your email and follow the confirmation link to finish setup.
+	</div>
+
+	<form class="email-form" action="confirmation" method="post">
+		{% csrf_token %}
+		<label for="email-input">
+			<input type="hidden" class="body_bold_16" name="current-email" id="email-input" placeholder="email address" value="{{ current_email}} ">
+		</label>
+		<label for="send-confirmation-email-button" class="email-button body_bold_16">
+			<input type="submit" id="send-confirmation-email-button" class="body_bold_15" value="Resend confirmation email">
+		</label>
+	</form>
