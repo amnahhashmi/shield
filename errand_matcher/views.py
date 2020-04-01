@@ -18,7 +18,6 @@ def index(request):
 
 def begin_signup(request):
     if request.method == 'POST':
-        import pdb; pdb.set_trace()
         first_name = request.POST['first_name']
         last_name = request.POST['last_name']
         email = request.POST['email']

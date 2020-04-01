@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     'errand_matcher',
     'phonenumber_field',
     'whitenoise.runserver_nostatic',
-    'django_extensions'
     # 'address'
 ]
 
