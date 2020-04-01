@@ -38,6 +38,7 @@ class Volunteer(models.Model):
 class ConfirmationToken(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     active = models.BooleanField(default=True)
+    email = models.EmailField(default='livelyhood.tech@gmail.com')
 
 class Requestor(models.Model):
     pass
