@@ -141,6 +141,9 @@ input[type="radio"]:checked + label {
 }
 
 
-
+.conf-item {
+	margin: 24px 0px;
+	padding: 0px 24px;
+}
 
 
