@@ -24,7 +24,7 @@
 	flex: none;
 	align-self: center;
 
-	width: 100%;
+	width: auto;
 }
  
 .option-box input {
@@ -100,9 +100,9 @@ todo: radio example
 	background: #C4C4C4;
 	border-radius: 8px;
 
-    text-align: center
+    text-align: center;
 
-    width: 100%;
+    width: auto;
 }
 
 @media screen and (min-width: 576px){
