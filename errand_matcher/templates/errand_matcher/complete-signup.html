@@ -16,6 +16,7 @@
 
     <!-- CUSTOM STYLESHEETS -->
     <link href="{% static 'errand_matcher/style.css' %}" rel="stylesheet"/>
+    <link href="{% static 'errand_matcher/begin-signup.css' %}" rel="stylesheet"/>
     <link href="{% static 'errand_matcher/complete-signup.css' %}" rel="stylesheet"/>
 
     <!-- PAGE SOURCE -->
@@ -24,6 +25,7 @@
 </head>
 <body>
 	{% if token_state == 'Active' %}
+		{% csrf_token %}
 		<div class="nav-bar">
 				<img src="{% static 'errand_matcher/icons/backarrow.svg' %}" alt="back button" height="24px" width="24px" id="back-button" class="nav-item back-button">
 				</img>
@@ -63,9 +65,12 @@
 		</div>
 
 		<div class="page" id="health-safety-page">
+			{% include "errand_matcher/health-safety.html" %}
 		</div>
 
 		<div class="page" id="confirm-page">
+			{% include "errand_matcher/volunteer-confirm.html" %}
+			<input type="hidden" id="current-email" name="current-email" value={{ current_email }}>
 		</div>
 
 		<div class="page" id="welcome-page">

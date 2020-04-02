@@ -196,6 +196,11 @@ li.nav-list-item:hover {
 	padding: 8px 24px;
 }
 
+.warning {
+	color: #B33A3A;
+	display: none;
+}
+
 .h3_64 {
 	/* Shield */
 

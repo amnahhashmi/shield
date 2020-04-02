@@ -5,20 +5,29 @@
 	The more often, the merrier :). Don't worry, you'll get to choose what to accept when the time comes.
 </div>
 
-<div class="radio-box">
-	<input type="radio" id="frequency-anytime-select"/><label for="frequency-anytime-select" class="body_bold_16">Anytime</label>
-</div>
+<label for="freq-anytime-cbox" class="option-box">
+	<input type="checkbox" id="freq-anytime-cbox" name="freq-anytime-cbox"/> 
+	<span class="cbox-item cbox"></span>
+	<span class="cbox-item body_bold_16">Anytime</span>  
+</label>
 
-<div class="radio-box">
-	<input type="radio" name="frequency-multi-week-select"/>
-	<label for="frequency-multi-week-select" class="body_bold_16">2-3 times a week</label>
-</div>
+<label for="freq-multi-week-cbox" class="option-box">
+	<input type="checkbox" id="freq-multi-week-cbox" name="freq-multi-week-cbox"/>
+	<span class="cbox-item cbox"></span> 
+	<span class="cbox-item body_bold_16">2-3 times a week</span>
+</label>
 
-<div class="radio-box">
-	<input type="radio" name="frequency-once-week-select"/>
-	<label for="frequency-once-week-select" class="body_bold_16">Once a week</label>
+<label for="freq-once-week-cbox" class="option-box">
+	<input type="checkbox" id="freq-once-week-cbox" name="freq-once-week-cbox"/>
+	<span class="cbox-item cbox"></span>
+	<span class="cbox-item body_bold_16">Once a week</span> 
+</label>
+
+<div class="body_16_fontonly subhead item warning" id="frequency-warning">
+	Please select only one.
 </div>
 
 <div class="body_bold_16 button next-button">
 	Next
 </div>
+

@@ -1,30 +1,49 @@
 /*email-confirmation.css*/
+.email-form {
 
-.email-box {
 	display: flex;
-	align-items: center;
+	flex-direction: column;
+	padding: 16px 24px;
+
+	/* Inside Auto Layout */
+
+	flex: none;
+	order: 3;
+	align-self: center;
+	margin: 0px 0px;
+
+	text-align: center
+}
+
+input[type=email] {
+	/* Auto Layout */
+
+	display: flex;
 	flex-direction: row;
 	padding: 16px 24px;
+	align-self: center;
 
 	background: #FFFFFF;
 	border: 2px solid #000000;
 	box-sizing: border-box;
 	border-radius: 8px;
 
-	/* Inside Auto Layout */
+	/* Body 16 */
 
-	flex: none;
-	margin: 0px 16px;
-}
+	font-family: Work Sans;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 16px;
+	line-height: 150%;
+	/* or 24px */
 
-input[type="email"] {
+
 	color: rgba(0, 0, 0, 0.56);
 
-	left: 12.32%;
-	right: 12.32%;
-	top: 22.73%;
-	bottom: 22.73%;
+	display: inline-block;
+}
 
+input[type=submit] {
 	/* Body Bold 16 */
 
 	font-family: Work Sans;
@@ -37,17 +56,6 @@ input[type="email"] {
 	text-align: center;
 	letter-spacing: 0.03em;
 
-	color: #000000;
-
-
-	/* Inside Auto Layout */
-
-	flex: none;
-	align-self: center;
-	margin: 0px 10px;
-}
-
-input[type="submit"]{
 	display: flex;
 	flex-direction: column;
 	padding: 10px;
@@ -55,25 +63,7 @@ input[type="submit"]{
 	background: #C4C4C4;
 	border-radius: 8px;
 
-	/* Body Bold 16 */
+	display: inline-block;
 
-	font-family: Work Sans;
-	font-style: normal;
-	font-weight: 600;
-	font-size: 16px;
-	line-height: 150%;
-	
-	/* identical to box height, or 24px */
-
-	text-align: center;
-	letter-spacing: 0.03em;
-
-	color: #000000;
-
-	/* Inside Auto Layout */
-
-	flex: none;
-	align-self: center;
-	margin: 10px 10px;
+	margin-top: 10px;
 }
-
