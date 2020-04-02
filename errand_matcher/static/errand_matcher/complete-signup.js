@@ -125,8 +125,10 @@ $(document).ready(function() {
 
 
 	$(".back-button").click(function(){
+		console.log(pageIndex)
 		if (pageIndex == 0) {
 			// send to landing page
+			window.location.pathname = '/';
 		} else {
 			$('body').trigger("pageEvent", pageIndex - 1)
 		}
