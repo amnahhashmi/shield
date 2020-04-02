@@ -111,36 +111,29 @@ todo: radio example
 	}
 }
 
-.radio-box {
-	display: flex;
-	flex-direction: row;
+.body-13 {
+	font-family: Work Sans;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 13px;
+	line-height: 150%;
+	/* identical to box height, or 19px */
 
-	background: #FFFFFF;
-	/* shadow */
+	color: #000000;
 
-	box-shadow: 0px 2px 16px rgba(0, 0, 0, 0.1);
-	border-radius: 8px;
+	opacity: 0.5;
 
-	padding: 24px;
-	margin: 24px 24px;
+	/* Inside Auto Layout */
 
 	flex: none;
 	align-self: center;
+	margin: 0px 4px;
 }
 
-input[type="radio"]{
-    visibility:hidden;
+.body_23 {
+	font-family: Work Sans;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 23px;
+	line-height: 150%;
 }
-
-input[type="radio"]:unchecked + label {
-	background: #FFFFFF;
-}
-
-input[type="radio"]:checked + label {
-	background: #C4C4C4;
-}
-
-
-
-
-
