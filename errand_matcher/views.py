@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 import os
-from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail
+# from sendgrid import SendGridAPIClient
+# from sendgrid.helpers.mail import Mail
 from errand_matcher.models import ConfirmationToken
 
 def index(request):
@@ -21,16 +21,16 @@ def confirm_email(request):
         print(token)
         token.save()
         url = request.META['HTTP_HOST'] + '/activate/' + str(token.id)
-        message = Mail(
-            from_email='livelyhood.tech@gmail.com',
-            to_emails=current_email,
-            subject='Thank you for signing up with Livelyhood!',
-            html_content='<a href={}>Activation Link</a>'.format(url))
-        try:
-            sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
-            response = sg.send(message)
-        except Exception as e:
-            print(e.message)
+        # message = Mail(
+        #     from_email='livelyhood.tech@gmail.com',
+        #     to_emails=current_email,
+        #     subject='Thank you for signing up with Livelyhood!',
+        #     html_content='<a href={}>Activation Link</a>'.format(url))
+        # try:
+        #     sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
+        #     response = sg.send(message)
+        # except Exception as e:
+        #     print(e.message)
     return render(request, 'errand_matcher/email-confirmation-end.html', {'current_email': current_email})
 
 
@@ -48,3 +48,6 @@ def activate(request, token_id):
 
 def matchable_volunteers(request, requestor_id):
     pass
+
+def health_and_safety(request):
+    return render(request, 'errand_matcher/health-and-safety.html')
