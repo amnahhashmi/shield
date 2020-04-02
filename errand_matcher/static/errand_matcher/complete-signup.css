@@ -23,6 +23,8 @@
 
 	flex: none;
 	align-self: center;
+
+	width: 100%;
 }
  
 .option-box input {
@@ -99,10 +101,16 @@ todo: radio example
 	border-radius: 8px;
 
     text-align: center
+
+    width: 100%;
 }
 
 @media screen and (min-width: 576px){
 	.text-input{
+		width: 540px;
+	}
+
+	.option-box{
 		width: 540px;
 	}
 
@@ -111,42 +119,11 @@ todo: radio example
 	}
 }
 
-<<<<<<< HEAD
-.radio-box {
-	display: flex;
-	flex-direction: row;
-
-	background: #FFFFFF;
-	/* shadow */
-
-	box-shadow: 0px 2px 16px rgba(0, 0, 0, 0.1);
-	border-radius: 8px;
-
-	padding: 24px;
-	margin: 24px 24px;
-
-	flex: none;
-	align-self: center;
-}
-
-input[type="radio"]{
-    visibility:hidden;
-}
-
-input[type="radio"]:unchecked + label {
-	background: #FFFFFF;
-}
-
-input[type="radio"]:checked + label {
-	background: #C4C4C4;
-}
-
-
 .conf-item {
 	margin: 24px 0px;
 	padding: 0px 24px;
 }
-=======
+
 .body-13 {
 	font-family: Work Sans;
 	font-style: normal;
@@ -158,13 +135,12 @@ input[type="radio"]:checked + label {
 	color: #000000;
 
 	opacity: 0.5;
->>>>>>> 4e5bc7cb9ebb4889bd4d5214d39607adb1297fbd
 
 	/* Inside Auto Layout */
 
 	flex: none;
 	align-self: center;
-	margin: 0px 4px;
+	margin: 4px 0px;
 }
 
 .body_23 {
