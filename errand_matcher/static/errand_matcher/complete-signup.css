@@ -111,6 +111,7 @@ todo: radio example
 	}
 }
 
+<<<<<<< HEAD
 .radio-box {
 	display: flex;
 	flex-direction: row;
@@ -145,5 +146,31 @@ input[type="radio"]:checked + label {
 	margin: 24px 0px;
 	padding: 0px 24px;
 }
+=======
+.body-13 {
+	font-family: Work Sans;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 13px;
+	line-height: 150%;
+	/* identical to box height, or 19px */
 
+	color: #000000;
 
+	opacity: 0.5;
+>>>>>>> 4e5bc7cb9ebb4889bd4d5214d39607adb1297fbd
+
+	/* Inside Auto Layout */
+
+	flex: none;
+	align-self: center;
+	margin: 0px 4px;
+}
+
+.body_23 {
+	font-family: Work Sans;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 23px;
+	line-height: 150%;
+}

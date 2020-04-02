@@ -1,4 +1,3 @@
-{% load static %}
 {% if current_email is None %}
 	<div class="h5_32 item">
 		What's your school or work email?
@@ -17,12 +16,6 @@
 		</label>
 	</form>
 {% else %}
-	<div class="nav-bar">
-		<a href='#' id="back-button" class="nav-button disabled">
-			<img src="{% static 'errand_matcher/icons/backarrow.svg' %}" alt="back button" height="24px" width="24px">
-			</img>
-		</a>
-	</div>
 	<div class="h5_32 item">
 		Got it!
 	</div>

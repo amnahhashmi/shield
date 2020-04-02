@@ -1,5 +1,5 @@
 // complete-signup.js
-// script for 'begin_signup' endpoint
+// script for 'complete_signup' endpoint
 
 // Bias the autocomplete object to the user's geographical location,
 // as supplied by the browser's 'navigator.geolocation' object.
@@ -41,7 +41,7 @@ function initAutocomplete() {
 $(document).ready(function() {
 
 	var pages = $(".page")
-	var pageIndex = 0
+	var pageIndex = 0;
 
 	// custom event for toggling between pages of signup form
 	$("body").bind("pageEvent", function(e, index){
@@ -57,24 +57,82 @@ $(document).ready(function() {
 
 		// update progress bar
 		progressBarLocation = (3 + pageIndex)/ pages.length
+
 		$("stop").slice(1,3).attr("offset",progressBarLocation)
-
-		// populate confirmation fields
-		$("#name-confirmation").text($("#firstname-input").val()+" "+$("#lastname-input").val())
-
-		// todo: learnhow to retrieve email
-		$("#email-confirmation").text("NEED EMAIL FROM CONF-TOKEN")
-
-		$("#phone-confirmation").text($('#phone-input').val())
-
-		$("transport-confirmation").text($)
 
 		// todo handle button activation/deactivation
 	})
 
 	// button behavior
 	$(".next-button").click(function(){
-		// todo form validation
+		
+		// Set transportation review to user input
+		if (pageIndex == 2) {
+			var transportation = [];
+			if ($("#transport-feet-cbox").is(":checked")){
+				transportation.push("My own two feet");
+			}
+			if($("#transport-bike-cbox").is(":checked")){
+				transportation.push("Bike");
+			}
+			if($("#transport-car-cbox").is(":checked")){
+				transportation.push("Car");
+			}
+
+			var transportation_as_str = transportation.join(", ")
+			$('#transportation-review').text(transportation_as_str)
+		}
+
+		// Set frequencyreview to user input
+		if (pageIndex == 3) {
+			var frequency = [];
+			if ($("#freq-anytime-cbox").is(":checked")){
+				frequency.push("Anytime");
+			}
+			if($("#freq-multi-week-cbox").is(":checked")){
+				frequency.push("2-3 times a week");
+			}
+			if($("#freq-once-week-cbox").is(":checked")){
+				frequency.push("Once a week");
+			}
+
+			// Can only have one option selected
+			if (frequency.length > 1) {
+				$("#frequency-warning").show()
+				return;
+			}
+			else {
+				var frequency_as_str = frequency.join(", ")
+			$('#frequency-review').text(frequency_as_str)
+			
+			}
+		}
+
+		// Set language review to user input
+		if (pageIndex == 4) {
+			var languages = [];
+			if($("#spanish-cbox").is(":checked")){
+				languages.push("Spanish");
+			}
+			if($("#russian-cbox").is(":checked")){
+				languages.push("Russian");
+			}
+			if($("#chinese-cbox").is(":checked")){
+				languages.push("Chinese");
+			}
+
+			var languages_as_str = languages.join(", ")
+			$('#language-review').text(languages_as_str)
+		}
+
+		// Validate user certified health and safety protocl
+		if (pageIndex == 5) {
+			if (!$("#certify-health-safety-protocol-cbox").is(":checked")) {
+				$("#health-safety-warning").show()
+				return;
+			}
+		}
+
 		$('body').trigger("pageEvent", pageIndex + 1)
 	})
 
@@ -90,7 +148,11 @@ $(document).ready(function() {
 	// If all name input fields are full on blur/defocus, automatically progress
 	$('#name-page').find(".text-input").blur(function(e){
 		if ($('#firstname-input').val().length > 0 && $('#lastname-input').val().length > 0){
-			$('body').trigger("pageEvent", pageIndex + 1)
+
+			// Set review field to user input
+			$('#firstname-review').text($('#firstname-input').val());
+			$('#lastname-review').text($('#lastname-input').val());
+			$('body').trigger("pageEvent", pageIndex + 1);
 		}
 	});
 
@@ -106,16 +168,43 @@ $(document).ready(function() {
 		);
 
 		if (phone.length==10) {
+			// Set review field to user input
+			$('#phone-review').text(phone);
 			$('body').trigger("pageEvent", pageIndex + 1)
 		} else {
-			// todo: display a warning message
+			// display a warning message
 		}
 	})
 
-	$('#address-input').blur(function(e){
-		// todo: validate
-		$('body').trigger("pageEvent", pageIndex + 1)
-	})
+	// Submit volunteer form
+	$(".finish-set-up").click(function(event){
+		event.preventDefault();
+		var csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+		var add_volunteer_url = window.location.protocol +'//' + document.domain + ':8000/volunteer';
+		// make POST ajax call
+        $.ajax({
+            type: 'POST',
+            headers: {'X-CSRFToken': csrftoken},
+            url: add_volunteer_url,
+            data: {
+            	"first_name": $("#firstname-review").text(),
+            	"last_name": $("#lastname-review").text(),
+            	"email": $("#email-review").text(),
+            	"mobile_number": $("#phone-review").text(),
+            	"frequency": $("#frequency-review").text(),
+            	"transportation": $("#transportation-review").text(),
+            	"language": $("#language-review").text()
+            },
+            success: function(response){
+            	console.log(response);
+            },
+            error: function(jqHXR, exception){
+            	console.log(exception);
+            }
+        })
+        $('body').trigger("pageEvent", pageIndex + 1)
+
+    })
 
 	// display first page
 	$("body").trigger("pageEvent",0)
