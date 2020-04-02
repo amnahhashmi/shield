@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-
 from django.contrib.auth.hashers import make_password
 from django.views.decorators.csrf import ensure_csrf_cookie
 import os
@@ -110,6 +109,7 @@ def activate(request, token_id):
         else:
             token_state = 'Expired'
     return render(request, 'errand_matcher/complete-signup.html', {'token_state': token_state, 'email': token.email})
+
 
 def matchable_volunteers(request, requestor_id):
     pass
