@@ -113,3 +113,6 @@ def activate(request, token_id):
 
 def matchable_volunteers(request, requestor_id):
     pass
+
+def health_and_safety(request):
+    return render(request, 'errand_matcher/health-and-safety.html')

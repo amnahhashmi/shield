@@ -6,6 +6,10 @@ $(document).ready(function() {
 		window.location.replace("#top");
 	})
 
+	$('.health-and-safety-link').click(function(){
+		window.location.href = "health";
+	})
+
 	$('.faq-link').click(function(){
 		window.location.replace("#above-faq");
 	})

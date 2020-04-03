@@ -21,10 +21,10 @@
 
 <body>
 	<div class="top-nav-bar">
-		<!-- TODO: Set link for Health and safety protocol, check other links are correct. -->
+		<!-- TODO: Check all links are correct. -->
 		<ul class="nav-list">
 			<li class="nav-list-item button top-link" id="livelyhood-list-item">LivelyHood</li>
-			<li class="nav-list-item">Health and safety protocol</li>
+			<li class="nav-list-item button health-and-safety-link">Health and safety protocol</li>
 			<li class="nav-list-item button faq-link">FAQs</li>
 			<li class="nav-list-item button about-link">About</li>
 			<li class="nav-list-item button about-link">Contact</li>
@@ -41,7 +41,7 @@
 			<p class="button-text">Help protect the most vulnerable in your community</p>
 		</div>
 
-		<h5 class="subheading">How it works</h5>
+		<h4 class="h4-heading">How it works</h4>
 
 		<div class="horizontal-container">
 			<div class="step-box">
@@ -61,17 +61,17 @@
         <!-- For linking -->
 		<div id="above-faq"></div>
 
-		<h5 class="subheading">Frequently asked questions</h5>
+		<h4 class="h4-heading">Frequently asked questions</h4>
 
-		<!-- TODO: Update to actual answers. -->
+        <h5 class="h5-heading">Volunteer</h5>
 	    <div class="collapsible-container">
 		    <div class="collapsible">
 		    	<!-- TODO: Use SVG instead of PNG. -->
 		  	    <img src="{% static 'errand_matcher/icons/expand_more_24px.png' %}" class="collapsible-image">
-		  	    <p class="title-text">How do I coordinate delivery with the requestor?</p>
+		  	    <p class="title-text">How do I coordinate the delivery with the requester?</p>
 		    </div>
 		    <div class="collapsible-content">
-			    <p class="details-text">TODO: Question answer</p>
+			    <p class="details-text">We match you automatically. When you decide to help with a request, you will receive the requester’s contact information. Please coordinate delivery over phone/email as much as possible and avoid direct physical contact.</p>
 		    </div>
 	    </div>
 	    <div class="collapsible-container">
@@ -80,7 +80,7 @@
 		  	    <p class="title-text">How much time do I have to commit?</p>
 		    </div>
 		    <div class="collapsible-content">
-		  	    <p class="details-text">TODO: Question answer</p>
+		  	    <p class="details-text">As much as you want! LivelyHood relies on the help of willing and able volunteers, and we don’t take that for granted. Any time that you can chip in counts.</p>
 		    </div>
 		</div>
 		<div class="collapsible-container">
@@ -89,17 +89,84 @@
 		  	    <p class="title-text">What if I can’t complete my assigned task or the items requested are out of stock?</p>
 		    </div>
 		    <div class="collapsible-content">
-		  	    <p class="details-text">TODO: Question answer</p>
+		  	    <p class="details-text">While we encourage volunteers to complete tasks to their best ability, we understand that these are difficult times for everyone. Just decline the request text, and the task will get assigned to someone else.</p>
+		    </div>
+		</div>
+		<div class="collapsible-container">
+			<div class="collapsible">
+		  	    <img src="{% static 'errand_matcher/icons/expand_more_24px.png' %}" class="collapsible-image">
+		  	    <p class="title-text">Do I need a car to volunteer?</p>
+		    </div>
+		    <div class="collapsible-content">
+		  	    <p class="details-text">You can walk, run, cycle, or drive to a grocery store or pharmacy! We just request that you stay six feet away from others and practice social distancing as much as possible.</p>
+		    </div>
+		</div>
+		<div class="collapsible-container">
+			<div class="collapsible">
+		  	    <img src="{% static 'errand_matcher/icons/expand_more_24px.png' %}" class="collapsible-image">
+		  	    <p class="title-text">How will I receive the money I used to pay for groceries? </p>
+		    </div>
+		    <div class="collapsible-content">
+		  	    <p class="details-text">Keep the receipt from the purchase. In some cases, it may be possible for the community member to call the grocery store in advance to pay for groceries with a credit card. You should coordinate with the community member in advance for the method of payment for the items you purchase. You should not be paid more than what you paid as this is a volunteer service. If the community member is ill, coordinate a digital method of payment to minimize transmission.</p>
+		    </div>
+		</div>
+
+		<h5 class="h5-heading">Requester</h5>
+
+		<div class="collapsible-container">
+			<div class="collapsible">
+		  	    <img src="{% static 'errand_matcher/icons/expand_more_24px.png' %}" class="collapsible-image">
+		  	    <p class="title-text">How do I know if I’m eligible for this service?</p>
+		    </div>
+		    <div class="collapsible-content">
+		  	    <p class="details-text">We hope to target high-risk individuals like the elderly (60+ yo), immuno-compromised, front-line medical workers, quarantined. If you are quarantined because of confirmed COVID + diagnosis or exposure, please inform your volunteer and take extra precautions to prevent disease transmission (eg. electronic form of payment).</p>
+		    </div>
+		</div>
+		<div class="collapsible-container">
+			<div class="collapsible">
+		  	    <img src="{% static 'errand_matcher/icons/expand_more_24px.png' %}" class="collapsible-image">
+		  	    <p class="title-text">Is this free?</p>
+		    </div>
+		    <div class="collapsible-content">
+		  	    <p class="details-text">It absolutely is! You would just need a method of payment to pay for the  items that you request volunteers to buy.</p>
+		    </div>
+		</div>
+		<div class="collapsible-container">
+			<div class="collapsible">
+		  	    <img src="{% static 'errand_matcher/icons/expand_more_24px.png' %}" class="collapsible-image">
+		  	    <p class="title-text">How do I know the items I request don’t carry coronavirus?</p>
+		    </div>
+		    <div class="collapsible-content">
+		  	    <p class="details-text">The risk of items being delivered carrying coronavirus is equivalent to that of any other delivery service. Our volunteers have been given a set of stringent protocols. Please see instructions for precautions you can take to sanitize the delivered goods and minimize risk of disease transmission.</p>
+		    </div>
+		</div>
+		<div class="collapsible-container">
+			<div class="collapsible">
+		  	    <img src="{% static 'errand_matcher/icons/expand_more_24px.png' %}" class="collapsible-image">
+		  	    <p class="title-text">What if I’m not in Boston?</p>
+		    </div>
+		    <!-- TODO: Update email. -->
+		    <div class="collapsible-content">
+		  	    <p class="details-text">Our service is currently limited to Boston. Check out other great organisations like Invisible Hands or COVID-Assist, which cover New York and San Francisco. If you want us to come to your city, email xxx@abc.com*</p>
+		    </div>
+		</div>
+		<div class="collapsible-container">
+			<div class="collapsible">
+		  	    <img src="{% static 'errand_matcher/icons/expand_more_24px.png' %}" class="collapsible-image">
+		  	    <p class="title-text">Can you run other errands for me? (e.g. dog walking, bank visits)</p>
+		    </div>
+		    <div class="collapsible-content">
+		  	    <p class="details-text">Our service is currently limited to grocery and pharmacy shopping, though we hope to broaden this in the future. We suggest you reach out to other services, like Cambridge Mutual Aid or use Facebook’s request help feature.</p>
 		    </div>
 		</div>
 
 		<!-- For linking -->
 		<div id="above-about"></div>
 
-		<h5 class="subheading">About</h5>
+		<h4 class="h4-heading">About</h4>
 		
-		<!-- TODO: Update to actual text, add image. -->
-		<p class="details-text" id="about-text">Hi there! We are [TEAM NAMES]. We're a group of students from Harvard, designers and engineers across the country who are driven to help at-risk communities in this time of uncertainty.<br><br>Have questions? We're here to help.<br><br><b>Call:</b> (555) 123-4567<br><b>Email:</b> hi@shield.com</p>
+		<!-- TODO: Add contact info. -->
+		<p class="details-text">Hi there! We are Team LivelyHood. We're a group of students from Harvard, designers and engineers across the country who are driven to help at-risk communities in this time of uncertainty.<br><br>Our mission is to mobilize help for vulnerable, at-risk members of our local community. In the face of COVID-19, social distancing is limiting the movement of people and changing our way of life. We are hoping to make a difference by keeping at-risk members of the community in their homes, and by asking the willing and able to run a few extra errands when they are out.<br><br>Have questions? We're here to help.<br><br><b>Call:</b> (555) 123-4567<br><b>Email:</b> hi@shield.com</p>
 	</div>
 
 	<div class="footer">
