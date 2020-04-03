@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+		<!-- import fonts -->
+		<link href="https://fonts.googleapis.com/css?family=Work+Sans&display=swap" rel="stylesheet">
+
+		<!-- import jQuery -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+		<title>Livelyhood - Volunteer</title>
+
+        <!-- CUSTOM STYLESHEETS -->
+        <link href="{% static 'errand_matcher/style.css' %}" rel="stylesheet"/>
+        <link href="{% static 'errand_matcher/begin-signup.css' %}" rel="stylesheet"/>
+        <link href="{% static 'errand_matcher/email-confirmation.css' %}" rel="stylesheet"/>
+
+        <!-- PAGE SOURCE -->
+        <script src="{% static 'errand_matcher/begin-signup.js' %}"></script>
+	</head>
+	<body>
+		<div class="nav-bar">
+			<a href='#' id="back-button" class="nav-button disabled">
+				<img src="{% static 'errand_matcher/icons/backarrow.svg' %}" alt="back button" height="24px" width="24px">
+				</img>
+			</a>
+		</div>
+		<div class="page" id="reqs-page">
+			{% include "errand_matcher/requirements.html" %}
+		</div>
+
+		<div class="page" id="email-page">
+			{% include "errand_matcher/email-confirmation.html" %}
+		</div>
+	</body>
+</html>

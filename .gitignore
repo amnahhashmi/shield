@@ -12,3 +12,5 @@ env/
 .vscode/
 .env
 loadEnv.sh
+sendgrid.env
+

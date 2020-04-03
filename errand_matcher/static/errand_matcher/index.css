@@ -1,0 +1,113 @@
+/* TODO: confirm all font styles with UX */
+/* TODO: potentially consolidate some styles */
+
+.main-heading {
+	position:static;
+	margin-bottom: 17px;
+
+	font-family: PT Serif;
+	font-style: normal;
+	font-weight: bold;
+	font-size: 64px;
+	line-height: 120%;
+	
+	color: #000000;
+}
+
+.main-text {
+	position:static;
+
+	font-family: Work Sans;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 23px;
+	line-height: 150%;
+
+	color: #000000;
+}
+
+.main-text-bold {
+	position:static;
+
+	font-family: Work Sans;
+	font-style: normal;
+	font-weight: bold;
+	font-size: 23px;
+	line-height: 150%;
+
+	color: #000000;
+}
+
+.step-box {
+	padding:24px;
+	width: 180px;
+	margin-top: 12px;
+	margin-right: 32px;
+
+	background: #EAEAEA;
+	border-radius: 8px;
+}
+
+.step-title {
+	position: static;
+	margin-bottom: 2px;
+
+	font-family: Work Sans;
+	font-style: normal;
+	font-weight: 600;
+	font-size: 16px;
+	line-height: 150%;
+
+	color: #202124;
+}
+
+.step-text {
+	position: static;
+	margin-top: 2px;
+
+	font-family: Work Sans;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 14px;
+	line-height: 150%;
+
+	color: #202124;
+}
+
+.collapsible-container {
+	border-bottom-style: solid;
+	border-bottom-width: 1px;
+	border-bottom-color: #EAEAEA;
+}
+
+.collapsible {
+    color: rgba(0, 0, 0, 0.54);
+    cursor: pointer;
+    padding-top: 24px;
+    padding-bottom: 24px;
+    padding-left: 0px;
+    width: 100%;
+    outline: none;
+
+    display: flex;
+	flex-direction: row;
+
+    border: none;
+}
+
+.collapsible-content {
+	max-height:0;
+    overflow: hidden;
+
+    transition: max-height .25s ease-in-out;
+}
+
+img.collapsible-image {
+	vertical-align: middle;
+
+	margin-right: 30px;
+	width: 24px;
+	height: 24px;
+
+	transition: transform .25s ease-out;
+}

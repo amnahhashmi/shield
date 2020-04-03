@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
+import uuid
 
 class User(AbstractUser):
     USER_TYPE_CHOICES = (
@@ -32,6 +33,12 @@ class Volunteer(models.Model):
     speaks_russian = models.BooleanField()
     # Certified that Volunteer has read Health and Safety Protocol
     consented = models.BooleanField()
+    opted_out = models.BooleanField(default=False)
+
+class ConfirmationToken(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    active = models.BooleanField(default=True)
+    email = models.EmailField(default='livelyhood.tech@gmail.com')
 
 class Requestor(models.Model):
     pass

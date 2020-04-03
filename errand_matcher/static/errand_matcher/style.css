@@ -1,3 +1,206 @@
+.top-nav-bar {
+	position: fixed;
+	top: 0;
+	width: 100%;
+	height: 96px;
+
+	background: #FFFFFF;
+}
+
+ul.nav-list {
+    list-style-type: none;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    margin-right: 64px;
+    margin-left: 64px;
+    padding: 0;
+}
+
+li.nav-list-item {
+	display: inline-block;
+	margin-right: 56px;
+	margin-top: 36px;
+
+	font-family: Work Sans;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 150%;
+
+    text-align: center;
+}
+
+/* TODO: check hover behavior with UX */
+li.nav-list-item:hover {
+	cursor: pointer;
+}
+
+#livelyhood-list-item {
+	margin-right: 96px;
+
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.contents {
+	margin-top: 128px;
+	margin-left: 220px;
+	margin-right: 220px;
+	margin-bottom: 128px;
+}
+
+.h4-heading {
+	position:static;
+	margin-top: 96px;
+	margin-bottom: 12px;
+
+	font-family: PT Serif;
+	font-style: normal;
+	font-weight: bold;
+	font-size: 32px;
+	line-height: 130%;
+
+	color: #000000;
+}
+
+.h5-heading {
+	position:static;
+	margin-top: 36px;
+	margin-bottom: 12px;
+
+	font-family: PT Serif;
+	font-style: normal;
+	font-weight: bold;
+	font-size: 24px;
+	line-height: 130%;
+
+	color: #000000;
+}
+
+.title-text {
+	position: static;
+	margin: 0px;
+
+	font-family: Work Sans;
+	font-style: normal;
+	font-weight: 600;
+	font-size: 16px;
+	line-height: 150%;
+	letter-spacing: 0.03em;
+
+	color: #000000;
+}
+
+.details-text {
+	font-family: Work Sans;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 14px;
+	line-height: 150%;
+
+	color: #000000;
+}
+
+.horizontal-container {
+	position: static;
+
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+}
+
+.footer {
+	position: static;
+
+	padding-top: 80px;
+	padding-left: 220px;
+	padding-right: 220px;
+	padding-bottom: 80px;
+
+	background: #F1F1F1;
+}
+
+.footer-text {
+	width: 40%;
+	margin-right: 58px;
+}
+
+#footer-box {
+	width: 40%;
+}
+
+.footer-copyright {
+	position:static;
+	margin-top: 67px;
+
+	font-family: Work Sans;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 11px;
+    line-height: 200%;
+
+    text-align: center;
+}
+
+.button-box {
+	position: static;
+	padding:24px;
+	width: 272px;
+
+	background: #000000;
+	border-radius: 8px;
+}
+
+/* TODO: check hover behavior with UX */
+.button-box:hover {
+	background: #202124;
+	cursor: pointer;
+}
+
+.button-title {
+	position: static;
+	padding: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-left: 0px;
+	margin-bottom: 2px;
+
+	font-family: Work Sans;
+	font-style: normal;
+	font-weight: 600;
+	font-size: 16px;
+	line-height: 150%;
+	letter-spacing: 0.03em;
+
+	color: #FFFFFF;
+}
+
+.button-text {
+	position: static;
+	padding: 0px;
+	margin-bottom: 0px;
+	margin-right: 0px;
+	margin-left: 0px;
+	margin-top: 2px;
+
+	font-family: Work Sans;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 14px;
+	line-height: 150%;
+
+	color: #FFFFFF;
+}
+
+.item {
+	padding: 8px 24px;
+}
+
+.warning {
+	color: #B33A3A;
+	display: none;
+}
+
 .h3_64 {
 	/* Shield */
 
@@ -20,7 +223,27 @@
 	color: #000000;
 }
 
+.h5_32 {
+	display: flex;
+	flex-direction: column;
+
+	/* H5 32 */
+	font-family: PT Serif;
+	font-style: normal;
+	font-weight: bold;
+	font-size: 32px;
+	line-height: 130%;
+	/* or 42px */
+
+	color: #000000;
+
+	/* Inside Auto Layout */
+	flex: none;
+	align-self: center;
+}
+
 .body_16 {
+	/* SV: low priority--separate element positioning from font classes for integration across pages*/
 	position: absolute;
 	left: 0%;
 	right: 0%;
@@ -34,10 +257,21 @@
 	line-height: 150%;
 	/* or 24px */
 
-
 	color: #000000;
 
 	white-space: pre-wrap;
+}
+
+.body_16_fontonly {
+	/* Body 16 */
+	font-family: Work Sans;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 16px;
+	line-height: 150%;
+	/* or 24px */
+
+	color: #000000;
 }
 
 
@@ -53,7 +287,7 @@
 
 	letter-spacing: 0.03em;
 
-	color: #041C4F;
+	color: #000000;
 }
 
 #volunteer_box {
@@ -121,9 +355,7 @@
 	line-height: 150%;
 	/* or 21px */
 
-
 	color: #041C4F;
-
 
 	/* Inside Auto Layout */
 
@@ -131,5 +363,28 @@
 	order: 1;
 	align-self: center;
 	margin: 0px 4px;
+}
+
+.page {
+	display: none;
+}
+
+.nav-bar {
+	padding: 24px 0px;
+}
+
+.nav-item {
+	display: inline-block;
+	margin-left: 24px;
+
+}
+
+body {
+	margin: 0px;
+}
+
+a.disabled {
+  pointer-events: none;
+  cursor: default;
 }
 
