@@ -23,6 +23,8 @@
 
 	flex: none;
 	align-self: center;
+
+	width: auto;
 }
  
 .option-box input {
@@ -98,7 +100,9 @@ todo: radio example
 	background: #C4C4C4;
 	border-radius: 8px;
 
-    text-align: center
+    text-align: center;
+
+    width: auto;
 }
 
 @media screen and (min-width: 576px){
@@ -106,9 +110,18 @@ todo: radio example
 		width: 540px;
 	}
 
+	.option-box{
+		width: 540px;
+	}
+
 	.button{
 		width: 520px;
 	}
+}
+
+.conf-item {
+	margin: 24px 0px;
+	padding: 0px 24px;
 }
 
 .body-13 {
@@ -127,7 +140,7 @@ todo: radio example
 
 	flex: none;
 	align-self: center;
-	margin: 0px 4px;
+	margin: 4px 0px;
 }
 
 .body_23 {
@@ -136,4 +149,9 @@ todo: radio example
 	font-weight: normal;
 	font-size: 23px;
 	line-height: 150%;
+}
+
+.warning {
+	display: none;
+	opacity: 0.5;
 }

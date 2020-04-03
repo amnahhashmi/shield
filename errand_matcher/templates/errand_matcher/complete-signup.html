@@ -12,6 +12,9 @@
 	<!-- import jQuery -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
+	<!-- import Google Maps JavaScript API -->
+	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAfDYFaz06jElLS5CqxsNLq7WVxWIjt9BA&libraries=places&callback=initAutocomplete" async defer></script>
+
 	<title>Complete sign-up</title>
 
     <!-- CUSTOM STYLESHEETS -->
@@ -25,7 +28,9 @@
 </head>
 <body>
 	{% if token_state == 'Active' %}
+
 		{% csrf_token %}
+
 		<div class="nav-bar">
 				<img src="{% static 'errand_matcher/icons/backarrow.svg' %}" alt="back button" height="24px" width="24px" id="back-button" class="nav-item back-button">
 				</img>
@@ -48,9 +53,9 @@
 			{% include "errand_matcher/volunteer-phone.html" %}
 		</div>
 
-<!-- 		<div class="page" id="address-page">
+		<div class="page" id="address-page">
 			{% include "errand_matcher/volunteer-address.html" %}
-		</div> -->
+		</div>
 
 		<div class="page" id="transport-page">
 			{% include "errand_matcher/transport.html" %}
