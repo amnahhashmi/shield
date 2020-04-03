@@ -1,10 +1,75 @@
 // complete-signup.js
 // script for 'complete_signup' endpoint
 
+// Keeps track of which page is being viewed.
+var pageIndex;
+
+// Google Maps autocomplete widget
+var autocomplete;
+
+// Bias the autocomplete object to the user's geographical location,
+// as supplied by the browser's 'navigator.geolocation' object.
+function geolocate() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+      var geolocation = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+      };
+      var circle = new google.maps.Circle(
+          {center: geolocation, radius: position.coords.accuracy});
+      autocomplete.setBounds(circle.getBounds());
+    });
+  }
+}
+
+// // Initialize the Google Maps API autocomplete widget for address entry.
+function initAutocomplete() {
+  // Create the autocomplete object, restricting the search predictions to
+  // geographical location types.
+
+	autocomplete = new google.maps.places.Autocomplete(
+		document.getElementById('address-input'), {types: ['geocode']});
+
+	// Avoid paying for data that you don't need by restricting the set of
+	// place fields that are returned to just the address components.
+	autocomplete.setFields(['address_component','geometry']);
+
+	// When the user selects an address from the drop-down, populate the
+	// address fields in the form.
+	autocomplete.addListener('place_changed', function(){
+
+		var place = autocomplete.getPlace();
+		var zip;
+
+		$.each(place ? place.address_components : [], function(){
+			if (this.types[0] == "postal_code") {
+				zip = this.long_name;
+			}
+		});
+
+
+		// SV Question: What should we do if address is provided with no ZIP code (but valid lat/lng)?
+		if (!place || !place.geometry || !place.address_components || !zip) {
+			// User entered the name of a Place that was not suggested and
+	    	// pressed the Enter key, or the Place Details request failed.
+			$("#address-warning").show();
+			return;
+		} else {
+			$("#address-input").attr("lat",place.geometry.location.lat())
+			$("#address-input").attr("lon",place.geometry.location.lng())
+			$("#address-input").attr("zip",zip)
+			$("#zipcode-review").text(zip)
+	
+			$('body').trigger('pageEvent', pageIndex + 1)
+		}
+	})
+}
+
 $(document).ready(function() {
 
 	var pages = $(".page")
-	var pageIndex = 0;
+	pageIndex = 0;
 
 	// custom event for toggling between pages of signup form
 	$("body").bind("pageEvent", function(e, index){
@@ -23,73 +88,32 @@ $(document).ready(function() {
 
 		$("stop").slice(1,3).attr("offset",progressBarLocation)
 
-		// todo handle button activation/deactivation
 	})
 
 	// button behavior
 	$(".next-button").click(function(){
 		
 		// Set transportation review to user input
-		if (pageIndex == 2) {
-			var transportation = [];
-			if ($("#transport-feet-cbox").is(":checked")){
-				transportation.push("My own two feet");
-			}
-			if($("#transport-bike-cbox").is(":checked")){
-				transportation.push("Bike");
-			}
-			if($("#transport-car-cbox").is(":checked")){
-				transportation.push("Car");
-			}
-
-			var transportation_as_str = transportation.join(", ")
-			$('#transportation-review').text(transportation_as_str)
+		if (pageIndex == 3) {
+			$('#transportation-review').text($("input[name='transport']:checked").val())
 		}
 
 		// Set frequencyreview to user input
-		if (pageIndex == 3) {
-			var frequency = [];
-			if ($("#freq-anytime-cbox").is(":checked")){
-				frequency.push("Anytime");
-			}
-			if($("#freq-multi-week-cbox").is(":checked")){
-				frequency.push("2-3 times a week");
-			}
-			if($("#freq-once-week-cbox").is(":checked")){
-				frequency.push("Once a week");
-			}
-
-			// Can only have one option selected
-			if (frequency.length > 1) {
-				$("#frequency-warning").show()
-				return;
-			}
-			else {
-				var frequency_as_str = frequency.join(", ")
-			$('#frequency-review').text(frequency_as_str)
-			
-			}
+		if (pageIndex == 4) {
+			$('#frequency-review').text($("input[name='frequency']:checked").val())
 		}
 
 		// Set language review to user input
-		if (pageIndex == 4) {
-			var languages = [];
-			if($("#spanish-cbox").is(":checked")){
-				languages.push("Spanish");
-			}
-			if($("#russian-cbox").is(":checked")){
-				languages.push("Russian");
-			}
-			if($("#chinese-cbox").is(":checked")){
-				languages.push("Chinese");
-			}
-
+		if (pageIndex == 5) {
+			var languages = $.map($("input[name='languages']:checked"), function(item){
+				return $(item).val()
+			})
 			var languages_as_str = languages.join(", ")
 			$('#language-review').text(languages_as_str)
 		}
 
 		// Validate user certified health and safety protocl
-		if (pageIndex == 5) {
+		if (pageIndex == 6) {
 			if (!$("#certify-health-safety-protocol-cbox").is(":checked")) {
 				$("#health-safety-warning").show()
 				return;
@@ -99,9 +123,12 @@ $(document).ready(function() {
 		$('body').trigger("pageEvent", pageIndex + 1)
 	})
 
+
 	$(".back-button").click(function(){
+		console.log(pageIndex)
 		if (pageIndex == 0) {
 			// send to landing page
+			window.location.pathname = '/';
 		} else {
 			$('body').trigger("pageEvent", pageIndex - 1)
 		}
@@ -110,6 +137,7 @@ $(document).ready(function() {
 	// If all name input fields are full on blur/defocus, automatically progress
 	$('#name-page').find(".text-input").blur(function(e){
 		if ($('#firstname-input').val().length > 0 && $('#lastname-input').val().length > 0){
+
 			// Set review field to user input
 			$('#firstname-review').text($('#firstname-input').val());
 			$('#lastname-review').text($('#lastname-input').val());
@@ -131,11 +159,15 @@ $(document).ready(function() {
 		if (phone.length==10) {
 			// Set review field to user input
 			$('#phone-review').text(phone);
-			$('body').trigger("pageEvent", pageIndex + 1)
+			$('body').trigger("pageEvent", pageIndex + 1);
 		} else {
-			// display a warning message
+			$("#phone-warning").show();
 		}
-	})
+	});
+
+	$('#address-input').blur(function(e){
+		google.maps.event.trigger(autocomplete, 'place_changed');
+	});
 
 	// Submit volunteer form
 	$(".finish-set-up").click(function(event){
@@ -154,7 +186,9 @@ $(document).ready(function() {
             	"mobile_number": $("#phone-review").text(),
             	"frequency": $("#frequency-review").text(),
             	"transportation": $("#transportation-review").text(),
-            	"language": $("#language-review").text()
+            	"language": $("#language-review").text(),
+            	"lat": $("address-input").attr("lat"),
+            	"lon": $("#address-input").attr("lon")
             },
             success: function(response){
             	console.log(response);
