@@ -17,7 +17,7 @@ $(document).ready(function() {
 
        		// Hide affirmative and acknowledge
        		$('.acknowledge').css('display', 'none')
-    		$('.affirmative').css('display','none')
+       		$('.affirmative').css('display','none')
        	}
     });
 
