@@ -9,29 +9,53 @@ $(document).ready(function() {
 		// If all requirements are checked
     	if ($('.req-input:checked').length == $('.req-input').length) {
 
-    		// Show affirmative
-       		$('.affirmative').css('display','flex')
+    		// Show acknowledge
+       		$('.acknowledge').css('display','flex')
+       		$('.acknowledge').focus()
+       	}
+       	else {
+
+       		// Hide affirmative and acknowledge
+       		$('.acknowledge').css('display', 'none')
+       		$('.affirmative').css('display','none')
+       	}
+    });
+
+    $(".acknowledge-input").change(function(){
+    	if ($('.acknowledge-input:checked')) {
+
+    		// show affirmative
+    		$('.affirmative').css('display','flex')
        		$('.affirmative').focus()
 
        		window.setTimeout(function(){
-       			// Change page displayed
-	       		$('#reqs-page').css('display', 'none')
-	       		$('#email-page').css('display', 'block')
+   			// Change page displayed
+       		$('#reqs-page').css('display', 'none')
+       		$('#email-page').css('display', 'block')
 
-	       		// Activate back button
-	       		$('#back-button').removeClass('disabled')
-	       		$('#back-button').children().addBack().click(function(){
-	       			$('#email-page').css('display', 'none')
-	       			$('#reqs-page').css('display', 'block')
-	       			$('#back-button').addClass('disabled')
-	       		});
-       		}, 2000)
-    	} 
+       		// Activate back button
+       		$('#back-button').removeClass('disabled')
+       		$('#back-button').children().addBack().click(function(){
+       			$('#email-page').css('display', 'none')
+       			$('#reqs-page').css('display', 'block')
+       			$('#back-button').addClass('disabled')
+       			});
+   			}, 2000)
+    	}
     	else {
-    		// Hide affirmative
+    		// hide affirmative
     		$('.affirmative').css('display','none')
     	}
+    });
 
+    // email validation
+	$('#email-input').blur(function(e){
+		if ($('#email-input').val().indexOf('.edu') >= 0) {
+			// Enable button
+			$('#send-confirmation-email-button').prop('disabled', false);
+		} else {
+			// Show warning
+			$("#email-warning").show();
+		}
 	});
-
 });

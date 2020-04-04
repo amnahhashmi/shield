@@ -89,8 +89,12 @@ def confirm_email(request):
         message = Mail(
             from_email='livelyhood.tech@gmail.com',
             to_emails=current_email,
-            subject='Thank you for signing up with Livelyhood!',
-            html_content='<a href={}>Activation Link</a>'.format(url))
+            subject='Welcome to Livelyhood',
+            html_content='Follow the link to finish activating your account')
+        message.template_id = 'd-b0b0a7af49f24ca38b29c125384abba8'
+        message.dynamic_template_data = {
+            'volunteerURL': url
+        }
         try:
             sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
             response = sg.send(message)
