@@ -146,3 +146,15 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 MEDIA_URL = '/media/'
+
+
+# Celery settings
+
+CELERY_BROKER_URL = os.environ.get('REDIS_URL', '')
+CELERY_BROKER_TRANSPORT_OPTIONS = { 'visibility_timeout': 3600 }
+
+#: Only add pickle to this list if your broker is secured
+#: from unwanted access (see userguide/security.html)
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_RESULT_BACKEND = os.environ.get('REDIS_URL', '')
+CELERY_TASK_SERIALIZER = 'json'
