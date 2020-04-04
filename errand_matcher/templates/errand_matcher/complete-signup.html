@@ -77,8 +77,9 @@
 			{% include "errand_matcher/volunteer-confirm.html" %}
 			<input type="hidden" id="current-email" name="current-email" value={{ current_email }}>
 		</div>
-
+		
 		<div class="page" id="welcome-page">
+			{% include "errand_matcher/welcome.html" %}
 		</div>
 	{% else %}
 	<div class="h5_32 item">

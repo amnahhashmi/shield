@@ -95,6 +95,7 @@ $(document).ready(function() {
 		
 		// Set transportation review to user input
 		if (pageIndex == 3) {
+
 			$('#transportation-review').text($("input[name='transport']:checked").val())
 		}
 
@@ -197,6 +198,8 @@ $(document).ready(function() {
             	console.log(exception);
             }
         })
+        // set welcome field to user name
+        $('#welcome-name').text('Welcome to the team, ' + $('#firstname-review').text());
         $('body').trigger("pageEvent", pageIndex + 1)
 
     })
