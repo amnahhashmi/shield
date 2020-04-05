@@ -174,7 +174,13 @@ $(document).ready(function() {
 	$(".finish-set-up").click(function(event){
 		event.preventDefault();
 		var csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-		var add_volunteer_url = window.location.protocol +'//' + document.domain + ':8000/volunteer';
+		var add_volunteer_url;
+		if (location.port) {
+			 add_volunteer_url = window.location.protocol +'//' + document.domain + ':' + location.port + '/volunteer';
+		} else {
+			add_volunteer_url = window.location.protocol +'//' + document.domain + '/volunteer';
+		}
+
 		// make POST ajax call
         $.ajax({
             type: 'POST',
