@@ -26,18 +26,6 @@
 	color: #000000;
 }
 
-.main-text-bold {
-	position:static;
-
-	font-family: Work Sans;
-	font-style: normal;
-	font-weight: bold;
-	font-size: 23px;
-	line-height: 150%;
-
-	color: #000000;
-}
-
 .step-box {
 	padding:24px;
 	width: 180px;
@@ -110,4 +98,14 @@ img.collapsible-image {
 	height: 24px;
 
 	transition: transform .25s ease-out;
+}
+
+@media only screen and (max-width: 800px) {
+	.main-heading {
+	    font-size: 32px;
+    }
+
+    .main-text {
+	    font-size: 20px;
+    }
 }

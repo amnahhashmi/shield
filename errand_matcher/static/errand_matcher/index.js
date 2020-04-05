@@ -2,6 +2,15 @@
 
 $(document).ready(function() {
 
+	$('.icon').click(function(){
+        var topnav = document.getElementById("topnav");
+        if (topnav.className === "topnav") {
+          topnav.className += " responsive";
+        } else {
+          topnav.className = "topnav";
+        }
+    });
+
 	$('.top-link').click(function(){
 		window.location.replace("#top");
 	})
@@ -12,11 +21,22 @@ $(document).ready(function() {
 
 	$('.faq-link').click(function(){
 		window.location.replace("#above-faq");
+		collapseTopNav();
 	})
 
 	$('.about-link').click(function(){
 		window.location.replace("#above-about");
+		collapseTopNav();
 	})
+
+	function collapseTopNav() {
+		var topnav = document.getElementById("topnav");
+        if (topnav.className === "topnav") {
+          return;
+        } else {
+          topnav.className = "topnav";
+        }
+	}
 
 	$('.volunteer-button').click(function(){
 		window.location.href = "volunteer";
