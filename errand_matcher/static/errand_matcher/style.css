@@ -132,13 +132,19 @@
 	position: static;
 	padding:24px;
 	width: 272px;
+	margin-top: 12px;
+	margin-right: 24px;
 
 	background: #000000;
 	border-radius: 8px;
 }
 
+.button-box[disabled] {
+	background: #EAEAEA;
+}
+
 /* TODO: check hover behavior with UX */
-.button-box:hover {
+.button-box:hover:not([disabled]) {
 	background: #202124;
 	cursor: pointer;
 }
@@ -161,6 +167,10 @@
 	color: #FFFFFF;
 }
 
+.button-title[disabled] {
+	color: #000000;
+}
+
 .button-text {
 	position: static;
 	padding: 0px;
@@ -176,6 +186,10 @@
 	line-height: 150%;
 
 	color: #FFFFFF;
+}
+
+.button-text[disabled] {
+	color: #000000;
 }
 
 @media only screen and (max-width: 800px) {
