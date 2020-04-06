@@ -194,7 +194,7 @@ $(document).ready(function() {
             	"frequency": $("#frequency-review").text(),
             	"transportation": $("#transportation-review").text(),
             	"language": $("#language-review").text(),
-            	"lat": $("address-input").attr("lat"),
+            	"lat": $("#address-input").attr("lat"),
             	"lon": $("#address-input").attr("lon")
             },
             success: function(response){
