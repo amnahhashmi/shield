@@ -18,12 +18,12 @@
 	<title>Complete sign-up</title>
 
     <!-- CUSTOM STYLESHEETS -->
-    <link href="{% static 'errand_matcher/style.css' %}" rel="stylesheet"/>
-    <link href="{% static 'errand_matcher/begin-signup.css' %}" rel="stylesheet"/>
-    <link href="{% static 'errand_matcher/complete-signup.css' %}" rel="stylesheet"/>
+    <link href="{% static 'css/style.css' %}" rel="stylesheet"/>
+    <link href="{% static 'css/begin-signup.css' %}" rel="stylesheet"/>
+    <link href="{% static 'css/complete-signup.css' %}" rel="stylesheet"/>
 
     <!-- PAGE SOURCE -->
-    <script src="{% static 'errand_matcher/complete-signup.js' %}"></script>
+    <script src="{% static 'js/complete-signup.js' %}"></script>
     
 </head>
 <body>
@@ -32,7 +32,7 @@
 		{% csrf_token %}
 
 		<div class="nav-bar">
-				<img src="{% static 'errand_matcher/icons/backarrow.svg' %}" alt="back button" height="24px" width="24px" id="back-button" class="nav-item back-button">
+				<img src="{% static 'icons/backarrow.svg' %}" alt="back button" height="24px" width="24px" id="back-button" class="nav-item back-button">
 				</img>
 				<svg id="progress-bar" class="nav-item" width="224" height="24" viewBox="0 0 224 12" fill="none" xmlns="http://www.w3.org/2000/svg">
 						<linearGradient id="g">
