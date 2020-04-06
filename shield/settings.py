@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 import dj_database_url
+import django_heroku
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -138,6 +139,7 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'errand_matcher/static'),
 )
 
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Celery settings
 
@@ -149,3 +151,5 @@ CELERY_BROKER_TRANSPORT_OPTIONS = { 'visibility_timeout': 3600 }
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_RESULT_BACKEND = os.environ.get('REDIS_URL', '')
 CELERY_TASK_SERIALIZER = 'json'
+
+django_heroku.settings(locals())
