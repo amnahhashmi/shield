@@ -95,8 +95,11 @@ $(document).ready(function() {
 		
 		// Set transportation review to user input
 		if (pageIndex == 3) {
-
-			$('#transportation-review').text($("input[name='transport']:checked").val())
+			var transportations = $.map($("input[name='transport']:checked"), function(item){
+				return $(item).val()
+			})
+			var transportation_as_str = transportations.join(", ")
+			$('#transportation-review').text(transportation_as_str)
 		}
 
 		// Set frequencyreview to user input
