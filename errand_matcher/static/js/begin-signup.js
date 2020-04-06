@@ -48,14 +48,15 @@ $(document).ready(function() {
     	}
     });
 
-    // email validation
-	$('#email-input').blur(function(e){
-		if ($('#email-input').val().indexOf('.edu') >= 0) {
-			// Enable button
-			$('#send-confirmation-email-button').prop('disabled', false);
-		} else {
-			// Show warning
-			$("#email-warning").show();
-		}
-	});
+    // email validation - AH 4.06.2020 remove and deal with criminal 
+    // background in matching
+	// $('#email-input').blur(function(e){
+	// 	if ($('#email-input').val().indexOf('.edu') >= 0) {
+	// 		// Enable button
+	// 		$('#send-confirmation-email-button').prop('disabled', false);
+	// 	} else {
+	// 		// Show warning
+	// 		$("#email-warning").show();
+	// 	}
+	// });
 });
