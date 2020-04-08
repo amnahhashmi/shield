@@ -18,10 +18,4 @@ class Migration(migrations.Migration):
                 ('active', models.BooleanField(default=True)),
             ],
         ),
-        migrations.CreateModel(
-            name='Requestor',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-            ],
-        ),
     ]
