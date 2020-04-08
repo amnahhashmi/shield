@@ -50,9 +50,9 @@ class Requestor(models.Model):
     first_name = models.CharField(max_length=30, default='')
     last_name = models.CharField(max_length=30, default='')
     mobile_number = PhoneNumberField(default='555-555-5555')
-    lon = models.FloatField()
-    lat = models.FloatField()
-    contact_preference = models.PositiveSmallIntegerField(choices=CONTACT_PREFERENCE_CHOICES)
+    lon = models.FloatField(null=True)
+    lat = models.FloatField(null=True)
+    contact_preference = models.PositiveSmallIntegerField(choices=CONTACT_PREFERENCE_CHOICES, default=1)
 
 class Errand(models.Model):
     STATUS_CHOICES = (
