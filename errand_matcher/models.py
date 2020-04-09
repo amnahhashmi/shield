@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 import uuid
+from datetime import date
 
 class User(AbstractUser):
     USER_TYPE_CHOICES = (
@@ -47,7 +48,7 @@ class Requestor(models.Model):
     )
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    mobile_number = PhoneNumberField(default='555-555-5555')
+    mobile_number = PhoneNumberField()
     date_of_birth = models.DateField()
     lon = models.FloatField()
     lat = models.FloatField()
