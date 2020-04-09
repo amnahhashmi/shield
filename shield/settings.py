@@ -154,7 +154,7 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_BEAT_SCHEDULE = {
  'match-errands-every-five-minutes': {
        'task': 'errand_matcher.tasks.match_errands',
-       'schedule': 5.0,
+       'schedule': 60.0,
        'args': (),
     },
 }
