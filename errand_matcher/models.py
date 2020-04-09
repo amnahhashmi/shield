@@ -67,7 +67,7 @@ class Errand(models.Model):
     urgency = models.PositiveSmallIntegerField(choices=URGENCY_CHOICES)
     requestor = models.ForeignKey(Requestor, on_delete=models.CASCADE)
     claimed_volunteer = models.ForeignKey(Volunteer, on_delete=models.CASCADE, related_name='claimed_volunteer', blank=True, null=True)
-    contacted_volunteers = models.ManyToManyField(Volunteer, related_name='contacted_volunteers')
-    requestor_review = models.PositiveSmallIntegerField(choices=REVIEW_CHOICES)
-    volunteer_review = models.PositiveSmallIntegerField(choices=REVIEW_CHOICES)
+    contacted_volunteers = models.ManyToManyField(Volunteer, related_name='contacted_volunteers', blank=True)
+    requestor_review = models.PositiveSmallIntegerField(choices=REVIEW_CHOICES, blank=True, null=True)
+    volunteer_review = models.PositiveSmallIntegerField(choices=REVIEW_CHOICES, blank=True, null=True)
 
