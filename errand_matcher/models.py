@@ -41,7 +41,18 @@ class ConfirmationToken(models.Model):
     email = models.EmailField(default='livelyhood.tech@gmail.com')
 
 class Requestor(models.Model):
-    pass
+    CONTACT_PREFERENCE_CHOICES = (
+        (1, 'sms'),
+        (2, 'call')
+    )
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    mobile_number = PhoneNumberField()
+    date_of_birth = models.DateField()
+    lon = models.FloatField()
+    lat = models.FloatField()
+
+    contact_preference = models.PositiveSmallIntegerField(choices=CONTACT_PREFERENCE_CHOICES, default=1)
 
 class Errand(models.Model):
     STATUS_CHOICES = (
