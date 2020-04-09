@@ -25,9 +25,9 @@ function geolocate() {
 
 // // Initialize the Google Maps API autocomplete widget for address entry.
 function initAutocomplete() {
-  // Create the autocomplete object, restricting the search predictions to
-  // geographical location types.
 
+	// Create the autocomplete object, restricting the search predictions to
+	// geographical location types.
 	autocomplete = new google.maps.places.Autocomplete(
 		document.getElementById('address-input'), {types: ['geocode']});
 
@@ -58,11 +58,23 @@ function initAutocomplete() {
 			$("#address-input").attr("lat",place.geometry.location.lat())
 			$("#address-input").attr("lon",place.geometry.location.lng())
 
-			$("#address-review").text($("#address-input").val()+" "+address['postal_code'])
+			$("#address-review").text($("#address-input").val());
 			$('body').trigger('pageEvent', pageIndex + 1)
 
 		}
-	})
+	});
+
+	// This prevents chrome's address autocomplete feature from interfering with the maps widget.
+	var observer = new MutationObserver(function() {
+        observer.disconnect();
+        $("#address-input").attr("autocomplete", "chrome-off");
+    });
+
+    observer.observe($("#address-input").get(0), {
+        attributes: true,
+        attributeFilter: ['autocomplete']
+    });
+
 }
 
 $(document).ready(function() {
@@ -175,7 +187,7 @@ $(document).ready(function() {
 	})
 
 	$("#redo-button").click(function(){
-		window.location.pathname = "/request";
+		window.location.pathname = "/enroll";
 	});
 
 	// If all name input fields are full on blur/defocus, automatically progress
@@ -199,12 +211,13 @@ $(document).ready(function() {
 	// Submit volunteer form
 	$("#submit-button").click(function(event){
 
+		csrftoken = $('[name=csrfmiddlewaretoken]').val();
 
 		// make POST ajax call
         $.ajax({
             type: 'POST',
             headers: {'X-CSRFToken': csrftoken},
-            url: "/",
+            url: "/enroll",
             data: {
             	"first_name": $("#firstname-review").text(),
             	"last_name": $("#lastname-review").text(),
@@ -213,10 +226,10 @@ $(document).ready(function() {
             	"contact_preference": $("#contact-review").text(),
             	"lat": $("#address-input").attr("lat"),
             	"lon": $("#address-input").attr("lon"),
-
             },
-            success: function(response){
-            	console.log(response);
+            success: function(welcome_page){
+            	$("html").empty();
+    			$("html").append(welcome_page);
             },
             error: function(jqHXR, exception){
             	console.log(exception);
@@ -227,4 +240,4 @@ $(document).ready(function() {
 	// display first page
 	$("body").trigger("pageEvent",0)
 
-});
+})
