@@ -43,3 +43,31 @@ class ConfirmationToken(models.Model):
 class Requestor(models.Model):
     pass
 
+class Errand(models.Model):
+    STATUS_CHOICES = (
+        (1, 'open'),
+        (2, 'in progress'),
+        (3, 'complete'),
+        (4, 'failed')
+    )
+
+    URGENCY_CHOICES = (
+        (1, 'less than 24 hours'),
+        (2, 'within 3 days')
+    )
+
+    REVIEW_CHOICES = (
+        (1, 'positive'),
+        (2, 'negative')
+    )
+
+    requested_time = models.DateTimeField()
+    claimed_time = models.DateTimeField(blank=True, null=True)
+    status = models.PositiveSmallIntegerField(choices=STATUS_CHOICES)
+    urgency = models.PositiveSmallIntegerField(choices=URGENCY_CHOICES)
+    requestor = models.ForeignKey(Requestor, on_delete=models.CASCADE)
+    claimed_volunteer = models.ForeignKey(Volunteer, on_delete=models.CASCADE, related_name='claimed_volunteer', blank=True, null=True)
+    contacted_volunteers = models.ManyToManyField(Volunteer, related_name='contacted_volunteers', blank=True)
+    requestor_review = models.PositiveSmallIntegerField(choices=REVIEW_CHOICES, blank=True, null=True)
+    volunteer_review = models.PositiveSmallIntegerField(choices=REVIEW_CHOICES, blank=True, null=True)
+
