@@ -7,16 +7,16 @@
 	<!-- import jQuery -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
-	<title>Shield</title>
+	<title>LivelyHood</title>
 	<link href="https://fonts.googleapis.com/css?family=Playfair+Display" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css?family=Work+Sans&display=swap" rel="stylesheet">
 
 	<!-- CUSTOM STYLESHEETS -->
-    <link href="{% static 'errand_matcher/style.css' %}" rel="stylesheet"/>
-    <link href="{% static 'errand_matcher/index.css' %}" rel="stylesheet"/>
+    <link href="{% static 'css/style.css' %}" rel="stylesheet"/>
+    <link href="{% static 'css/index.css' %}" rel="stylesheet"/>
 
 	<!-- PAGE SOURCE -->
-    <script src="{% static 'errand_matcher/index.js' %}"></script>
+    <script src="{% static 'js/index.js' %}"></script>
 </head>
 
 <body>
@@ -34,10 +34,17 @@
 
 		<p class="main-text">Safe deliveries for the most at-risk community members facing COVID-19.<br><br><b>Currently in the Boston area.</b></p>
 
-		<div class="button-box button volunteer-button">
-			<p class="button-title">Be a volunteer</p>
-			<p class="button-text">Help protect the most vulnerable in your community</p>
-		</div>
+        <div class="horizontal-container">
+		    <div class="button-box button volunteer-button">
+			    <p class="button-title">Be a volunteer</p>
+			    <p class="button-text">Help protect the most vulnerable in your community</p>
+		    </div>
+
+		    <div class="button-box" disabled>
+			    <p class="button-title" disabled>Request a delivery</p>
+			    <p class="button-text" disabled>Coming soon</p>
+		    </div>
+	    </div>
 
 		<h4 class="h4-heading">How it works</h4>
 
@@ -65,7 +72,7 @@
 	    <div class="collapsible-container">
 		    <div class="collapsible">
 		    	<!-- TODO: Use SVG instead of PNG. -->
-		  	    <img src="{% static 'errand_matcher/icons/expand_more_24px.png' %}" class="collapsible-image">
+		  	    <img src="{% static 'css/icons/expand_more_24px.png' %}" class="collapsible-image">
 		  	    <p class="title-text">How do I coordinate the delivery with the requester?</p>
 		    </div>
 		    <div class="collapsible-content">
@@ -74,7 +81,7 @@
 	    </div>
 	    <div class="collapsible-container">
 	    	<div class="collapsible">
-		  	    <img src="{% static 'errand_matcher/icons/expand_more_24px.png' %}" class="collapsible-image">
+		  	    <img src="{% static 'css/icons/expand_more_24px.png' %}" class="collapsible-image">
 		  	    <p class="title-text">How much time do I have to commit?</p>
 		    </div>
 		    <div class="collapsible-content">
@@ -83,7 +90,7 @@
 		</div>
 		<div class="collapsible-container">
 			<div class="collapsible">
-		  	    <img src="{% static 'errand_matcher/icons/expand_more_24px.png' %}" class="collapsible-image">
+		  	    <img src="{% static 'css/icons/expand_more_24px.png' %}" class="collapsible-image">
 		  	    <p class="title-text">What if I can’t complete my assigned task or the items requested are out of stock?</p>
 		    </div>
 		    <div class="collapsible-content">
@@ -92,7 +99,7 @@
 		</div>
 		<div class="collapsible-container">
 			<div class="collapsible">
-		  	    <img src="{% static 'errand_matcher/icons/expand_more_24px.png' %}" class="collapsible-image">
+		  	    <img src="{% static 'css/icons/expand_more_24px.png' %}" class="collapsible-image">
 		  	    <p class="title-text">Do I need a car to volunteer?</p>
 		    </div>
 		    <div class="collapsible-content">
@@ -101,7 +108,7 @@
 		</div>
 		<div class="collapsible-container">
 			<div class="collapsible">
-		  	    <img src="{% static 'errand_matcher/icons/expand_more_24px.png' %}" class="collapsible-image">
+		  	    <img src="{% static 'css/icons/expand_more_24px.png' %}" class="collapsible-image">
 		  	    <p class="title-text">How will I receive the money I used to pay for groceries? </p>
 		    </div>
 		    <div class="collapsible-content">
@@ -113,7 +120,7 @@
 
         <div class="collapsible-container">
 			<div class="collapsible">
-		  	    <img src="{% static 'errand_matcher/icons/expand_more_24px.png' %}" class="collapsible-image">
+		  	    <img src="{% static 'css/icons/expand_more_24px.png' %}" class="collapsible-image">
 		  	    <p class="title-text">How do I submit a request?</p>
 		    </div>
 		    <div class="collapsible-content">
@@ -122,7 +129,7 @@
 		</div>
 		<div class="collapsible-container">
 			<div class="collapsible">
-		  	    <img src="{% static 'errand_matcher/icons/expand_more_24px.png' %}" class="collapsible-image">
+		  	    <img src="{% static 'css/icons/expand_more_24px.png' %}" class="collapsible-image">
 		  	    <p class="title-text">How do I know if I’m eligible for this service?</p>
 		    </div>
 		    <div class="collapsible-content">
@@ -131,7 +138,7 @@
 		</div>
 		<div class="collapsible-container">
 			<div class="collapsible">
-		  	    <img src="{% static 'errand_matcher/icons/expand_more_24px.png' %}" class="collapsible-image">
+		  	    <img src="{% static 'css/icons/expand_more_24px.png' %}" class="collapsible-image">
 		  	    <p class="title-text">Is this free?</p>
 		    </div>
 		    <div class="collapsible-content">
@@ -140,7 +147,7 @@
 		</div>
 		<div class="collapsible-container">
 			<div class="collapsible">
-		  	    <img src="{% static 'errand_matcher/icons/expand_more_24px.png' %}" class="collapsible-image">
+		  	    <img src="{% static 'css/icons/expand_more_24px.png' %}" class="collapsible-image">
 		  	    <p class="title-text">How do I know the items I request don’t carry coronavirus?</p>
 		    </div>
 		    <div class="collapsible-content">
@@ -149,7 +156,7 @@
 		</div>
 		<div class="collapsible-container">
 			<div class="collapsible">
-		  	    <img src="{% static 'errand_matcher/icons/expand_more_24px.png' %}" class="collapsible-image">
+		  	    <img src="{% static 'css/icons/expand_more_24px.png' %}" class="collapsible-image">
 		  	    <p class="title-text">What if I’m not in Boston?</p>
 		    </div>
 		    <div class="collapsible-content">
@@ -158,7 +165,7 @@
 		</div>
 		<div class="collapsible-container">
 			<div class="collapsible">
-		  	    <img src="{% static 'errand_matcher/icons/expand_more_24px.png' %}" class="collapsible-image">
+		  	    <img src="{% static 'css/icons/expand_more_24px.png' %}" class="collapsible-image">
 		  	    <p class="title-text">Can you run other errands for me? (e.g. dog walking, bank visits)</p>
 		    </div>
 		    <div class="collapsible-content">

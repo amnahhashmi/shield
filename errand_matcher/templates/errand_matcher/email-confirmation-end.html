@@ -15,14 +15,14 @@
 		<title>Livelyhood - Volunteer</title>
 
         <!-- CUSTOM STYLESHEETS -->
-        <link href="{% static 'errand_matcher/style.css' %}" rel="stylesheet"/>
-        <link href="{% static 'errand_matcher/begin-signup.css' %}" rel="stylesheet"/>
-        <link href="{% static 'errand_matcher/email-confirmation.css' %}" rel="stylesheet"/>
+        <link href="{% static 'css/style.css' %}" rel="stylesheet"/>
+        <link href="{% static 'css/begin-signup.css' %}" rel="stylesheet"/>
+        <link href="{% static 'css/email-confirmation.css' %}" rel="stylesheet"/>
 	</head>
 	<body>
 		<div class="nav-bar">
 			<a href='#' id="back-button" class="nav-button">
-				<img src="{% static 'errand_matcher/icons/backarrow.svg' %}" alt="back button" height="24px" width="24px">
+				<img src="{% static 'css/icons/backarrow.svg' %}" alt="back button" height="24px" width="24px">
 				</img>
 			</a>
 		</div>
@@ -30,7 +30,7 @@
 		Got it!
 	</div>
 	<div class="body_16_fontonly subhead item">
-		Please check your email and follow the confirmation link to finish setup.
+		Please check your email and follow the confirmation link to finish setup. If you do not see the email in a few minutes, please check your spam or junk folder.
 	</div>
 
 	<form class="email-form" action="confirmation" method="post">

@@ -95,8 +95,11 @@ $(document).ready(function() {
 		
 		// Set transportation review to user input
 		if (pageIndex == 3) {
-
-			$('#transportation-review').text($("input[name='transport']:checked").val())
+			var transportations = $.map($("input[name='transport']:checked"), function(item){
+				return $(item).val()
+			})
+			var transportation_as_str = transportations.join(", ")
+			$('#transportation-review').text(transportation_as_str)
 		}
 
 		// Set frequencyreview to user input
@@ -174,7 +177,13 @@ $(document).ready(function() {
 	$(".finish-set-up").click(function(event){
 		event.preventDefault();
 		var csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-		var add_volunteer_url = window.location.protocol +'//' + document.domain + ':8000/volunteer';
+		var add_volunteer_url;
+		if (location.port) {
+			 add_volunteer_url = window.location.protocol +'//' + document.domain + ':' + location.port + '/volunteer';
+		} else {
+			add_volunteer_url = window.location.protocol +'//' + document.domain + '/volunteer';
+		}
+
 		// make POST ajax call
         $.ajax({
             type: 'POST',
@@ -188,7 +197,7 @@ $(document).ready(function() {
             	"frequency": $("#frequency-review").text(),
             	"transportation": $("#transportation-review").text(),
             	"language": $("#language-review").text(),
-            	"lat": $("address-input").attr("lat"),
+            	"lat": $("#address-input").attr("lat"),
             	"lon": $("#address-input").attr("lon")
             },
             success: function(response){

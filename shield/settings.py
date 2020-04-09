@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 import dj_database_url
+import django_heroku
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -24,15 +25,17 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+if os.environ.get('LOCAL'):
+    DEBUG = True
+    SECURE_SSL_REDIRECT = False
+else:
+    DEBUG = False
+    SECURE_SSL_REDIRECT = True
 
-ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1', 'shieldcovid.herokuapp.com']
+ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1', 'shieldcovid.herokuapp.com', 'www.livelyhood.io']
 
 CSRF_USE_SESSIONS = True
-CSRF_COOKIE_SECURE = True
-# SECURE_SSL_REDIRECT = False
-# SESSION_COOKIE_SECURE = True
-
+SESSION_COOKIE_SECURE = True
 
 # Application definition
 
@@ -45,19 +48,17 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'errand_matcher',
     'phonenumber_field',
-    'whitenoise.runserver_nostatic',
-    # 'address'
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware'
 ]
 
 ROOT_URLCONF = 'shield.urls'
@@ -133,24 +134,18 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.0/howto/static-files/
-
-#location where django collect all static files
-STATIC_ROOT = os.path.join(BASE_DIR,'static')
-
+# https://docs.djangoproject.com/en/1.9/howto/static-files/
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 
-# location where you will store your static files
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'shield/static')]
+# Extra places for collectstatic to find static files.
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'errand_matcher/static'),
+)
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-MEDIA_ROOT = os.path.join(BASE_DIR,'media')
-MEDIA_URL = '/media/'
-
-
 # Celery settings
-
 CELERY_BROKER_URL = os.environ.get('REDIS_URL', '')
 CELERY_BROKER_TRANSPORT_OPTIONS = { 'visibility_timeout': 3600 }
 
@@ -159,3 +154,5 @@ CELERY_BROKER_TRANSPORT_OPTIONS = { 'visibility_timeout': 3600 }
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_RESULT_BACKEND = os.environ.get('REDIS_URL', '')
 CELERY_TASK_SERIALIZER = 'json'
+
+django_heroku.settings(locals())
