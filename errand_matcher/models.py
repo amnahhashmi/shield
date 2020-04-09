@@ -2,7 +2,6 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 import uuid
-from datetime import date
 
 class User(AbstractUser):
     USER_TYPE_CHOICES = (
