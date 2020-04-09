@@ -121,6 +121,8 @@ def activate(request, token_id):
             token_state = 'Expired'
     return render(request, 'errand_matcher/complete-signup.html', {'token_state': token_state, 'email': token.email})
 
+def requestor_signup(request):
+    return render(request, 'errand_matcher/requestor-signup.html')
 
 def matchable_volunteers(request, requestor_id):
     pass

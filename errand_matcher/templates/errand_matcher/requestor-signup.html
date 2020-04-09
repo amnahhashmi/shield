@@ -1,0 +1,76 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+	<!-- import fonts -->
+	<link href="https://fonts.googleapis.com/css?family=Work+Sans&display=swap" rel="stylesheet">
+
+	<!-- import jQuery -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+	<!-- import Google Maps JavaScript API -->
+	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAfDYFaz06jElLS5CqxsNLq7WVxWIjt9BA&libraries=places&callback=initAutocomplete" defer></script>
+
+	<title>LivelyHood Requestor Sign-Up</title>
+
+    <!-- CUSTOM STYLESHEETS -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet"/>
+    <link href="{% static 'css/requestor-signup.css' %}" rel="stylesheet"/>
+
+    <!-- PAGE SOURCE -->
+    <script src="{% static 'js/requestor-signup.js' %}"></script>
+    
+</head>
+<body>
+
+	<div class="nav-bar">
+			<img src="{% static 'css/icons/backarrow.svg' %}" alt="back button" height="24px" width="24px" id="back-button" class="nav-item back-button">
+			</img>
+			<svg id="progress-bar" class="nav-item" width="224" height="24" viewBox="0 0 224 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<linearGradient id="g">
+						<stop offset="0" stop-color="#848484"/>
+						<stop offset=".4" stop-color="#848484"/>
+						<stop offset=".4" stop-color="#EBEBEB"/>
+						<stop offset="1" stop-color="#EBEBEB"/>
+					</linearGradient> 
+					<rect width="224" height="12" rx="6" fill="url(#g)"/>
+			</svg>
+	</div>
+
+	<div class="page" id="name-page">
+		{% include "errand_matcher/requestor-requirements.html" %}
+	</div>
+
+	<div class="page" id="name-page">
+		{% include "errand_matcher/requestor-name.html" %}
+	</div>
+
+	<div class="page" id="dob-page">
+		{% include "errand_matcher/requestor-dob.html" %}
+	</div>
+
+	<div class="page" id="address-page">
+		{% include "errand_matcher/requestor-address.html" %}
+	</div>
+
+	<div class="page" id="contact-page">
+		{% include "errand_matcher/requestor-contact.html" %}
+	</div>
+
+	<div class="page" id="phone-page">
+		{% include "errand_matcher/requestor-phone.html" %}
+	</div>
+
+	<div class="page" id="confirm-page">
+		
+	</div>
+	
+	<!-- <div class="page" id="welcome-page">
+		{% include "errand_matcher/welcome.html" %}
+	</div> -->
+</body>
+</html>
