@@ -340,7 +340,7 @@ todo: radio example
 	border: 2px solid #000000;
 }
 
-.button {
+.inline-button-box {
 	display: flex;
 	flex-direction: column;
 	padding: 10px;
@@ -355,6 +355,16 @@ todo: radio example
     width: auto;
 }
 
+.inline-button-box:hover:not([disabled]) {
+	filter: brightness(90%);
+	cursor: pointer;
+}
+
+.option-box:hover:not([disabled]) {
+	filter: brightness(90%);
+	cursor: pointer;
+}
+
 @media screen and (min-width: 576px){
 	.text-input{
 		width: 540px;
@@ -364,8 +374,8 @@ todo: radio example
 		width: 540px;
 	}
 
-	.button{
-		width: 520px;
+	.inline-button-box{
+		width: 540px;
 	}
 }
 
