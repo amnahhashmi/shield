@@ -122,7 +122,7 @@ def activate(request, token_id):
     return render(request, 'errand_matcher/complete-signup.html', {'token_state': token_state, 'email': token.email})
 
 def requestor_signup(request):
-    return render(request, 'errand_matcher/requestor-signup.html')
+    return render(request, 'errand_matcher/requestor-signup.html', {'GMAPS_API_KEY': os.environ.get('GMAPS_API_KEY')})
 
 def matchable_volunteers(request, requestor_id):
     pass
