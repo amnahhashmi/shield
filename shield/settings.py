@@ -25,12 +25,16 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+if os.environ.get('LOCAL'):
+    DEBUG = True
+    SECURE_SSL_REDIRECT = False
+else:
+    DEBUG = False
+    SECURE_SSL_REDIRECT = True
 
 ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1', 'shieldcovid.herokuapp.com', 'www.livelyhood.io']
 
 CSRF_USE_SESSIONS = True
-SECURE_SSL_REDIRECT = True
 SESSION_COOKIE_SECURE = True
 
 # Application definition
@@ -142,7 +146,6 @@ STATICFILES_DIRS = (
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Celery settings
-
 CELERY_BROKER_URL = os.environ.get('REDIS_URL', '')
 CELERY_BROKER_TRANSPORT_OPTIONS = { 'visibility_timeout': 3600 }
 
