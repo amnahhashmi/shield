@@ -24,10 +24,8 @@
 	</head>
 	<body>
 		<div class="nav-bar">
-			<a href='#' id="back-button" class="nav-button disabled">
-				<img src="{% static 'css/icons/backarrow.svg' %}" alt="back button" height="24px" width="24px">
-				</img>
-			</a>
+			<img src="{% static 'css/icons/backarrow.svg' %}" alt="back button" height="24px" width="24px" id="back-button" class="nav-item back-button">
+			</img>
 		</div>
 		<div class="page" id="reqs-page">
 			{% include "errand_matcher/requirements.html" %}
