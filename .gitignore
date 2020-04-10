@@ -12,4 +12,4 @@ env/
 .env
 loadEnv.sh
 sendgrid.env
-
+celerybeat*
