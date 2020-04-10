@@ -155,9 +155,14 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_RESULT_BACKEND = os.environ.get('REDIS_URL', '')
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_BEAT_SCHEDULE = {
- 'match-errands-every-five-minutes': {
+    'match-errands-every-five-minutes': {
        'task': 'errand_matcher.tasks.match_errands',
        'schedule': 60.0,
+       'args': (),
+    },
+    'send-complete-messages-every-day': {
+       'task': 'errand_matcher.tasks.send_errand_completion_messages',
+       'schedule': 86400.0,
        'args': (),
     },
 }

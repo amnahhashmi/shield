@@ -16,3 +16,7 @@ def count_users():
 def match_errands():
     count = Volunteer.objects.count()
     print(count)
+
+@shared_task
+def send_errand_completion_messages():
+    print('hello')
