@@ -25,6 +25,8 @@ def begin_signup(request):
         frequency = request.POST['frequency']
         language = request.POST.get('language', '')
         transportation = request.POST['transportation']
+        lat = request.POST['lat']
+        lon = request.POST['lon']
 
 
         user = User(username=email, 
@@ -65,8 +67,8 @@ def begin_signup(request):
         volunteer = Volunteer(
             user=user,
             mobile_number=mobile_number,
-            lon=-71.12253,
-            lat=42.36722,
+            lon=lon,
+            lat=lat,
             frequency=freq_no,
             walks=walks,
             has_bike = has_bike,
