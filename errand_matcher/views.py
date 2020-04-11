@@ -5,7 +5,7 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 import os
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
-from errand_matcher.models import ConfirmationToken, User, Volunteer
+from errand_matcher.models import ConfirmationToken, User, Volunteer, Requestor
 
 frequency_choice_lookup = {
     'Anytime': 1,
@@ -13,6 +13,10 @@ frequency_choice_lookup = {
     'Once a week': 3
 }
 
+contact_choice_lookup = {
+    'SMS text': 1,
+    'Phone call': 2
+}
 def index(request):
     return render(request, 'errand_matcher/index.html')
 
@@ -121,8 +125,46 @@ def activate(request, token_id):
             token_state = 'Expired'
     return render(request, 'errand_matcher/complete-signup.html', {'token_state': token_state, 'email': token.email})
 
+@ensure_csrf_cookie
 def requestor_signup(request):
-    return render(request, 'errand_matcher/requestor-signup.html', {'GMAPS_API_KEY': os.environ.get('GMAPS_API_KEY')})
+   
+    if request.method == 'POST':
+        first_name = request.POST['first_name']
+        last_name = request.POST['last_name']
+        mobile_number = request.POST['mobile_number']
+        contact_preference = request.POST['contact_preference']
+        date_of_birth = request.POST['birth_date']
+        lat = request.POST['lat']
+        lon = request.POST['lon']
+
+        print(date_of_birth)
+
+        # SV 4-10-20 : TODO language preference patch
+
+        user = User(username=mobile_number, 
+            first_name=first_name,
+            last_name=last_name,
+            email='',
+            password=make_password(date_of_birth),
+            user_type=2)
+        user.save()
+
+        requestor = Requestor(
+            user=user,
+            mobile_number=mobile_number,
+            date_of_birth=date_of_birth,
+            lon=lon,
+            lat=lat,
+            contact_preference = contact_choice_lookup[contact_preference]
+            )
+        requestor.save()
+
+        return HttpResponse(render(request, 'errand_matcher/requestor-welcome.html', {
+            'requestor': requestor
+            }))
+
+    else:
+        return render(request, 'errand_matcher/requestor-signup.html', {'GMAPS_API_KEY': os.environ.get('GMAPS_API_KEY')})
 
 def matchable_volunteers(request, requestor_id):
     pass

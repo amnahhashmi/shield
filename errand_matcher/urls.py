@@ -9,5 +9,5 @@ urlpatterns = [
     path('confirmation', views.confirm_email, name='confirm_email'),
     path('activate/<uuid:token_id>', views.activate, name='activate'),
     path('health', views.health_and_safety, name='health_and_safety'),
-    path('request', views.requestor_signup, name='request')
+    path('enroll', views.requestor_signup, name='enroll')
 ]

@@ -240,4 +240,4 @@ $(document).ready(function() {
 	// display first page
 	$("body").trigger("pageEvent",0)
 
-})
+}); 
