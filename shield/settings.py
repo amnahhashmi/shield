@@ -25,17 +25,17 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-if os.environ.get('LOCAL'):
-    DEBUG = True
-    SECURE_SSL_REDIRECT = False
-else:
-    DEBUG = False
-    SECURE_SSL_REDIRECT = True
+# if os.environ.get('LOCAL'):
+DEBUG = True
+SECURE_SSL_REDIRECT = False
+# else:
+#     DEBUG = False
+#     SECURE_SSL_REDIRECT = True
 
 ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1', 'shieldcovid.herokuapp.com', 'www.livelyhood.io']
 
 CSRF_USE_SESSIONS = True
-SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = False
 
 # Application definition
 
@@ -155,16 +155,23 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_RESULT_BACKEND = os.environ.get('REDIS_URL', '')
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_BEAT_SCHEDULE = {
-    'match-errands-every-five-minutes': {
-       'task': 'errand_matcher.tasks.match_errands',
+    # 'match-errands-every-five-minutes': {
+    #    'task': 'errand_matcher.tasks.match_errands',
+    #    'schedule': 300.0,
+    #    'args': (),
+    # },
+    'send-complete-messages-every-day': {
+       'task': 'errand_matcher.tasks.send_errand_completion_messages',
        'schedule': 60.0,
        'args': (),
     },
-    'send-complete-messages-every-day': {
-       'task': 'errand_matcher.tasks.send_errand_completion_messages',
-       'schedule': 86400.0,
-       'args': (),
-    },
+}
+
+TWILIO_ACCOUNT_SID = os.getenv('TWILIO_ACCOUNT_SID')
+TWILIO_AUTH_TOKEN = os.getenv('TWILIO_AUTH_TOKEN')
+TWILIO_NUMBER = os.getenv('TWILIO_NUMBER')
+TWILIO_FLOWS = {
+    'Req_Happy_VolDelivered': 'FW554a336fe5d6c246d934a9e77e6dadb6',
 }
 
 django_heroku.settings(locals())

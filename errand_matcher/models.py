@@ -74,6 +74,7 @@ class Errand(models.Model):
 
     requested_time = models.DateTimeField()
     claimed_time = models.DateTimeField(blank=True, null=True)
+    completed_time = models.DateTimeField(blank=True, null=True)
     status = models.PositiveSmallIntegerField(choices=STATUS_CHOICES)
     urgency = models.PositiveSmallIntegerField(choices=URGENCY_CHOICES)
     requestor = models.ForeignKey(Requestor, on_delete=models.CASCADE)
@@ -81,4 +82,4 @@ class Errand(models.Model):
     contacted_volunteers = models.ManyToManyField(Volunteer, related_name='contacted_volunteers', blank=True)
     requestor_review = models.PositiveSmallIntegerField(choices=REVIEW_CHOICES, blank=True, null=True)
     volunteer_review = models.PositiveSmallIntegerField(choices=REVIEW_CHOICES, blank=True, null=True)
-
+    requestor_confirmed = models.BooleanField(null=True)
