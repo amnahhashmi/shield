@@ -574,6 +574,10 @@ todo: radio example
 
 }
 
+.option-button {
+	padding: 24px;
+}
+
 body {
 	margin: 0px;
 }
