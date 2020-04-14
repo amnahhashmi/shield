@@ -38,6 +38,10 @@
 	margin: 128px 220px;
 }
 
+.subflow-contents {
+	margin: 0px 24px;
+}
+
 .h4-heading {
 	position:static;
 	margin-top: 96px;
@@ -585,5 +589,37 @@ body {
 .disabled {
   pointer-events: none;
   cursor: default;
+}
+
+.styled-number {
+    font-family: Work Sans;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 20px;
+    height: 24px;
+    width: 24px;
+    border-radius: 50%;
+    color: #FFFFFF;
+    text-align: center;
+    left: 0;
+    margin-top: 8px;
+    background: #000000;
+}
+
+.numbered-list-item {
+	/* Body 16 */
+	font-family: Work Sans;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 16px;
+	line-height: 150%;
+	/* or 24px */
+
+	color: #000000;
+	width: 80%;
+
+    margin-left: 24px;
+	margin-bottom: 24px;
 }
 

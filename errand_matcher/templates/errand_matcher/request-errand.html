@@ -1,0 +1,36 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+		<!-- import fonts -->
+		<link href="https://fonts.googleapis.com/css?family=Work+Sans&display=swap" rel="stylesheet">
+
+		<!-- import jQuery -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+		<title>LivelyHood - Delivery Request</title>
+
+        <!-- CUSTOM STYLESHEETS -->
+        <link href="{% static 'css/style.css' %}" rel="stylesheet"/>
+
+        <!-- PAGE SOURCE -->
+        <script src="{% static 'js/request-errand.js' %}"></script>
+	</head>
+	<body>
+		<div class="nav-bar">
+			<img src="{% static 'css/icons/backarrow.svg' %}" alt="back button" height="24px" width="24px" id="back-button" class="nav-item back-button">
+			</img>
+		</div>
+		<div class="page" id="urgency-page">
+			{% include "errand_matcher/errand-urgency.html" %}
+		</div>
+
+		<div class="page" id="confirmation-page">
+			{% include "errand_matcher/errand-request-confirmation.html" %}
+		</div>
+	</body>
+</html>
