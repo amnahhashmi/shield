@@ -52,16 +52,16 @@ $(document).ready(function() {
     // background in matching
     // AH 4.16.2020 validate email clientside
 
-  $('#email-input').blur(function(e){
-    var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+  $('#send-confirmation-email-button').click(function(e){
+    var regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
     if (regex.test($('#email-input').val())) {
-      // Hide warning and enable button
+      // Hide warning and submit
       $("#email-warning").hide()
-      $('#send-confirmation-email-button').prop('disabled', false);
+      $('#send-confirmation-email-button').submit()
     } else {
-      // Show warning and disable button
+      // Show warning and prevent submit
       $("#email-warning").show();
-      $('#send-confirmation-email-button').prop('disabled', true);
+      e.preventDefault();
     }
   });
-});
+})
