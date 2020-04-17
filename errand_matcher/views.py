@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseNotAllowed
 from django.contrib.auth.hashers import make_password
 from django.views.decorators.csrf import ensure_csrf_cookie
 import os
@@ -85,24 +85,29 @@ def begin_signup(request):
 def confirm_email(request):
     if request.method == 'POST':
         current_email = request.POST.get('current-email')
-        token = ConfirmationToken(email=current_email)
-        token.save()
-        url = request.META['HTTP_HOST'] + '/activate/' + str(token.id)
-        message = Mail(
-            from_email='livelyhood.tech@gmail.com',
-            to_emails=current_email,
-            subject='Welcome to Livelyhood',
-            html_content='Follow the link to finish activating your account')
-        message.template_id = 'd-b0b0a7af49f24ca38b29c125384abba8'
-        message.dynamic_template_data = {
-            'volunteerURL': url
-        }
-        try:
-            sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
-            response = sg.send(message)
-        except Exception as e:
-            print(e.message)
-    return render(request, 'errand_matcher/email-confirmation-end.html', {'current_email': current_email})
+        # AH 4.16.20: to reduce signup friction, removing activation email
+        # token = ConfirmationToken(email=current_email)
+        # token.save()
+        # url = request.META['HTTP_HOST'] + '/activate/' + str(token.id)
+        # message = Mail(
+        #     from_email='livelyhood.tech@gmail.com',
+        #     to_emails=current_email,
+        #     subject='Welcome to Livelyhood',
+        #     html_content='Follow the link to finish activating your account')
+        # message.template_id = 'd-b0b0a7af49f24ca38b29c125384abba8'
+        # message.dynamic_template_data = {
+        #     'volunteerURL': url
+        # }
+        # try:
+        #     sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
+        #     response = sg.send(message)
+        # except Exception as e:
+        #     print(e.message)
+    # return render(request, 'errand_matcher/email-confirmation-end.html', {'current_email': current_email})
+        return render(request, 'errand_matcher/complete-signup.html',
+         {'token_state': 'Active', 'email': current_email})
+    else:
+        return HttpResponseNotAllowed(('POST',))
 
 @ensure_csrf_cookie
 def activate(request, token_id):

@@ -48,15 +48,20 @@ $(document).ready(function() {
     	}
     });
 
-    // email validation - AH 4.06.2020 remove and deal with criminal 
+    // email validation - AH 4.06.2020 remove and deal with criminal
     // background in matching
-	// $('#email-input').blur(function(e){
-	// 	if ($('#email-input').val().indexOf('.edu') >= 0) {
-	// 		// Enable button
-	// 		$('#send-confirmation-email-button').prop('disabled', false);
-	// 	} else {
-	// 		// Show warning
-	// 		$("#email-warning").show();
-	// 	}
-	// });
+    // AH 4.16.2020 validate email clientside
+
+  $('#email-input').blur(function(e){
+    var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+    if (regex.test($('#email-input').val())) {
+      // Hide warning and enable button
+      $("#email-warning").hide()
+      $('#send-confirmation-email-button').prop('disabled', false);
+    } else {
+      // Show warning and disable button
+      $("#email-warning").show();
+      $('#send-confirmation-email-button').prop('disabled', true);
+    }
+  });
 });
