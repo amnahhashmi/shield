@@ -160,7 +160,8 @@ def requestor_signup(request):
         requestor.save()
 
         return HttpResponse(render(request, 'errand_matcher/requestor-welcome.html', {
-            'requestor': requestor
+            'requestor': requestor,
+            'GMAPS_API_KEY': os.environ.get('GMAPS_API_KEY')
             }))
 
     else:
