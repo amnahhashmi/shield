@@ -187,7 +187,7 @@ $(document).ready(function() {
 	})
 
 	$("#redo-button").click(function(){
-		window.location.pathname = "/enroll";
+		window.location.pathname = "/requestor";
 	});
 
 	// If all name input fields are full on blur/defocus, automatically progress
@@ -217,7 +217,7 @@ $(document).ready(function() {
         $.ajax({
             type: 'POST',
             headers: {'X-CSRFToken': csrftoken},
-            url: "/enroll",
+            url: "/requestor",
             data: {
             	"first_name": $("#firstname-review").text(),
             	"last_name": $("#lastname-review").text(),

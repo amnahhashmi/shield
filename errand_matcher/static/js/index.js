@@ -1,4 +1,4 @@
-// index.js
+// requestor-welcome.js
 
 $(document).ready(function() {
 
@@ -50,6 +50,20 @@ $(document).ready(function() {
 		// SV 4/11/20 : Should be a link to support page once that exists
 		window.location.href = "/#above-about";
 	})
+
+	$('.collapsible').click(function(){
+		this.classList.toggle("active");
+		var image = $(this).find("img");
+		var content = this.nextElementSibling;
+        if (content.style.maxHeight) {
+          content.style.maxHeight = null;
+          image.css('transform','rotate(0deg)');
+        } else {
+          content.style.maxHeight = content.scrollHeight + "px";
+          image.css('transform','rotate(-180deg)');
+        }
+	})
+	
 
 
 });
