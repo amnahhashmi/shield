@@ -211,7 +211,7 @@ $(document).ready(function() {
 	// Submit volunteer form
 	$("#submit-button").click(function(event){
 
-		csrftoken = $('[name=csrfmiddlewaretoken]').val();
+		var csrftoken = $('[name=csrfmiddlewaretoken]').val();
 
 		// make POST ajax call
         $.ajax({
