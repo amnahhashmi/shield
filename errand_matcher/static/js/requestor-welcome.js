@@ -51,19 +51,4 @@ $(document).ready(function() {
 		window.location.href = "/#above-about";
 	})
 
-	$('.collapsible').click(function(){
-		this.classList.toggle("active");
-		var image = $(this).find("img");
-		var content = this.nextElementSibling;
-        if (content.style.maxHeight) {
-          content.style.maxHeight = null;
-          image.css('transform','rotate(0deg)');
-        } else {
-          content.style.maxHeight = content.scrollHeight + "px";
-          image.css('transform','rotate(-180deg)');
-        }
-	})
-	
-
-
 });
