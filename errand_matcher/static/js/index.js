@@ -1,4 +1,4 @@
-// requestor-welcome.js
+// index.js
 
 $(document).ready(function() {
 
@@ -9,23 +9,24 @@ $(document).ready(function() {
         } else {
           topnav.className = "topnav";
         }
-        $(topnav).next().css("margin-top",topnav.scrollHeight);
     });
 
 	$('.top-link').click(function(){
-		window.location.href ="/#top";
+		window.location.replace("#top");
 	})
 
 	$('.health-and-safety-link').click(function(){
-		window.location.href = "/health";
+		window.location.href = "health";
 	})
 
 	$('.faq-link').click(function(){
-		window.location.href = "/#above-faq";
+		window.location.replace("#above-faq");
+		collapseTopNav();
 	})
 
 	$('.about-link').click(function(){
-		window.location.href = "/#above-about";
+		window.location.replace("#above-about");
+		collapseTopNav();
 	})
 
 	function collapseTopNav() {
@@ -37,18 +38,8 @@ $(document).ready(function() {
         }
 	}
 
-	$('#request-button').click(function(){
-		// SV 4/11/20 : Should be a link to request page once that exists
-		// window.location.href = "?";
-	})
-
-	$('#faq-button').click(function(){
-		window.location.href = "/#above-faq";
-	})
-
-	$('#support-button').click(function(){
-		// SV 4/11/20 : Should be a link to support page once that exists
-		window.location.href = "/#above-about";
+	$('.volunteer-button').click(function(){
+		window.location.href = "volunteer";
 	})
 
 	$('.collapsible').click(function(){
@@ -63,7 +54,4 @@ $(document).ready(function() {
           image.css('transform','rotate(-180deg)');
         }
 	})
-	
-
-
 });
