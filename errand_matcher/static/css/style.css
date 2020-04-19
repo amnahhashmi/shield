@@ -371,12 +371,17 @@ todo: radio example
 	}
 
 	.option-box{
-		width: 540px;
+		width: 508px;
 	}
 
 	.inline-button-box{
-		width: 540px;
+		width: 520px;
 	}
+}
+
+.strong-button {
+	background: #000000;
+	color: #FFFFFF;
 }
 
 .conf-item {
@@ -569,11 +574,15 @@ todo: radio example
 
 }
 
+.option-button {
+	padding: 24px;
+}
+
 body {
 	margin: 0px;
 }
 
-a.disabled {
+.disabled {
   pointer-events: none;
   cursor: default;
 }

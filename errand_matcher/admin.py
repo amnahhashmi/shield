@@ -1,5 +1,5 @@
 from django.contrib import admin
-from errand_matcher.models import User, Volunteer, ConfirmationToken
+from errand_matcher.models import User, Volunteer, Requestor, ConfirmationToken
 import csv
 from django.http import HttpResponse
 
@@ -32,4 +32,7 @@ class VolunteerAdmin(admin.ModelAdmin, ExportCsvMixin):
 @admin.register(ConfirmationToken)
 class ConfirmationTokenAdmin(admin.ModelAdmin, ExportCsvMixin):
     actions = ["export_as_csv"]
+
+admin.site.register(Requestor)
+
 
