@@ -40,17 +40,13 @@
 					<rect width="224" height="12" rx="6" fill="url(#g)"/>
 			</svg>
 	</div>
-
-	<div class="page" id="name-page">
+	
+	<div class="page" id="requirements-page">
 		{% include "errand_matcher/requestor-requirements.html" %}
 	</div>
 
 	<div class="page" id="name-page">
 		{% include "errand_matcher/requestor-name.html" %}
-	</div>
-
-	<div class="page" id="dob-page">
-		{% include "errand_matcher/requestor-dob.html" %}
 	</div>
 
 	<div class="page" id="address-page">
@@ -61,12 +57,24 @@
 		{% include "errand_matcher/requestor-contact.html" %}
 	</div>
 
+	{% if date_of_birth is None %}
+	<div class="page" id="dob-page">
+		{% include "errand_matcher/requestor-dob.html" %}
+	</div>
+	{% endif %}
+
+	{% if mobile_number is None %}
 	<div class="page" id="phone-page">
 		{% include "errand_matcher/requestor-phone.html" %}
 	</div>
+	{% endif %}
 
 	<div class="page" id="confirm-page">
 		{% include "errand_matcher/requestor-confirm.html" %}
+	</div>
+
+	<div class="page" id="welcome-page">
+		{% include "errand_matcher/requestor-welcome.html" %}
 	</div>
 </body>
 </html>

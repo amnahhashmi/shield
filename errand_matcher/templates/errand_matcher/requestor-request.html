@@ -1,0 +1,56 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+	<!-- import fonts -->
+	<link href="https://fonts.googleapis.com/css?family=Work+Sans&display=swap" rel="stylesheet">
+
+	<!-- import jQuery -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script src="https://momentjs.com/downloads/moment.js"></script>
+
+	<!-- import Google Maps JavaScript API -->
+	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{ GMAPS_API_KEY}}&libraries=places&callback=initAutocomplete" defer></script>
+
+	<title>LivelyHood Requestor Sign-Up</title>
+
+    <!-- CUSTOM STYLESHEETS -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet"/>
+
+    <!-- PAGE SOURCE -->
+    <script src="{% static 'js/requestor-signup.js' %}"></script>
+
+</head>
+<body>
+	<div class="page" id="first-time-sign-in-page">
+		<div class="h5_32 item">
+	Request a delivery
+	</div>
+
+	<div class="body_16_fontonly inline-button-box button" id="first-delivery-button">
+		<span><b>This is my first delivery</b></span>
+		<span>Sign up with your details to get your first delivery</span>
+	</div>
+
+	<div class="body_16_fontonly inline-button-box button" id="requestor-signin-button">
+		<span><b>I've had a delivery before</b></span>
+		<span>Sign into your account</span>
+	</div>
+</body>
+<script>
+	$(document).ready(function() {
+		$("#first-delivery-button").click(function(){
+			window.location.pathname = "/requestor/signup";
+		});
+
+		$("#requestor-signin-button").click(function(){
+			window.location.pathname = "/requestor/login";
+		});
+	});
+</script>
+<html>
+

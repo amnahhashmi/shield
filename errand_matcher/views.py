@@ -6,6 +6,7 @@ import os
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 from errand_matcher.models import ConfirmationToken, User, Volunteer, Requestor
+import phonenumbers
 
 frequency_choice_lookup = {
     'Anytime': 1,
@@ -125,9 +126,32 @@ def activate(request, token_id):
             token_state = 'Expired'
     return render(request, 'errand_matcher/complete-signup.html', {'token_state': token_state, 'email': token.email})
 
+def requestor(request):
+    return render(request, 'errand_matcher/requestor-request.html')
+
+def requestor_login(request):
+    if request.method == 'POST':
+        mobile_number = request.POST.get('phone-input')
+        dob = request.POST.get('dob-input')
+        parsed_mobile_number = phonenumbers.parse('+1{}'.format(mobile_number))
+        requestor = Requestor.objects.filter(mobile_number=parsed_mobile_number, 
+            date_of_birth=dob).first()
+
+        # Requestor not found, sign up
+        if requestor is None:
+            return render(request, 'errand_matcher/requestor-signup.html',
+             {'GMAPS_API_KEY': os.environ.get('GMAPS_API_KEY'),
+             'mobile_number': mobile_number,
+             'date_of_birth': dob})
+        
+        else:
+            return render(request, 'errand_matcher/request-errand.html', 
+                {'Requestor': requestor})
+    else:
+        return render(request, 'errand_matcher/requestor-login.html')
+
 @ensure_csrf_cookie
 def requestor_signup(request):
-   
     if request.method == 'POST':
         first_name = request.POST['first_name']
         last_name = request.POST['last_name']
@@ -136,8 +160,6 @@ def requestor_signup(request):
         date_of_birth = request.POST['birth_date']
         lat = request.POST['lat']
         lon = request.POST['lon']
-
-        print(date_of_birth)
 
         # SV 4-10-20 : TODO language preference patch
 
@@ -151,27 +173,27 @@ def requestor_signup(request):
 
         requestor = Requestor(
             user=user,
-            mobile_number=mobile_number,
+            mobile_number='+1' + mobile_number,
             date_of_birth=date_of_birth,
             lon=lon,
             lat=lat,
             contact_preference = contact_choice_lookup[contact_preference]
             )
         requestor.save()
-
-        return HttpResponse(render(request, 'errand_matcher/requestor-welcome.html', {
-            'requestor': requestor,
-            'GMAPS_API_KEY': os.environ.get('GMAPS_API_KEY')
-            }))
+        return HttpResponse(status=204)
 
     else:
-        return render(request, 'errand_matcher/requestor-signup.html', {'GMAPS_API_KEY': os.environ.get('GMAPS_API_KEY')})
+        return render(request, 'errand_matcher/requestor-signup.html',
+            {'GMAPS_API_KEY': os.environ.get('GMAPS_API_KEY')})
+
+def request_errand(request):
+    if request.method == 'POST':
+        pass
+    else:
+        return render(request, 'errand_matcher/request-errand.html')
 
 def matchable_volunteers(request, requestor_id):
     pass
 
 def health_and_safety(request):
     return render(request, 'errand_matcher/health-and-safety.html')
-
-def request_errand(request):
-    return render(request, 'errand_matcher/request-errand.html')

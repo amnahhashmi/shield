@@ -140,13 +140,26 @@ $(document).ready(function() {
 					break;
 				}
 
-			case 4:
+			case 3:
 				if ($("input[name='contact']:checked").length == 0) {
 					return;
 				} else {
 					$("#contact-review").text($("input[name='contact']:checked").val())
 					break;
 				}
+
+			case 4:
+				// validate date
+		        date_input = moment($('#dob-input').val(),"YYYY-MM-DD")
+		        if(!date_input.isValid() || !date_input.isBefore()){
+		            $("#dob-warning").show().focus()
+		            return;
+		        } else {
+		            $("#dob-warning").hide()
+		            // Set review field to user input
+					$('#dob-review').text($("#dob-input").val());
+					break;
+		        }
 
 			case 5:
 				phone = $("#phone-input").val();
@@ -217,25 +230,76 @@ $(document).ready(function() {
         $.ajax({
             type: 'POST',
             headers: {'X-CSRFToken': csrftoken},
-            url: "/requestor",
+            url: "/requestor/signup",
             data: {
             	"first_name": $("#firstname-review").text(),
             	"last_name": $("#lastname-review").text(),
             	"mobile_number": $("#phone-review").text(),
-            	"birth_date": $('#dob-input').val(),
+            	"birth_date": $('#dob-review').text(),
             	"contact_preference": $("#contact-review").text(),
             	"lat": $("#address-input").attr("lat"),
             	"lon": $("#address-input").attr("lon"),
             },
-            success: function(welcome_page){
-            	$("html").empty();
-    			$("html").append(welcome_page);
+            success: function(response){
+            	console.log(response)
             },
             error: function(jqHXR, exception){
             	console.log(exception);
             }
         })
+
+        // set welcome field to user name
+        $('#welcome-name').text('Thanks for the details, ' + $('#firstname-review').text() + '. Now that we know how to contact you and where you are, you can request a delivery.');
+        $('body').trigger("pageEvent", pageIndex + 1)
     })
+
+    $('.icon').click(function(){
+        var topnav = document.getElementById("topnav");
+        if (topnav.className === "topnav") {
+          topnav.className += " responsive";
+        } else {
+          topnav.className = "topnav";
+        }
+        $(topnav).next().css("margin-top",topnav.scrollHeight);
+    });
+
+	$('.top-link').click(function(){
+		window.location.href ="/#top";
+	})
+
+	$('.health-and-safety-link').click(function(){
+		window.location.href = "/health";
+	})
+
+	$('.faq-link').click(function(){
+		window.location.href = "/#above-faq";
+	})
+
+	$('.about-link').click(function(){
+		window.location.href = "/#above-about";
+	})
+
+	function collapseTopNav() {
+		var topnav = document.getElementById("topnav");
+        if (topnav.className === "topnav") {
+          return;
+        } else {
+          topnav.className = "topnav";
+        }
+	}
+
+	$('#request-button').click(function(){
+		window.location.href = "/errand";
+	})
+
+	$('#faq-button').click(function(){
+		window.location.href = "/#above-faq";
+	})
+
+	$('#support-button').click(function(){
+		// SV 4/11/20 : Should be a link to support page once that exists
+		window.location.href = "/#above-about";
+	})
 
 	// display first page
 	$("body").trigger("pageEvent",0)

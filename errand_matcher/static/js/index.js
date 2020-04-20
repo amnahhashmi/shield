@@ -42,6 +42,10 @@ $(document).ready(function() {
 		window.location.href = "volunteer";
 	})
 
+	$('.requestor-button').click(function(){
+		window.location.href = "requestor";
+	})
+
 	$('.collapsible').click(function(){
 		this.classList.toggle("active");
 		var image = $(this).find("img");
