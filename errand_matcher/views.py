@@ -197,6 +197,3 @@ def matchable_volunteers(request, requestor_id):
 
 def health_and_safety(request):
     return render(request, 'errand_matcher/health-and-safety.html')
-
-def request_errand(request):
-    return render(request, 'errand_matcher/request-errand.html')
