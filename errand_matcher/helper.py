@@ -101,27 +101,3 @@ def gmaps_distance(origin, destination, modes):
         distance_result.append((mode, mode_duration))
 
     return distance_result
-
-
-def ask_volunteers(errand_urgency, )
-        days_to_add = 1 if errand_urgency_lookup[errand_urgency] == 1 else 3
-
-        deadline_str = '{} at 6 p.m.'.format(
-            weekday_lookup[(timezone.now() + timedelta(days=1)).date().isoweekday()])
-
-        requestor_number_stripped = requestor_number.replace('(', '').replace(
-            ')', '').replace('-', '')
-        url = "http://127.0.0.1/errand/{}/accept/{}".format(
-            errand.id, requestor_number_stripped)
-        tiny_url = make_tiny(url)
-
-        for v in volunteers:
-            message = "{} needs help getting groceries! Can you make a delivery by {}?"\
-            " Only accept if you're sure that you can make it,"\
-            " since {} relies on LivelyHood to receive her living essentials. Accept request at {}".format(
-                requestor.user.first_name, deadline_str, requestor.user.first_name, url)
-            v_number = phonenumbers.format_number(
-                v.mobile_number, phonenumbers.PhoneNumberFormat.NATIONAL)
-            send_sms(v_number, message)
-            errand.contacted_volunteers.add(v)
-        errand.f

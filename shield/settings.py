@@ -165,7 +165,6 @@ CELERY_BEAT_SCHEDULE = {
        'schedule': 60.0,
        'args': (),
     },
-
 }
 
 django_heroku.settings(locals())
