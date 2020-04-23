@@ -13,4 +13,6 @@ urlpatterns = [
     path('requestor/signup', views.requestor_signup, name='requestor_signup'),
     path('requestor/login', views.requestor_login, name='requestor_login'),
     path('errand', views.request_errand, name='request_errand'),
+    path('errand/<int:errand_id>/accept/<int:volunteer_number>', views.accept_errand, name='accept_errand'),
+    path('sms', views.sms_inbound, name='sms_inbound')
 ]

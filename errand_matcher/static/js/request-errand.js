@@ -43,4 +43,31 @@ $(document).ready(function() {
 
 	// display first page
 	$("body").trigger("pageEvent",0)
+
+	// Submit errand
+	$("#delivery-request-button").click(function(event){
+
+		var csrftoken = $('[name=csrfmiddlewaretoken]').val();
+
+		// make POST ajax call
+        $.ajax({
+            type: 'POST',
+            headers: {'X-CSRFToken': csrftoken},
+            url: "/errand",
+            data: {
+            	"requestor_number": $("#requestor-number").val(),
+            	"urgency": $("input[name='errand-urgency']:checked").val()
+            },
+            success: function(response){
+            	console.log(response)
+            },
+            error: function(jqHXR, exception){
+            	console.log(exception);
+            }
+        })
+
+        $('body').trigger("pageEvent", pageIndex + 1)
+    })
+
+
 });
