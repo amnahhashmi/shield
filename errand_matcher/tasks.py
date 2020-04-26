@@ -27,12 +27,14 @@ def send_errand_completion_messages():
     errands = Errand.objects.filter(status=3, requestor_confirmed__isnull=True)
     for errand in errands:
         requestor = Requestor.objects.get(user_id=errand.requestor_id)
+        volunteer = User.objects.get(id=errand.claimed_volunteer_id)
         execution = twilio_client.studio \
             .v1 \
             .flows(settings.TWILIO_FLOWS['Req_Happy_VolDelivered']) \
             .executions \
             .create(parameters = {
                 'errand_id': errand.id,
+                'volunteer_name': volunteer.first_name,
             }, to=requestor.mobile_number.as_e164, from_=settings.TWILIO_NUMBER)
         errand.requestor_confirmed=False
         errand.save()
