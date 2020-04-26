@@ -31,6 +31,8 @@ def send_errand_completion_messages():
             .v1 \
             .flows(settings.TWILIO_FLOWS['Req_Happy_VolDelivered']) \
             .executions \
-            .create(to=requestor.mobile_number.as_e164, from_=settings.TWILIO_NUMBER)
+            .create(parameters = {
+                'errand_id': errand.id,
+            }, to=requestor.mobile_number.as_e164, from_=settings.TWILIO_NUMBER)
         errand.requestor_confirmed=False
         errand.save()

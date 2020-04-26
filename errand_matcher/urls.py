@@ -13,4 +13,5 @@ urlpatterns = [
     path('requestor/signup', views.requestor_signup, name='requestor_signup'),
     path('requestor/login', views.requestor_login, name='requestor_login'),
     path('errand', views.request_errand, name='request_errand'),
+    path('errand/<int:errand_id>', views.errand_status, name='errand_status'),
 ]

@@ -1,11 +1,11 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseNotAllowed
 from django.contrib.auth.hashers import make_password
-from django.views.decorators.csrf import ensure_csrf_cookie
+from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 import os
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
-from errand_matcher.models import ConfirmationToken, User, Volunteer, Requestor
+from errand_matcher.models import ConfirmationToken, Errand, User, Volunteer, Requestor
 import phonenumbers
 
 frequency_choice_lookup = {
@@ -191,6 +191,25 @@ def request_errand(request):
         pass
     else:
         return render(request, 'errand_matcher/request-errand.html')
+
+@csrf_exempt
+def errand_status(request, errand_id):
+    # Set status on errand (based on delivery success or failure)
+    if request.method == 'POST':
+        status = int(request.body)
+        try:
+            errand = Errand.objects.get(id=errand_id)
+            if status:
+                errand.requestor_confirmed=True
+            else:
+                errand.requestor_confirmed=None
+            errand.save()
+        except Errand.DoesNotExist:
+            return HttpResponse(status=404)
+        return HttpResponse(status=200)
+    else:
+        pass
+
 
 def matchable_volunteers(request, requestor_id):
     pass
