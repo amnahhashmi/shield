@@ -5,6 +5,7 @@ from urllib.parse import urlencode
 from urllib.request import urlopen
 import contextlib
 from twilio.rest import Client
+import os
 
 def make_tiny_url(url):
     request_url = ('http://tinyurl.com/api-create.php?' + 
@@ -13,9 +14,9 @@ def make_tiny_url(url):
         return response.read().decode('utf-8')
 
 def send_sms(to_number, message):
-    account_sid = os.getenv('TWILIO_ACCOUNT_SID')
-    auth_token = os.getenv('TWILIO_AUTH_TOKEN')
-    twilio_number = os.getenv('TWILIO_NUMBER')
+    account_sid = os.environ.getenv('TWILIO_ACCOUNT_SID')
+    auth_token = os.environ.getenv('TWILIO_AUTH_TOKEN')
+    twilio_number = os.environ.getenv('TWILIO_NUMBER')
     client = Client(account_sid, auth_token)
     message = client.messages.create(
         body=message,
