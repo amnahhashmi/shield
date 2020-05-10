@@ -22,6 +22,12 @@ weekday_lookup = {
     7: 'Sunday'
 }
 
+url_lookup = {
+    'LOCAL': 'http://127.0.0.1:8000',
+    'STAGING': 'https://staging-shieldcovid.herokuapp.com',
+    'PROD': 'https://www.livelyhood.io'
+}
+
 @shared_task
 def match_errands():
     logger.info('Matching errands')
@@ -46,10 +52,8 @@ def match_errands():
             phonenumbers.PhoneNumberFormat.E164)
         requestor_number_stripped = requestor_number_str.replace('+1', '')
 
-        if os.environ.get('LOCAL'):
-            url_base = "http://127.0.0.1"
-        else:
-            url_base = "https://www.livelyhood.io"
+        deploy_stage = os.environ.get('DEPLOY_STAGE')
+        url_base = url_lookup[deploy_stage]
         
         url = "{}/errand/{}/accept/{}".format(url_base,
                 errand.id, requestor_number_stripped)

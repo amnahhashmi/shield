@@ -26,14 +26,20 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-if os.environ.get('LOCAL'):
+deploy_stage = os.environ.get('DEPLOY_STAGE')
+if deploy_stage == 'LOCAL':
     DEBUG = True
     SECURE_SSL_REDIRECT = False
 else:
     DEBUG = False
     SECURE_SSL_REDIRECT = True
 
-ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1', 'shieldcovid.herokuapp.com', 'www.livelyhood.io']
+ALLOWED_HOSTS = ['0.0.0.0', 
+    'localhost', 
+    '127.0.0.1', 
+    'staging-shieldcovid.herokuapp.com', 
+    'shieldcovid.herokuapp.com', 
+    'www.livelyhood.io']
 
 CSRF_USE_SESSIONS = True
 SESSION_COOKIE_SECURE = True
