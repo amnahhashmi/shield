@@ -19,12 +19,6 @@ $(document).ready(function() {
 
 	})
 
-	// button behavior
-	$(".next-button").click(function(){
-		// TODO: Add POST to actually submit errand request.
-		$('body').trigger("pageEvent", pageIndex + 1)
-	})
-
 	$(".back-button").click(function(){
 		window.location.replace("home");
 	})
