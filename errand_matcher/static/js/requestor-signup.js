@@ -23,6 +23,26 @@ function geolocate() {
   }
 }
 
+function distance(lat1, lon1, lat2, lon2) {
+	if ((lat1 == lat2) && (lon1 == lon2)) {
+		return 0;
+	}
+	else {
+		var radlat1 = Math.PI * lat1/180;
+		var radlat2 = Math.PI * lat2/180;
+		var theta = lon1-lon2;
+		var radtheta = Math.PI * theta/180;
+		var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+		if (dist > 1) {
+			dist = 1;
+		}
+		dist = Math.acos(dist);
+		dist = dist * 180/Math.PI;
+		dist = dist * 60 * 1.1515;
+		return dist;
+	}
+}
+
 // // Initialize the Google Maps API autocomplete widget for address entry.
 function initAutocomplete() {
 
@@ -55,11 +75,23 @@ function initAutocomplete() {
 			$("#address-warning").show();
 			return;
 		} else {
-			$("#address-input").attr("lat",place.geometry.location.lat())
-			$("#address-input").attr("lon",place.geometry.location.lng())
-
-			$("#address-review").text($("#address-input").val());
-			$('body').trigger('pageEvent', pageIndex + 1)
+			lat = place.geometry.location.lat()
+			lng = place.geometry.location.lng()
+			
+			// User entered address outside of range from target (HBS)
+			target_lng = -71.12253
+			dist = distance(lat, lng, target_lat, target_lng);
+			if (dist > 10) {
+				$("#address-warning").hide()
+				$("#outside-of-boston-warning").show();
+				return;
+			}
+			else {
+				$("#address-input").attr("lat",lat)
+				$("#address-input").attr("lon",lng)
+				$("#address-review").text($("#address-input").val());
+				$('body').trigger('pageEvent', pageIndex + 1)
+			}
 
 		}
 	});
