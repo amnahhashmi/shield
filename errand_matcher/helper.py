@@ -86,7 +86,7 @@ def distance(origin, destination):
 
 def gmaps_reverse_geocode(latlng):
    # Reference: https://github.com/googlemaps/google-maps-services-python/blob/master/googlemaps/distance_matrix.py
-    gmaps = googlemaps.Client(key=os.environ.get('GMAPS_API_KEY_2'))
+    gmaps = googlemaps.Client(key=os.environ.get('GMAPS_API_KEY'))
 
     gmaps_result = gmaps.reverse_geocode(latlng)
     # TO DO: error case
@@ -94,7 +94,7 @@ def gmaps_reverse_geocode(latlng):
 
 def gmaps_distance(origin, destination, modes):
     # Reference: https://github.com/googlemaps/google-maps-services-python/blob/master/googlemaps/distance_matrix.py
-    gmaps = googlemaps.Client(key=os.environ.get('GMAPS_API_KEY_2'))
+    gmaps = googlemaps.Client(key=os.environ.get('GMAPS_API_KEY'))
 
     distance_result = []
     for mode in modes:
