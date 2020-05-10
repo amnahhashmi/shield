@@ -79,6 +79,7 @@ function initAutocomplete() {
 			lng = place.geometry.location.lng()
 			
 			// User entered address outside of range from target (HBS)
+			target_lat = 42.36722
 			target_lng = -71.12253
 			dist = distance(lat, lng, target_lat, target_lng);
 			if (dist > 10) {
