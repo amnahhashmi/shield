@@ -54,6 +54,9 @@ class Requestor(models.Model):
 
     contact_preference = models.PositiveSmallIntegerField(choices=CONTACT_PREFERENCE_CHOICES, default=1)
 
+class SiteConfiguration(models.Model):
+    mobile_number_on_call = PhoneNumberField()
+
 class Errand(models.Model):
     STATUS_CHOICES = (
         (1, 'open'),
@@ -74,9 +77,11 @@ class Errand(models.Model):
 
     requested_time = models.DateTimeField()
     claimed_time = models.DateTimeField(blank=True, null=True)
+    completed_time = models.DateTimeField(blank=True, null=True)
     status = models.PositiveSmallIntegerField(choices=STATUS_CHOICES)
     urgency = models.PositiveSmallIntegerField(choices=URGENCY_CHOICES)
     requestor = models.ForeignKey(Requestor, on_delete=models.CASCADE)
+    request_round = models.PositiveSmallIntegerField(default=0)
     claimed_volunteer = models.ForeignKey(Volunteer, on_delete=models.CASCADE, related_name='claimed_volunteer', blank=True, null=True)
     contacted_volunteers = models.ManyToManyField(Volunteer, related_name='contacted_volunteers', blank=True)
     requestor_review = models.PositiveSmallIntegerField(choices=REVIEW_CHOICES, blank=True, null=True)

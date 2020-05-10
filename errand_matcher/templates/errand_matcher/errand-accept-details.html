@@ -1,0 +1,33 @@
+<div class="h5_32 item">
+	Delivery request
+</div>
+<div class="body_16_fontonly subhead item">
+	Once you accept a request, we'll send you details on how to contact them and their exact location.
+</div>
+
+{% csrf_token %}
+
+<div class="conf-item">
+	<div class="body-13">Name</div>
+	<div class="body_bold_16">
+		<span>{{requestor.user.first_name}}</span> <span>{{requestor.user.last_name}}</span>
+	</div>
+</div>
+
+<div class="conf-item">
+	<div class="body-13">Delivery needed</div>
+	<div class="body_bold_16">{{ errand_urgency }}</div>
+</div>
+
+<div class="conf-item">
+	<div class="body-13">Distance</div>
+	<div class="body_bold_16">{{ distance }}</div>
+</div>
+
+<div class="inline-button-box button strong-button button-title" id="accept-request-button">
+	Accept request
+</div>
+
+<div class="body_bold_16 inline-button-box button" id="next-time-request-button">
+	Maybe next time
+</div>

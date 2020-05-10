@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 import os
 import dj_database_url
 import django_heroku
+from celery.schedules import crontab
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -48,6 +49,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'errand_matcher',
     'phonenumber_field',
+    'django_celery_beat'
 ]
 
 MIDDLEWARE = [
@@ -151,13 +153,18 @@ CELERY_BROKER_TRANSPORT_OPTIONS = { 'visibility_timeout': 3600 }
 
 #: Only add pickle to this list if your broker is secured
 #: from unwanted access (see userguide/security.html)
-CELERY_ACCEPT_CONTENT = ['json']
+CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_BACKEND = os.environ.get('REDIS_URL', '')
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_BEAT_SCHEDULE = {
- 'match-errands-every-five-minutes': {
+    'match-errands-every-five-minutes': {
        'task': 'errand_matcher.tasks.match_errands',
-       'schedule': 60.0,
+       'schedule': crontab(minute='*/5'),
+       'args': (),
+    },
+    'send-complete-messages-every-day': {
+       'task': 'errand_matcher.tasks.send_errand_completion_messages',
+       'schedule': crontab(minute=0, hour=18),
        'args': (),
     },
 }

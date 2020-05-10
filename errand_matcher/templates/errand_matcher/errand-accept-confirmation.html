@@ -1,0 +1,30 @@
+<div class="h5_32 item">
+    Delivery accepted!
+</div>
+<div class="body_16_fontonly subhead item">
+    Thanks for making a difference! Contact them <b>in the next hour<b> to get details.
+</div>
+
+{% csrf_token %}
+
+<div class="conf-item">
+    <div class="body-13">Name</div>
+    <div class="body_bold_16">
+        <span>{{requestor.user.first_name}}</span> <span">{{requestor.user.last_name}}</span>
+    </div>
+</div>
+
+<div class="conf-item">
+    <div class="body-13">Phone number</div>
+    <div class="body_bold_16">{{ requestor_number }}</div>
+</div>
+
+<div class="conf-item">
+    <div class="body-13">Notification preference</div>
+    <div class="body_bold_16">{{ contact_preference }} </div>
+</div>
+
+<div class="conf-item">
+    <div class="body-13">Address</div>
+    <div class="body_bold_16">{{ address }}</div>
+</div>

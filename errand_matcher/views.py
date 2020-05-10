@@ -1,11 +1,17 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseNotAllowed
 from django.contrib.auth.hashers import make_password
-from django.views.decorators.csrf import ensure_csrf_cookie
+from django.views.decorators.csrf import csrf_exempt
+from django.utils import timezone
+import math
 import os
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
-from errand_matcher.models import ConfirmationToken, User, Volunteer, Requestor
+import errand_matcher.helper as helper
+from errand_matcher.models import ConfirmationToken 
+from errand_matcher.models import Errand
+from errand_matcher.models import User, Volunteer, Requestor
+from errand_matcher.models import SiteConfiguration
 import phonenumbers
 
 frequency_choice_lookup = {
@@ -18,8 +24,28 @@ contact_choice_lookup = {
     'SMS text': 1,
     'Phone call': 2
 }
+
+errand_urgency_lookup = {
+    'In less than 24 hours': 1,
+    'Within 3 days': 2
+}
+
 def index(request):
     return render(request, 'errand_matcher/index.html')
+
+def health_and_safety(request):
+    return render(request, 'errand_matcher/health-and-safety.html')
+
+@csrf_exempt
+def sms_inbound(request):
+    from_number = request.POST['From']
+    body = request.POST['body']
+
+    # forward text to on-call staffer
+    site_configuration = SiteConfiguration.objects.first()
+    message = '{}: {}'.format(site_configuration.mobile_number, body)
+    helper.send_sms(site_configuration.mobile_number_on_call, message)
+    return
 
 def begin_signup(request):
     if request.method == 'POST':
@@ -32,7 +58,6 @@ def begin_signup(request):
         transportation = request.POST['transportation']
         lat = request.POST['lat']
         lon = request.POST['lon']
-
 
         user = User(username=email, 
             first_name=first_name,
@@ -71,7 +96,8 @@ def begin_signup(request):
 
         volunteer = Volunteer(
             user=user,
-            mobile_number=mobile_number,
+            # PhoneNumberField requires country code
+            mobile_number='+1' + mobile_number,
             lon=lon,
             lat=lat,
             frequency=freq_no,
@@ -114,7 +140,6 @@ def confirm_email(request):
     else:
         return HttpResponseNotAllowed(('POST',))
 
-@ensure_csrf_cookie
 def activate(request, token_id):
     token = ConfirmationToken.objects.filter(id=token_id).first()
     if token is None:
@@ -146,11 +171,10 @@ def requestor_login(request):
         
         else:
             return render(request, 'errand_matcher/request-errand.html', 
-                {'Requestor': requestor})
+                {'requestor_number': mobile_number})
     else:
         return render(request, 'errand_matcher/requestor-login.html')
 
-@ensure_csrf_cookie
 def requestor_signup(request):
     if request.method == 'POST':
         first_name = request.POST['first_name']
@@ -173,12 +197,12 @@ def requestor_signup(request):
 
         requestor = Requestor(
             user=user,
+            # PhoneNumberField requires country code
             mobile_number='+1' + mobile_number,
             date_of_birth=date_of_birth,
             lon=lon,
             lat=lat,
-            contact_preference = contact_choice_lookup[contact_preference]
-            )
+            contact_preference = contact_choice_lookup[contact_preference])
         requestor.save()
         return HttpResponse(status=204)
 
@@ -188,12 +212,81 @@ def requestor_signup(request):
 
 def request_errand(request):
     if request.method == 'POST':
-        pass
+        requestor_number = request.POST['requestor_number']
+        urgency = request.POST['urgency']
+        parsed_mobile_number = phonenumbers.parse('+1{}'.format(requestor_number))
+        requestor = Requestor.objects.filter(mobile_number=parsed_mobile_number).first()
+
+        errand = Errand(
+            requested_time = timezone.now(),
+            status = 1,
+            urgency = errand_urgency_lookup[urgency],
+            requestor = requestor
+        )
+        errand.save()
+
+        return HttpResponse(status=204)
     else:
         return render(request, 'errand_matcher/request-errand.html')
 
-def matchable_volunteers(request, requestor_id):
-    pass
+def accept_errand(request, errand_id, volunteer_number):
+    if request.method == 'POST':
+        # To DO: what if errand isn't open?
+        errand = Errand.objects.get(id=errand_id)
+        parsed_mobile_number = phonenumbers.parse('+1{}'.format(volunteer_number))
+        # TO DO: failure case if multiple volunteers or DNE?
+        volunteer = Volunteer.objects.filter(mobile_number=parsed_mobile_number).first()
 
-def health_and_safety(request):
-    return render(request, 'errand_matcher/health-and-safety.html')
+        # update errand
+        errand.status = 2
+        errand.claimed_time = timezone.now()
+        errand.claimed_volunteer = volunteer
+        errand.save()
+
+        return HttpResponse(status=204)
+
+    else:
+        # TO DO: verify that volunteer is associated with errand
+        errand = Errand.objects.get(id=errand_id)
+        parsed_mobile_number = phonenumbers.parse('+1{}'.format(volunteer_number))
+        # TO DO: failure case if multiple volunteers or DNE?
+        volunteer = Volunteer.objects.filter(mobile_number=parsed_mobile_number).first()
+        
+        # TO DO: failure case if no modes
+        modes = []
+        if volunteer.walks:
+            modes.append('walking')
+        if volunteer.has_bike:
+            modes.append('biking')
+        if volunteer.has_car:
+            modes.append('driving')
+
+        distances = helper.gmaps_distance((volunteer.lat, volunteer.lon), 
+            (errand.requestor.lat, errand.requestor.lon), modes)
+        if len(distances) == 1:
+            distance_str = distances[0][1] + ' ' + distances[0][0]
+        else:
+            last_item = distances.pop()
+            distance_str = ''
+            for distance_mode, distance_duration in distances:
+                distance_str.join(distance_duration + ' ' + distance_mode + ', ')
+            distance_str.join('or ' + last_item[1] + ' ' + last_item[0])
+
+        urgency_str = [k for k,v in errand_urgency_lookup.items() if v == errand.urgency][0]
+
+        address = helper.gmaps_reverse_geocode((errand.requestor.lat, errand.requestor.lon))
+
+        requestor_number = phonenumbers.format_number(
+            errand.requestor.mobile_number, phonenumbers.PhoneNumberFormat.NATIONAL)
+
+        contact_preference = 'Texting' if errand.requestor.contact_preference == 1 else 'Phone call'
+
+        return render(request, 'errand_matcher/errand-accept.html', {
+            'requestor': errand.requestor,
+            'errand_urgency': urgency_str,
+            'distance': distance_str,
+            'errand_status': errand.status,
+            'contact_preference': contact_preference,
+            'address': address,
+            'requestor_number': requestor_number
+            })

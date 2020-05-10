@@ -18,21 +18,18 @@
         <link href="{% static 'css/style.css' %}" rel="stylesheet"/>
 
         <!-- PAGE SOURCE -->
-        <script src="{% static 'js/request-errand.js' %}"></script>
+        <script src="{% static 'js/errand-accept.js' %}"></script>
 	</head>
 	<body>
-		<div class="nav-bar">
-			<img src="{% static 'css/icons/backarrow.svg' %}" alt="back button" height="24px" width="24px" id="back-button" class="nav-item back-button">
-			</img>
+		<div class="page" id="errand-accept-details-page">
+			{% include "errand_matcher/errand-accept-details.html" %}
 		</div>
-
-		{% csrf_token %}
-		<div class="page" id="urgency-page">
-			{% include "errand_matcher/errand-urgency.html" %}
+		<div class="page" id="errand-accep-confirmation-page">
+			{% include "errand_matcher/errand-accept-confirmation.html" %}
 		</div>
-
-		<div class="page" id="confirmation-page">
-			{% include "errand_matcher/errand-request-confirmation.html" %}
+		<div class="page" id="errand-accep-failure-page">
+			{% include "errand_matcher/errand-failure.html" %}
 		</div>
+		<input type="hidden" id="errand_status" value={{ errand_status }}>
 	</body>
 </html>

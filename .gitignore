@@ -13,3 +13,4 @@ env/
 loadEnv.sh
 sendgrid.env
 celerybeat*
+dump.rdb
