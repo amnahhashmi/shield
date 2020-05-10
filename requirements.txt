@@ -6,6 +6,7 @@ celery==4.4.2
 dj-database-url==0.5.0
 Django==3.0.4
 django-address==0.2.1
+django-celery-beat==2.0.0
 django-heroku==0.3.1
 django-phonenumber-field==4.0.0
 googlemaps==4.2.0

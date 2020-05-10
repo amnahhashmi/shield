@@ -1,6 +1,7 @@
 from __future__ import absolute_import, unicode_literals
 
 from celery import shared_task
+from celery.utils.log import get_task_logger
 import errand_matcher.helper as helper
 from errand_matcher.models import Errand
 import os
@@ -9,17 +10,30 @@ from datetime import date
 import phonenumbers
 from django.utils import timezone
 
+logger = get_task_logger(__name__)
+
+weekday_lookup = {
+    1: 'Monday',
+    2: 'Tuesday',
+    3: 'Wednesday',
+    4: 'Thursday',
+    5: 'Friday',
+    6: 'Saturday',
+    7: 'Sunday'
+}
+
 @shared_task
 def match_errands():
-	errands = Errand.objects.filter(status=1)
-	for errand in errands:
-		# TO DO: notify of failure state
-		if errand.requestor_round == 2:
-			errand.status = 4
-			errand.save()
-			continue
+    logger.info('Matching errands')
+    errands = Errand.objects.filter(status=1)
+    for errand in errands:
+        # TO DO: notify of failure state
+        if errand.request_round == 2:
+            errand.status = 4
+            errand.save()
+            continue
 
-		# TO DO: what if there are no volunteers?
+        # TO DO: what if there are no volunteers?
         volunteers = helper.match_errand_to_volunteers(errand)
 
         days_to_add = 1 if errand.urgency == 1 else 3
@@ -29,11 +43,11 @@ def match_errands():
 
         requestor_number = errand.requestor.mobile_number
         requestor_number_str= phonenumbers.format_number(requestor_number, 
-        	phonenumbers.PhoneNumberFormat.E164)
-        requestor_number_stripped = requestor_number.replace('+1', '')
+            phonenumbers.PhoneNumberFormat.E164)
+        requestor_number_stripped = requestor_number_str.replace('+1', '')
 
         if os.environ.get('LOCAL'):
-            url_base = "http://127.0.0.1/"
+            url_base = "http://127.0.0.1"
         else:
             url_base = "https://www.livelyhood.io"
         
@@ -49,7 +63,7 @@ def match_errands():
                 errand.requestor.user.first_name, deadline_str, errand.requestor.user.first_name, url)
             v_number = phonenumbers.format_number(
                 v.mobile_number, phonenumbers.PhoneNumberFormat.NATIONAL)
-            send_sms(v_number, message)
+            helper.send_sms(v_number, message)
             errand.contacted_volunteers.add(v)
 
         errand.request_round +=1
@@ -61,12 +75,12 @@ TWILIO_FLOWS = {
 
 @shared_task
 def send_errand_completion_messages():
-	# for errands 1 day ago
-    24_hour_errands = Errand.objects.filter(status=2, urgency=1, 
-    	claimed_time__gte=timezone.now()+timedelta(days=-1))
-    3_day_errands = Errand.objects.filter(status=2, urgency=2,
-    	claimed_time__gte=timezone.now()+timedelta(days=-3))
-    for errand in list(24_hour_errands) + list(3_day_errands):
+    # for errands 1 day ago
+    twenty_four_hour_errands = Errand.objects.filter(status=2, urgency=1, 
+        claimed_time__gte=timezone.now()+timedelta(days=-1))
+    three_day_errands = Errand.objects.filter(status=2, urgency=2,
+        claimed_time__gte=timezone.now()+timedelta(days=-3))
+    for errand in list(twenty_four_hour_errands) + list(three_day_errands):
         execution = twilio_client.studio \
             .v1 \
             .flows(settings.TWILIO_FLOWS['Req_Happy_VolDelivered']) \

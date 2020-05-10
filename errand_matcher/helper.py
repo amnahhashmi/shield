@@ -6,6 +6,8 @@ from urllib.request import urlopen
 import contextlib
 from twilio.rest import Client
 import os
+from django.utils import timezone
+from datetime import timedelta
 
 def make_tiny_url(url):
     request_url = ('http://tinyurl.com/api-create.php?' + 
@@ -14,9 +16,9 @@ def make_tiny_url(url):
         return response.read().decode('utf-8')
 
 def send_sms(to_number, message):
-    account_sid = os.environ.getenv('TWILIO_ACCOUNT_SID')
-    auth_token = os.environ.getenv('TWILIO_AUTH_TOKEN')
-    twilio_number = os.environ.getenv('TWILIO_NUMBER')
+    account_sid = os.environ.get('TWILIO_ACCOUNT_SID')
+    auth_token = os.environ.get('TWILIO_AUTH_TOKEN')
+    twilio_number = os.environ.get('TWILIO_NUMBER')
     client = Client(account_sid, auth_token)
     message = client.messages.create(
         body=message,
@@ -92,7 +94,7 @@ def gmaps_reverse_geocode(latlng):
 
 def gmaps_distance(origin, destination, modes):
     # Reference: https://github.com/googlemaps/google-maps-services-python/blob/master/googlemaps/distance_matrix.py
-    gmaps = googlemaps.Client(key='GMAPS_API_KEY_2')
+    gmaps = googlemaps.Client(key=os.environ.get('GMAPS_API_KEY_2'))
 
     distance_result = []
     for mode in modes:

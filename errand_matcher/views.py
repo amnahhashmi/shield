@@ -30,16 +30,6 @@ errand_urgency_lookup = {
     'Within 3 days': 2
 }
 
-weekday_lookup = {
-    1: 'Monday',
-    2: 'Tuesday',
-    3: 'Wednesday',
-    4: 'Thursday',
-    5: 'Friday',
-    6: 'Saturday',
-    7: 'Sunday'
-}
-
 def index(request):
     return render(request, 'errand_matcher/index.html')
 
@@ -282,7 +272,7 @@ def accept_errand(request, errand_id, volunteer_number):
                 distance_str.join(distance_duration + ' ' + distance_mode + ', ')
             distance_str.join('or ' + last_item[1] + ' ' + last_item[0])
 
-        urgency_str = [k for k,v in errand_urgency_lookup.items() if v == errand.status][0]
+        urgency_str = [k for k,v in errand_urgency_lookup.items() if v == errand.urgency][0]
 
         address = helper.gmaps_reverse_geocode((errand.requestor.lat, errand.requestor.lon))
 
