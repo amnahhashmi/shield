@@ -48,7 +48,7 @@ def match_errands():
             # alert on-call staffer
             site_configuration = SiteConfiguration.objects.first()
             message = 'ERRAND FAILURE! {} {}: {} requested at {}'.format(
-                errand.requestor.user.first_name, errand.requestor.user.last_name
+                errand.requestor.user.first_name, errand.requestor.user.last_name,
                 requestor_number_stripped, errand.requested_time)
             helper.send_sms(site_configuration.mobile_number_on_call, message)
             continue
