@@ -4,8 +4,10 @@ from celery import shared_task
 from celery.utils.log import get_task_logger
 import errand_matcher.helper as helper
 from errand_matcher.models import Errand
+from errand_matcher.models import SiteConfiguration
 import os
 from datetime import timedelta
+from datetime import datetime
 from datetime import date
 import phonenumbers
 from django.utils import timezone
@@ -33,10 +35,22 @@ def match_errands():
     logger.info('Matching errands')
     errands = Errand.objects.filter(status=1)
     for errand in errands:
+        requestor_number = errand.requestor.mobile_number
+        requestor_number_str= phonenumbers.format_number(requestor_number, 
+            phonenumbers.PhoneNumberFormat.E164)
+        requestor_number_stripped = requestor_number_str.replace('+1', '')
+
         # TO DO: notify of failure state
         if errand.request_round == 2:
             errand.status = 4
             errand.save()
+
+            # alert on-call staffer
+            site_configuration = SiteConfiguration.objects.first()
+            message = 'ERRAND FAILURE! {} {}: {} requested at {}'.format(
+                errand.requestor.user.first_name, errand.requestor.user.last_name
+                requestor_number_stripped, errand.requested_time)
+            helper.send_sms(site_configuration.mobile_number_on_call, message)
             continue
 
         # TO DO: what if there are no volunteers?
@@ -46,11 +60,6 @@ def match_errands():
 
         deadline_str = '{} at 6 p.m.'.format(
             weekday_lookup[(timezone.now() + timedelta(days=1)).date().isoweekday()])
-
-        requestor_number = errand.requestor.mobile_number
-        requestor_number_str= phonenumbers.format_number(requestor_number, 
-            phonenumbers.PhoneNumberFormat.E164)
-        requestor_number_stripped = requestor_number_str.replace('+1', '')
 
         deploy_stage = os.environ.get('DEPLOY_STAGE')
         url_base = url_lookup[deploy_stage]

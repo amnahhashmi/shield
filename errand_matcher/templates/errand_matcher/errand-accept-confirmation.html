@@ -2,11 +2,8 @@
     Delivery accepted!
 </div>
 <div class="body_16_fontonly subhead item">
-    Thanks for making a difference! Contact them <b>in the next hour<b> to get details.
+    Thanks for making a difference! Your requestor's details are below:
 </div>
-
-{% csrf_token %}
-
 <div class="conf-item">
     <div class="body-13">Name</div>
     <div class="body_bold_16">
@@ -27,4 +24,30 @@
 <div class="conf-item">
     <div class="body-13">Address</div>
     <div class="body_bold_16">{{ address }}</div>
+</div>
+<div class="body_16_fontonly subhead item">
+    Here's what to do next next:
+</div>
+<div class="horizontal-container item">
+    <div class="styled-number">1</div>
+    <div class="numbered-list-item">Contact your requestor within the next hour. Be sure to ask what items they need from the grocery store, their approximate budget, how they'll handle payment (bank transfer, Venmo, cash, etc), and how they're feeling! Our requestors might be vulnerable or lonely, and a little kindness could brighten their day.</div>
+</div>
+<div class="horizontal-container item">
+    <div class="styled-number">2</div>
+    <div class="numbered-list-item">Before beginning the delivery, remind yourself about our <a href="/health" target="_blank">safety protocol.</a></div>
+</div>
+<div class="horizontal-container item">
+    <div class="styled-number">3</div>
+    <div class="numbered-list-item">Go to a convenient grocery store, purchase the items, and keep the receipt. Don’t worry if any items are out of stock - just buy what you can.</div>
+</div>
+<div class="horizontal-container item">
+    <div class="styled-number">4</div>
+    <div class="numbered-list-item">Reach the requester’s home with the groceries, and collect payment.</div>
+</div>
+<div class="horizontal-container item">
+    <div class="styled-number">5</div>
+    <div class="numbered-list-item">Leave the groceries at their door or at a convenient location, with the receipt inside the bag.</div>
+</div>
+<div class="body_16_fontonly subhead item">
+    You're all done! If you don't get a response from your requester within a few hours, please text or call {{staff_number}} to reach Livelyhood support staff.
 </div>

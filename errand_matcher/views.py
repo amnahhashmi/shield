@@ -30,6 +30,17 @@ errand_urgency_lookup = {
     'Within 3 days': 2
 }
 
+def get_base_url():
+    url_lookup = {
+        'LOCAL': 'http://127.0.0.1:8000',
+        'STAGING': 'https://staging-shieldcovid.herokuapp.com',
+        'PROD': 'https://www.livelyhood.io'
+    }
+
+    deploy_stage = os.environ.get('DEPLOY_STAGE')
+    base_url = url_lookup[deploy_stage]
+    return base_url
+
 def index(request):
     return render(request, 'errand_matcher/index.html')
 
@@ -281,6 +292,11 @@ def accept_errand(request, errand_id, volunteer_number):
 
         contact_preference = 'Texting' if errand.requestor.contact_preference == 1 else 'Phone call'
 
+        # on-staff number
+        site_configuration = SiteConfiguration.objects.first()
+        staff_number = phonenumbers.format_number(
+            site_configuration.mobile_number_on_call, phonenumbers.PhoneNumberFormat.NATIONAL)
+
         return render(request, 'errand_matcher/errand-accept.html', {
             'requestor': errand.requestor,
             'errand_urgency': urgency_str,
@@ -288,5 +304,7 @@ def accept_errand(request, errand_id, volunteer_number):
             'errand_status': errand.status,
             'contact_preference': contact_preference,
             'address': address,
-            'requestor_number': requestor_number
+            'requestor_number': requestor_number,
+            'staff_number': staff_number,
+            'base_url': get_base_url()
             })
