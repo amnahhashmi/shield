@@ -17,7 +17,10 @@ def make_phone_numbers_valid(apps, schema_editor):
                 with_country_code = '+1{}'.format(v.mobile_number.raw_input)
                 valid_number = phonenumbers.parse(with_country_code)
                 v.mobile_number = valid_number
-                v.save()
+                try:
+                    v.save()
+                except:
+                    continue
 
 
 class Migration(migrations.Migration):
