@@ -35,6 +35,10 @@ class Volunteer(models.Model):
     consented = models.BooleanField()
     opted_out = models.BooleanField(default=False)
 
+    def __str__(self):
+        return '{} {}'.format(self.user.first_name, 
+            self.user.last_name)
+
 class ConfirmationToken(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     active = models.BooleanField(default=True)
@@ -53,6 +57,10 @@ class Requestor(models.Model):
     lat = models.FloatField()
 
     contact_preference = models.PositiveSmallIntegerField(choices=CONTACT_PREFERENCE_CHOICES, default=1)
+
+    def __str__(self):
+        return '{} {}'.format(self.user.first_name, 
+            self.user.last_name)
 
 class SiteConfiguration(models.Model):
     mobile_number_on_call = PhoneNumberField()
