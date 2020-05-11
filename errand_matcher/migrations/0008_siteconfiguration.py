@@ -10,11 +10,12 @@ def make_phone_numbers_valid(apps, schema_editor):
     for v in Volunteer.objects.all():
         if v.mobile_number == '':
             continue
-        if not phonenumbers.is_valid_number(v.mobile_number):
-            with_country_code = '+1{}'.format(v.mobile_number.raw_input)
-            valid_number = phonenumbers.parse(with_country_code)
-            v.mobile_number = valid_number
-            v.save()
+        else:
+            if not phonenumbers.is_valid_number(v.mobile_number):
+                with_country_code = '+1{}'.format(v.mobile_number.raw_input)
+                valid_number = phonenumbers.parse(with_country_code)
+                v.mobile_number = valid_number
+                v.save()
 
 
 class Migration(migrations.Migration):
