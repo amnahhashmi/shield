@@ -280,8 +280,8 @@ def accept_errand(request, errand_id, volunteer_number):
             last_item = distances.pop()
             distance_str = ''
             for distance_mode, distance_duration in distances:
-                distance_str.join(distance_duration + ' ' + distance_mode + ', ')
-            distance_str.join('or ' + last_item[1] + ' ' + last_item[0])
+                distance_str = distance_str + distance_duration + ' ' + distance_mode + ', '
+            distance_str = distance_str + 'or ' + last_item[1] + ' ' + last_item[0]
 
         urgency_str = [k for k,v in errand_urgency_lookup.items() if v == errand.urgency][0]
 
