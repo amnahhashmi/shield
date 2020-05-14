@@ -66,18 +66,21 @@ def match_errands():
 
         # TO DO: what if no volunteers?
         for v in volunteers:
-            v_number_str = phonenumbers.format_number(v.mobile_number, phonenumbers.PhoneNumberFormat.E164)
-            v_number_stripped = v_number_str.replace('+1', '')
-            url = "{}/errand/{}/accept/{}".format(url_base, errand.id, v_number_stripped)
+            if v.mobile_number == '':
+                continue
+            else:
+                v_number_str = phonenumbers.format_number(v.mobile_number, phonenumbers.PhoneNumberFormat.E164)
+                v_number_stripped = v_number_str.replace('+1', '')
+                url = "{}/errand/{}/accept/{}".format(url_base, errand.id, v_number_stripped)
 
-            message = "{} needs help getting groceries! Can you make a delivery by {}?"\
-            " Only accept if you're sure that you can make it,"\
-            " since {} relies on LivelyHood to receive her living essentials. Accept request at {}".format(
-                errand.requestor.user.first_name, deadline_str, errand.requestor.user.first_name, url)
-            
-            v_number = phonenumbers.format_number(v.mobile_number, phonenumbers.PhoneNumberFormat.NATIONAL)
-            helper.send_sms(v_number, message)
-            errand.contacted_volunteers.add(v)
+                message = "{} needs help getting groceries! Can you make a delivery by {}?"\
+                " Only accept if you're sure that you can make it,"\
+                " since {} relies on LivelyHood to receive her living essentials. Accept request at {}".format(
+                    errand.requestor.user.first_name, deadline_str, errand.requestor.user.first_name, url)
+                
+                v_number = phonenumbers.format_number(v.mobile_number, phonenumbers.PhoneNumberFormat.NATIONAL)
+                helper.send_sms(v_number, message)
+                errand.contacted_volunteers.add(v)
 
         errand.request_round +=1
         errand.save()
