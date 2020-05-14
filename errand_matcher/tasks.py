@@ -63,19 +63,19 @@ def match_errands():
 
         deploy_stage = os.environ.get('DEPLOY_STAGE')
         url_base = url_lookup[deploy_stage]
-        
-        url = "{}/errand/{}/accept/{}".format(url_base,
-                errand.id, requestor_number_stripped)
-        tiny_url = helper.make_tiny_url(url)
 
         # TO DO: what if no volunteers?
         for v in volunteers:
+            v_number_str = phonenumber.format_number(v.mobile_number, phonenumbers.PhoneNumberFormat.E164)
+            v_number_stripped = v_number_str.replace('+1', '')
+            url = "{}/errand/{}/accept/{}".format(url_base, errand.id, v_number_stripped)
+
             message = "{} needs help getting groceries! Can you make a delivery by {}?"\
             " Only accept if you're sure that you can make it,"\
             " since {} relies on LivelyHood to receive her living essentials. Accept request at {}".format(
                 errand.requestor.user.first_name, deadline_str, errand.requestor.user.first_name, url)
-            v_number = phonenumbers.format_number(
-                v.mobile_number, phonenumbers.PhoneNumberFormat.NATIONAL)
+            
+            v_number = phonenumbers.format_number(v.mobile_number, phonenumbers.PhoneNumberFormat.NATIONAL)
             helper.send_sms(v_number, message)
             errand.contacted_volunteers.add(v)
 
