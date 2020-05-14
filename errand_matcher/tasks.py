@@ -66,7 +66,7 @@ def match_errands():
 
         # TO DO: what if no volunteers?
         for v in volunteers:
-            v_number_str = phonenumber.format_number(v.mobile_number, phonenumbers.PhoneNumberFormat.E164)
+            v_number_str = phonenumbers.format_number(v.mobile_number, phonenumbers.PhoneNumberFormat.E164)
             v_number_stripped = v_number_str.replace('+1', '')
             url = "{}/errand/{}/accept/{}".format(url_base, errand.id, v_number_stripped)
 

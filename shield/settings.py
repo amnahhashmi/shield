@@ -165,14 +165,14 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_BEAT_SCHEDULE = {
     'match-errands-every-five-minutes': {
        'task': 'errand_matcher.tasks.match_errands',
-       'schedule': crontab(minute='*/5'),
+       'schedule': crontab(minute=15),
        'args': (),
     },
-    'send-complete-messages-every-day': {
-       'task': 'errand_matcher.tasks.send_errand_completion_messages',
-       'schedule': crontab(minute=0, hour=18),
-       'args': (),
-    },
+    # 'send-complete-messages-every-day': {
+    #    'task': 'errand_matcher.tasks.send_errand_completion_messages',
+    #    'schedule': crontab(minute=0, hour=18),
+    #    'args': (),
+    # },
 }
 
 django_heroku.settings(locals())
