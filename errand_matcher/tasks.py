@@ -50,7 +50,9 @@ def match_errands():
             message = 'ERRAND FAILURE! {} {}: {} requested at {}'.format(
                 errand.requestor.user.first_name, errand.requestor.user.last_name,
                 requestor_number_stripped, errand.requested_time)
-            helper.send_sms(site_configuration.mobile_number_on_call, message)
+            staff_number = phonenumbers.format_number(site_configuration.mobile_number_on_call, 
+                phonenumbers.PhoneNumberFormat.NATIONAL)
+            helper.send_sms(staff_number, message)
             continue
 
         # TO DO: what if there are no volunteers?
