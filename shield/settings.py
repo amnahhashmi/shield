@@ -165,7 +165,7 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_BEAT_SCHEDULE = {
     'match-errands-every-five-minutes': {
        'task': 'errand_matcher.tasks.match_errands',
-       'schedule': crontab(minute=0),
+       'schedule': crontab(minute=5),
        'args': (),
     },
     # 'send-complete-messages-every-day': {
