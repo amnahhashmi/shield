@@ -41,7 +41,7 @@ def match_errands():
         requestor_number_stripped = requestor_number_str.replace('+1', '')
 
         # TO DO: notify of failure state
-        if errand.request_round == 2:
+        if errand.request_round == 5:
             errand.status = 4
             errand.save()
 
