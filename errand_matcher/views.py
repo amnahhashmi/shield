@@ -188,13 +188,12 @@ def requestor_login(request):
 
 def requestor_signup(request):
     if request.method == 'POST':
-        first_name = request.POST['first_name']
-        last_name = request.POST['last_name']
-        mobile_number = request.POST['mobile_number']
-        contact_preference = request.POST['contact_preference']
-        date_of_birth = request.POST['birth_date']
-        lat = request.POST['lat']
-        lon = request.POST['lon']
+        first_name = request.POST['firstname-review']
+        last_name = request.POST['lastname-review']
+        mobile_number = request.POST['phone-review']
+        contact_preference = request.POST['contact-review']
+        date_of_birth = request.POST['dob-review']
+        address = request.POST['address-review']
 
         # SV 4-10-20 : TODO language preference patch
 
@@ -206,16 +205,19 @@ def requestor_signup(request):
             user_type=2)
         user.save()
 
+        coord_location = helper.gmaps_geocode(address)
+
         requestor = Requestor(
             user=user,
             # PhoneNumberField requires country code
             mobile_number='+1' + mobile_number,
             date_of_birth=date_of_birth,
-            lon=lon,
-            lat=lat,
+            lon=coord_location['longitude'],
+            lat=coord_location['latitude'],
             contact_preference = contact_choice_lookup[contact_preference])
         requestor.save()
-        return HttpResponse(status=204)
+        return render(request, 'errand_matcher/request-errand.html', 
+                {'requestor_number': mobile_number, 'requestor_name': first_name})
 
     else:
         return render(request, 'errand_matcher/requestor-signup.html',

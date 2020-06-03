@@ -20,19 +20,19 @@ $(document).ready(function() {
 	})
 
 	$(".back-button").click(function(){
-		window.location.replace("home");
+		window.location.replace(window.location.origin + "/home");
 	})
 
 	$(".health-and-safety-button").click(function(){
-		window.location.replace("health");
+		window.location.replace(window.location.origin + "/health");
 	})
 
 	$(".faq-button").click(function(){
-		window.location.replace("home#above-faq");
+		window.location.replace(window.location.origin + "home#above-faq");
 	})
 
 	$(".support-button").click(function(){
-		window.location.replace("home#above-about");
+		window.location.replace(window.location.origin + "home#above-about");
 	})
 
 	// display first page

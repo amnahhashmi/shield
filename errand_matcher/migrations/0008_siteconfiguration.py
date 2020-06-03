@@ -8,8 +8,6 @@ import phonenumbers
 def make_phone_numbers_valid(apps, schema_editor):
     Volunteer = apps.get_model('errand_matcher', 'Volunteer')
     for v in Volunteer.objects.all():
-        print(v.user.first_name)
-        print(v.user.last_name)
         if v.mobile_number == '':
             continue
         else:
