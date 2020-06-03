@@ -55,7 +55,7 @@ def match_errand_to_volunteers(errand):
         if v_prefs['pref'] == 1:
             continue
         if v_prefs['pref'] == 2:
-            if v['errand_counter'] >= 3:
+            if v_prefs['errand_counter'] >= 3:
                 volunteers_already_fulfilled_prefs.append(v)
 
         if v_prefs['pref'] == 3:
