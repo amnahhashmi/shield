@@ -5,38 +5,54 @@
 	Once you confirm your details, we’ll start trying to match you with a volunteer.
 </div>
 
-{% csrf_token %}
 
-<div class="conf-item">
-	<div class="body-13">Name</div>
-	<div class="body_bold_16">
-		<span id="firstname-review"></span> <span id="lastname-review"></span>
+<form class="requestor-signup-form" action="signup" method="post">
+	{% csrf_token %}
+
+	<div class="conf-item">
+		<div class="body-13">First name</div>
+		<div class="body_bold_16" for="firstname-review">
+			<input type="text" class="body_16_fontonly" style="border-width: 0px" id="firstname-review" name="firstname-review" readonly/>
+		</div>
 	</div>
-</div>
 
-<div class="conf-item">
-	<div class="body-13">Phone number</div>
-	<div class="body_bold_16" id="phone-review" name="phone-review">{{ mobile_number }}</div>
-</div>
+	<div class="conf-item">
+		<div class="body-13">Last name</div>
+		<div class="body_bold_16" for="lastname-review">
+			<input type="text" class="body_16_fontonly" style="border-width: 0px" id="lastname-review" name="lastname-review" readonly />
+		</div>
+	</div>
 
-<div class="conf-item">
-	<div class="body-13">Date of birth</div>
-	<div class="body_bold_16" id="dob-review" name="dob-review">{{ date_of_birth }}</div>
-</div>
+	<div class="conf-item">
+		<div class="body-13">Phone number</div>
+		<div class="body_bold_16" for="phone-review">
+			<input type="text" class="body_16_fontonly" style="border-width: 0px" id="phone-review" name="phone-review" val={{mobile_number}} readonly />
+		</div>
+	</div>
 
-<div class="conf-item">
-	<div class="body-13">Contact preference</div>
-	<div class="body_bold_16" id="contact-review" name="contact-review"></div>
-</div>
+	<div class="conf-item">
+		<div class="body-13">Date of birth</div>
+		<div class="body_bold_16" for="dob-review">
+			<input type="date" class="body_16_fontonly" style="border-width: 0px" id="dob-review" name="dob-review" val={{date_of_birth}} readonly />
+		</div>
+	</div>
 
-<div class="conf-item">
-	<div class="body-13">Address</div>
-	<div class="body_bold_16" id="address-review" name="address-review"></div>
-</div>
+	<div class="conf-item">
+		<div class="body-13">Contact preference</div>
+		<div class="body_bold_16" for="contact-review">
+			<input type="text" class="body_16_fontonly" style="border-width: 0px" id="contact-review" name="contact-review" readonly/>
+		</div>
+	</div>
 
-<div class="inline-button-box button strong-button button-title" id="submit-button">
-	Yes, sign up
-</div>
+	<div class="conf-item">
+		<div class="body-13">Address</div>
+		<div class="body_bold_16" for="address-review">
+			<input type="text" class="body_16_fontonly" style="border-width: 0px" size="50" id="address-review" name="address-review" readonly/>
+		</div>
+	</div>
+
+	<input type="submit" class="inline-button-box button strong-button button-title" style="text-align: center !important" id="requestor-signup-button" value="Yes, sign up">
+</form>
 
 <div class="body_bold_16 inline-button-box button" id="redo-button">
 	No, take me back

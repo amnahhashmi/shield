@@ -92,6 +92,14 @@ def gmaps_reverse_geocode(latlng):
     # TO DO: error case
     return gmaps_result[0]['formatted_address']
 
+def gmaps_geocode(address):
+    gmaps = googlemaps.Client(key=os.environ.get('GMAPS_API_KEY'))
+
+    gmaps_result = gmaps.geocode(address)
+    # TO DO: error case
+    return gmaps_result[0]['access_points'][0]['location']
+
+
 def gmaps_distance(origin, destination, modes):
     # Reference: https://github.com/googlemaps/google-maps-services-python/blob/master/googlemaps/distance_matrix.py
     gmaps = googlemaps.Client(key=os.environ.get('GMAPS_API_KEY'))

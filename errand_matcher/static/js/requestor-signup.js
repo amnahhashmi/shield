@@ -90,7 +90,7 @@ function initAutocomplete() {
 			else {
 				$("#address-input").attr("lat",lat)
 				$("#address-input").attr("lon",lng)
-				$("#address-review").text($("#address-input").val());
+				$("#address-review").val($("#address-input").val());
 				$('body').trigger('pageEvent', pageIndex + 1)
 			}
 
@@ -156,8 +156,8 @@ $(document).ready(function() {
 					$('#name-warning').show().focus()
 					return;
 				} else {
-					$('#firstname-review').text($('#firstname-input').val());
-					$('#lastname-review').text($('#lastname-input').val());
+					$('#firstname-review').val($('#firstname-input').val());
+					$('#lastname-review').val($('#lastname-input').val());
 					break;
 				}
 
@@ -177,7 +177,7 @@ $(document).ready(function() {
 				if ($("input[name='contact']:checked").length == 0) {
 					return;
 				} else {
-					$("#contact-review").text($("input[name='contact']:checked").val())
+					$("#contact-review").val($("input[name='contact']:checked").val())
 					break;
 				}
 
@@ -190,7 +190,7 @@ $(document).ready(function() {
 		        } else {
 		            $("#dob-warning").hide()
 		            // Set review field to user input
-					$('#dob-review').text($("#dob-input").val());
+					$('#dob-review').val($("#dob-input").val());
 					break;
 		        }
 
@@ -209,7 +209,7 @@ $(document).ready(function() {
 					return;
 				} else {
 					// Set review field to user input
-					$('#phone-review').text($("#phone-input").val());
+					$('#phone-review').val($("#phone-input").val());
 					break;
 				}
 		}
@@ -253,38 +253,6 @@ $(document).ready(function() {
 	$('#address-input').blur(function(e){
 		google.maps.event.trigger(autocomplete, 'place_changed');
 	});
-
-	// Submit volunteer form
-	$("#submit-button").click(function(event){
-
-		var csrftoken = $('[name=csrfmiddlewaretoken]').val();
-
-		// make POST ajax call
-        $.ajax({
-            type: 'POST',
-            headers: {'X-CSRFToken': csrftoken},
-            url: "/requestor/signup",
-            data: {
-            	"first_name": $("#firstname-review").text(),
-            	"last_name": $("#lastname-review").text(),
-            	"mobile_number": $("#phone-review").text(),
-            	"birth_date": $('#dob-review').text(),
-            	"contact_preference": $("#contact-review").text(),
-            	"lat": $("#address-input").attr("lat"),
-            	"lon": $("#address-input").attr("lon"),
-            },
-            success: function(response){
-            	console.log(response)
-            },
-            error: function(jqHXR, exception){
-            	console.log(exception);
-            }
-        })
-
-        // set welcome field to user name
-        $('#welcome-name').text('Thanks for the details, ' + $('#firstname-review').text() + '. Now that we know how to contact you and where you are, you can request a delivery.');
-        $('body').trigger("pageEvent", pageIndex + 1)
-    })
 
     $('.icon').click(function(){
         var topnav = document.getElementById("topnav");
