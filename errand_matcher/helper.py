@@ -97,7 +97,7 @@ def gmaps_geocode(address):
 
     gmaps_result = gmaps.geocode(address)
     # TO DO: error case
-    return gmaps_result[0]['access_points'][0]['location']
+    return gmaps_result[0]['geometry']['location']
 
 
 def gmaps_distance(origin, destination, modes):

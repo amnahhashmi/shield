@@ -212,8 +212,8 @@ def requestor_signup(request):
             # PhoneNumberField requires country code
             mobile_number='+1' + mobile_number,
             date_of_birth=date_of_birth,
-            lon=coord_location['longitude'],
-            lat=coord_location['latitude'],
+            lon=coord_location['lng'],
+            lat=coord_location['lat'],
             contact_preference = contact_choice_lookup[contact_preference])
         requestor.save()
         return render(request, 'errand_matcher/request-errand.html', 
