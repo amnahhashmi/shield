@@ -94,4 +94,5 @@ class Errand(models.Model):
     contacted_volunteers = models.ManyToManyField(Volunteer, related_name='contacted_volunteers', blank=True)
     requestor_review = models.PositiveSmallIntegerField(choices=REVIEW_CHOICES, blank=True, null=True)
     volunteer_review = models.PositiveSmallIntegerField(choices=REVIEW_CHOICES, blank=True, null=True)
+    additional_info = models.TextField(blank=True, null=True)
 

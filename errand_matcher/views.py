@@ -227,6 +227,7 @@ def request_errand(request):
     if request.method == 'POST':
         requestor_number = request.POST['requestor_number']
         urgency = request.POST['urgency']
+        additional_info = request.POST['additional_info']
         parsed_mobile_number = phonenumbers.parse('+1{}'.format(requestor_number))
         requestor = Requestor.objects.filter(mobile_number=parsed_mobile_number).first()
 
@@ -234,7 +235,8 @@ def request_errand(request):
             requested_time = timezone.now(),
             status = 1,
             urgency = errand_urgency_lookup[urgency],
-            requestor = requestor
+            requestor = requestor,
+            additional_info = additional_info
         )
         errand.save()
 
@@ -304,6 +306,7 @@ def accept_errand(request, errand_id, volunteer_number):
             'errand_urgency': urgency_str,
             'distance': distance_str,
             'errand_status': errand.status,
+            'additional_info': errand.additional_info,
             'contact_preference': contact_preference,
             'address': address,
             'requestor_number': requestor_number,

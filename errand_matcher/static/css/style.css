@@ -323,6 +323,16 @@
 todo: radio example
 */
 
+textarea {
+	margin: 16px 24px;
+	font-family: Work Sans;
+	width: auto;
+	height: 260px;
+
+	display: flex;
+	flex-direction: row;
+}
+
 .text-box {
 	margin: 16px 24px;
 }
@@ -379,6 +389,10 @@ todo: radio example
 	}
 
 	.inline-button-box{
+		width: 520px;
+	}
+
+	textarea {
 		width: 520px;
 	}
 }

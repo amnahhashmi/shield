@@ -57,7 +57,8 @@ $(document).ready(function() {
             url: "/errand",
             data: {
             	"requestor_number": $("#requestor-number").val(),
-            	"urgency": $("input[name='errand-urgency']:checked").val()
+            	"urgency": $("input[name='errand-urgency']:checked").val(),
+            	"additional_info": $("#errand-additional-info").val()
             },
             success: function(response){
             	console.log(response)
