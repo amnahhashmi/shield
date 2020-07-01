@@ -25,6 +25,15 @@
     <div class="body-13">Address</div>
     <div class="body_bold_16">{{ address }}</div>
 </div>
+
+{% if additional_info %}
+<div class="conf-item">
+    <div class="body-13">Additional details</div>
+    <div class="body_bold_16">{{ additional_info }}</div>
+</div>
+{% endif %}
+
+
 <div class="body_16_fontonly subhead item">
     Here's what to do next next:
 </div>

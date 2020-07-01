@@ -19,8 +19,15 @@ $(document).ready(function() {
 
 	})
 
+	// button behavior
+
 	$(".back-button").click(function(){
 		window.location.replace(window.location.origin + "/home");
+	})
+
+
+	$(".next-button").click(function(){
+		$('body').trigger("pageEvent", pageIndex + 1)
 	})
 
 	$(".health-and-safety-button").click(function(){
@@ -50,7 +57,8 @@ $(document).ready(function() {
             url: "/errand",
             data: {
             	"requestor_number": $("#requestor-number").val(),
-            	"urgency": $("input[name='errand-urgency']:checked").val()
+            	"urgency": $("input[name='errand-urgency']:checked").val(),
+            	"additional_info": $("#errand-additional-info").val()
             },
             success: function(response){
             	console.log(response)
