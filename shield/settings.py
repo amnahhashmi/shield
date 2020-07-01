@@ -42,7 +42,7 @@ ALLOWED_HOSTS = ['0.0.0.0',
     'www.livelyhood.io']
 
 CSRF_USE_SESSIONS = True
-SESSION_COOKIE_SECURE = True
+# SESSION_COOKIE_SECURE = True
 
 # Application definition
 
