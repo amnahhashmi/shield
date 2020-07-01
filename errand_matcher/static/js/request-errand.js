@@ -19,8 +19,15 @@ $(document).ready(function() {
 
 	})
 
+	// button behavior
+
 	$(".back-button").click(function(){
 		window.location.replace(window.location.origin + "/home");
+	})
+
+
+	$(".next-button").click(function(){
+		$('body').trigger("pageEvent", pageIndex + 1)
 	})
 
 	$(".health-and-safety-button").click(function(){
