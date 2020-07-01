@@ -35,57 +35,58 @@ def match_errands():
     logger.info('Matching errands')
     errands = Errand.objects.filter(status=1)
     for errand in errands:
+        
         requestor_number = errand.requestor.mobile_number
         requestor_number_str= phonenumbers.format_number(requestor_number, 
             phonenumbers.PhoneNumberFormat.E164)
         requestor_number_stripped = requestor_number_str.replace('+1', '')
 
-        # TO DO: notify of failure state
-        if errand.request_round == 5:
+        # convert to failed status if exceeded 1 day since creation
+        # for urgent or 3 days for non-urgent
+        days_to_add = 1 if errand.urgency == 1 else 3
+        errand_expiration = errand.requested_time + timedelta(days=days_to_add)
+        if timezone.now() > errand_expiration:
             errand.status = 4
             errand.save()
 
             # alert on-call staffer
             site_configuration = SiteConfiguration.objects.first()
-            message = 'ERRAND FAILURE! {} {}: {} requested at {}'.format(
-                errand.requestor.user.first_name, errand.requestor.user.last_name,
-                requestor_number_stripped, errand.requested_time)
             staff_number = phonenumbers.format_number(site_configuration.mobile_number_on_call, 
                 phonenumbers.PhoneNumberFormat.NATIONAL)
+            message = 'ERRAND FAILURE! {} {}: {} requested at {}'.format(
+                errand.requestor.user.first_name, errand.requestor.user.last_name,
+                requestor_number_str, errand.requested_time)
+ 
             helper.send_sms(staff_number, message)
-            continue
 
-        # TO DO: what if there are no volunteers?
-        volunteers = helper.match_errand_to_volunteers(errand)
+        else:
+            if errand.request_round < 5:
+                # TO DO: what if there are no volunteers?
+                volunteers = helper.match_errand_to_volunteers(errand)
+                deadline_str = '{} at 6 p.m.'.format(
+                    weekday_lookup[(timezone.now() + timedelta(days=days_to_add)).date().isoweekday()])
 
-        days_to_add = 1 if errand.urgency == 1 else 3
+                deploy_stage = os.environ.get('DEPLOY_STAGE')
+                url_base = url_lookup[deploy_stage]
 
-        deadline_str = '{} at 6 p.m.'.format(
-            weekday_lookup[(timezone.now() + timedelta(days=1)).date().isoweekday()])
+                for v in volunteers:
+                    if v.mobile_number == '':
+                        continue
+                    else:
+                        v_number_str = phonenumbers.format_number(v.mobile_number, phonenumbers.PhoneNumberFormat.E164)
+                        v_number_stripped = v_number_str.replace('+1', '')
+                        url = "{}/errand/{}/accept/{}".format(url_base, errand.id, v_number_stripped)
 
-        deploy_stage = os.environ.get('DEPLOY_STAGE')
-        url_base = url_lookup[deploy_stage]
+                        message = "Livelyhood here! {} needs help getting groceries! Can you make a delivery by {}?"\
+                        " Click here for more information and to let us know if you can help. {}".format(
+                            errand.requestor.user.first_name, deadline_str, url)
+                        
+                        v_number = phonenumbers.format_number(v.mobile_number, phonenumbers.PhoneNumberFormat.NATIONAL)
+                        helper.send_sms(v_number, message)
+                        errand.contacted_volunteers.add(v)
 
-        # TO DO: what if no volunteers?
-        for v in volunteers:
-            if v.mobile_number == '':
-                continue
-            else:
-                v_number_str = phonenumbers.format_number(v.mobile_number, phonenumbers.PhoneNumberFormat.E164)
-                v_number_stripped = v_number_str.replace('+1', '')
-                url = "{}/errand/{}/accept/{}".format(url_base, errand.id, v_number_stripped)
-
-                message = "{} needs help getting groceries! Can you make a delivery by {}?"\
-                " Only accept if you're sure that you can make it,"\
-                " since {} relies on LivelyHood to receive her living essentials. Accept request at {}".format(
-                    errand.requestor.user.first_name, deadline_str, errand.requestor.user.first_name, url)
-                
-                v_number = phonenumbers.format_number(v.mobile_number, phonenumbers.PhoneNumberFormat.NATIONAL)
-                helper.send_sms(v_number, message)
-                errand.contacted_volunteers.add(v)
-
-        errand.request_round +=1
-        errand.save()
+                errand.request_round +=1
+                errand.save()
 
 TWILIO_FLOWS = {
     'Req_Happy_VolDelivered': 'FW554a336fe5d6c246d934a9e77e6dadb6',

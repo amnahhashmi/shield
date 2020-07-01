@@ -27,13 +27,10 @@ def send_sms(to_number, message):
     return
 
 def match_errand_to_volunteers(errand):
-    # exclude volunteers contacted on open errands
-    volunteers_on_open_errands = []
-    open_errands = Errand.objects.filter(status=1)
-    for open_errand in open_errands:
-        volunteers_on_open_errands = volunteers_on_open_errands + \
-        list(open_errand.contacted_volunteers.all().values_list(
-            'mobile_number', flat=True))
+    # exclude volunteers already contacted
+    volunteers_already_contacted = list(errand.contacted_volunteers.all().
+        values_list('mobile_number', flat=True))
+
     # exclude volunteers already fulfilled preference
     errands_last_week = Errand.objects.filter(
         status__in=[2,3], 
@@ -63,7 +60,7 @@ def match_errand_to_volunteers(errand):
 
     # find up to 5 closest volunteers to requestor
     eligible_volunteers = Volunteer.objects.exclude(
-        mobile_number__in=volunteers_on_open_errands+volunteers_already_fulfilled_prefs)
+        mobile_number__in=volunteers_already_fulfilled_prefs + volunteers_already_contacted)
 
     by_distance = sorted(eligible_volunteers, 
         key=lambda v: distance((v.lat,v.lon),(errand.requestor.lat,errand.requestor.lon)))
