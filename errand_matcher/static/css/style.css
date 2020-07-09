@@ -251,6 +251,14 @@
 	padding: 8px 24px;
 }
 
+.affirmative {
+	display: none;
+}
+
+.acknowledge {
+	display: none;
+}
+
 .warning {
 	color: #B33A3A;
 	display: none;

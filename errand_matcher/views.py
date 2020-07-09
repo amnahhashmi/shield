@@ -58,7 +58,14 @@ def sms_inbound(request):
     helper.send_sms(site_configuration.mobile_number_on_call, message)
     return
 
-def begin_signup(request):
+def volunteer(request):
+    return render(request, 'errand_matcher/volunteer.html')
+
+def volunteer_login(request):
+    if request.method == 'POST':
+        pass
+
+def volunteer_signup(request):
     if request.method == 'POST':
         first_name = request.POST['first_name']
         last_name = request.POST['last_name']
@@ -122,7 +129,7 @@ def begin_signup(request):
         volunteer.save()
         return HttpResponse(status=204)
     else:
-        return render(request, 'errand_matcher/begin-signup.html')
+        return render(request, 'errand_matcher/volunteer-signup.html')
 
 def confirm_email(request):
     if request.method == 'POST':
