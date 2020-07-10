@@ -63,7 +63,7 @@ def match_errand_to_volunteers(errand):
 
     # find up to 5 closest volunteers to requestor
     eligible_volunteers = Volunteer.objects.exclude(
-        mobile_number__in=volunteers_on_open_errands+volunteers_already_fulfilled_prefs)
+        mobile_number__in=volunteers_on_open_errands+volunteers_already_fulfilled_prefs+[''])
 
     by_distance = sorted(eligible_volunteers, 
         key=lambda v: distance((v.lat,v.lon),(errand.requestor.lat,errand.requestor.lon)))
