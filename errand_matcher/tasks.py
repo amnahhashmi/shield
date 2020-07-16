@@ -93,7 +93,7 @@ TWILIO_FLOWS = {
 @shared_task
 def cleanup_tokens():
     # expire tokens after 10 minutes
-    ten_minutes_ago = timezone.now() - timedelta(minutes=15)
+    ten_minutes_ago = timezone.now() - timedelta(minutes=10)
     tokens_older_than_ten_mins = UserOTP.objects.filter(created_at__lte=ten_minutes_ago)
     tokens_older_than_ten_mins.delete()
 

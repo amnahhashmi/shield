@@ -78,7 +78,7 @@ def volunteer_login(request):
             # deliver OTP
             message = "Livelyhood here! {} is your one-time password for online login. Please do not share.".format(
                 user_otp.token)
-            helper.send_sms(helper.format_number(user_otp.mobile_number), message)
+            helper.send_sms(helper.format_mobile_number(user_otp.mobile_number), message)
             
             return render(request, 'errand_matcher/volunteer-login-otp.html')
         # If no Volunteer found, show warning and redirect back to signup
@@ -91,7 +91,8 @@ def volunteer_login(request):
 
 def volunteer_login_otp(request):
     if request.method == 'POST':
-        otp_input = request.POST.get('otp_input')
+        import pdb; pdb.set_trace()
+        otp_input = request.POST.get('otp-input')
         user_otp = UserOTP.objects.filter(token=otp_input).first()
 
         # If OTP found, login

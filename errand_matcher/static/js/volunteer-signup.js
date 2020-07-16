@@ -128,7 +128,7 @@ $(document).ready(function() {
   $(".next-button").click(function(){
     
     // Email validation and set email review to user inpurt
-    if (pagei=Index == 2) {
+    if (pageIndex == 2) {
       var regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
       if (regex.test($('#email-input').val())) {
         // Hide warning and submit
@@ -177,7 +177,6 @@ $(document).ready(function() {
 
 
   $(".back-button").click(function(){
-    console.log(pageIndex)
     if (pageIndex == 0) {
       // send to landing page
       window.location.pathname = '/';
