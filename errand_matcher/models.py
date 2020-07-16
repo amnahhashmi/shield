@@ -4,8 +4,6 @@ from phonenumber_field.modelfields import PhoneNumberField
 import uuid
 import math
 import random
-import errand_matcher.helper as helper
-import phonenumbers
 
 class User(AbstractUser):
     USER_TYPE_CHOICES = (
@@ -97,22 +95,20 @@ class Errand(models.Model):
     access_id = models.UUIDField(blank=True, null=True)
 
 class UserOTP(models.Model):
-    mobile_number = PhoneNumberField()
-    token = models.CharField(default=generate_token())
-    created_at = models.DateTimeField(auto_now_add=True)
-
     def generate_token():
-        digits_in_otp = "0123456789"
+        digits_in_otp = '0123456789'
 
+        token = ''
         for i in range(6):
             token += digits_in_otp[math.floor(random.random() * 10)] 
 
         return token
 
-    def deliver_token(self):
-        message = "Livelyhood here! {} is your one-time password for online login. Please do not share.".format(
-            self.token)
-        helper.send_sms(helper.format_number(self.mobile_number), message)
+    mobile_number = PhoneNumberField()
+    token = models.CharField(default=generate_token(), max_length=6)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
 
 
 

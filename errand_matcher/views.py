@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseNotAllowed
-from django.contrib.auth.hashers import authenticate, login, make_password
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.hashers import make_password
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
 import math
@@ -47,6 +48,9 @@ def index(request):
 def health_and_safety(request):
     return render(request, 'errand_matcher/health-and-safety.html')
 
+def error(request):
+    return render(request, 'errand_matcher/404.html')
+
 @csrf_exempt
 def sms_inbound(request):
     from_number = request.POST['From']
@@ -70,8 +74,13 @@ def volunteer_login(request):
         # If Volunteer found, create OTP
         if volunteer is not None:
             user_otp = UserOTP.objects.create(mobile_number = volunteer.mobile_number)
-                user_otp.deliver_token()
-                return render(request, 'errand_matcher/volunteer-login-otp.html')
+
+            # deliver OTP
+            message = "Livelyhood here! {} is your one-time password for online login. Please do not share.".format(
+                user_otp.token)
+            helper.send_sms(helper.format_number(user_otp.mobile_number), message)
+            
+            return render(request, 'errand_matcher/volunteer-login-otp.html')
         # If no Volunteer found, show warning and redirect back to signup
         else:
             return render(request, 'errand_matcher/volunteer-login.html', {
@@ -330,10 +339,10 @@ def accept_errand(request, errand_id, volunteer_number):
             'base_url': get_base_url()
             })
 
-    def view_errand(request, errand_id, access_id):
-        errand = Errand.objects.filter(access_id=access_id).first()
-        if errand is not None:
-                    return render(request, 'errand_matcher/errand-accept.html', {
+def view_errand(request, errand_id, access_id):
+    errand = Errand.objects.filter(access_id=access_id).first()
+    if errand is not None:
+        return render(request, 'errand_matcher/errand-accept.html', {
             'requestor': errand.requestor,
             'errand_urgency': urgency_str,
             'distance': distance_str,
@@ -346,4 +355,5 @@ def accept_errand(request, errand_id, volunteer_number):
             'base_url': get_base_url()
             })
 
-        else:
+    else:
+        pass
