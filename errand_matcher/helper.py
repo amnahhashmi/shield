@@ -26,6 +26,23 @@ def send_sms(to_number, message):
         to=to_number)
     return
 
+def get_support_mobile_number():
+    site_configuration = SiteConfiguration.objects.first()
+    return site_configuration.mobile_number_on_call
+
+def strip_mobile_number(mobile_number):
+    mobile_number_str = format_mobile_number(mobile_number)
+    mobile_number_stripped = mobile_number_str.replace('+1', '')
+    return mobile_number_stripped
+
+def format_mobile_number(mobile_number):
+    return phonenumbers.format_number(mobile_number, phonenumbers.PhoneNumberFormat.NATIONAL)
+
+def get_volunteer_from_mobile_number_str(mobile_number_str):
+    parsed_mobile_number = phonenumbers.parse('+1{}'.format(mobile_number_str))
+    volunteer = Volunteer.objects.filter(mobile_number=parsed_mobile_number).first()
+    return volunteer
+
 def match_errand_to_volunteers(errand):
     # exclude volunteers contacted on open errands
     volunteers_on_open_errands = []

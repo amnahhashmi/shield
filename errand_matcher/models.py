@@ -2,6 +2,10 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 import uuid
+import math
+import random
+import errand_matcher.helper as helper
+import phonenumbers
 
 class User(AbstractUser):
     USER_TYPE_CHOICES = (
@@ -38,11 +42,6 @@ class Volunteer(models.Model):
     def __str__(self):
         return '{} {}'.format(self.user.first_name, 
             self.user.last_name)
-
-class ConfirmationToken(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    active = models.BooleanField(default=True)
-    email = models.EmailField(default='livelyhood.tech@gmail.com')
 
 class Requestor(models.Model):
     CONTACT_PREFERENCE_CHOICES = (
@@ -95,4 +94,26 @@ class Errand(models.Model):
     requestor_review = models.PositiveSmallIntegerField(choices=REVIEW_CHOICES, blank=True, null=True)
     volunteer_review = models.PositiveSmallIntegerField(choices=REVIEW_CHOICES, blank=True, null=True)
     additional_info = models.TextField(blank=True, null=True)
+    access_id = models.UUIDField(blank=True, null=True)
+
+class UserOTP(models.Model):
+    mobile_number = PhoneNumberField()
+    token = models.CharField(default=generate_token())
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def generate_token():
+        digits_in_otp = "0123456789"
+
+        for i in range(6):
+            token += digits_in_otp[math.floor(random.random() * 10)] 
+
+        return token
+
+    def deliver_token(self):
+        message = "Livelyhood here! {} is your one-time password for online login. Please do not share.".format(
+            self.token)
+        helper.send_sms(helper.format_number(self.mobile_number), message)
+
+
+
 

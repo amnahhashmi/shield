@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+	<!-- import fonts -->
+	<link href="https://fonts.googleapis.com/css?family=Work+Sans&display=swap" rel="stylesheet">
+
+	<!-- import jQuery -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script src="https://momentjs.com/downloads/moment.js"></script>
+
+	<title>LivelyHood Volunteer Login</title>
+
+    <!-- CUSTOM STYLESHEETS -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet"/>
+
+</head>
+<body>
+	<div class="h5_32 item">
+		Sign in
+	</div>
+
+	<form class="volunteer-login-form" action="login" method="post">
+		{% csrf_token %}
+		<div class="text-box" for="phone-input">
+			<input type="text" class="text-input  body_16_fontonly" id="phone-input" name="phone-input" placeholder="Phone number" /> 
+		</div>
+		<div class="body_16_fontonly subhead item warning" id="phone-warning">
+			Please enter a 10-digit U.S. phone number to receive a one-time password.
+		</div>
+		<input type="submit" id="volunteer-login-button" class="inline-button-box button body_bold_16" value="Next"/>
+	</form>
+</body>
+</html>
