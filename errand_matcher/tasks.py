@@ -77,7 +77,7 @@ def match_errands():
                         v_number_stripped = v_number_str.replace('+1', '')
                         url = "{}/errand/{}/accept/{}".format(url_base, errand.id, v_number_stripped)
 
-                        message = "Livelyhood here! {} needs help getting groceries! Can you make a delivery by {}?"\
+                        message = "LivelyHood here! {} needs help getting groceries! Can you make a delivery by {}?"\
                         " Click here for more information and to let us know if you can help. {}".format(
                             errand.requestor.user.first_name, deadline_str, url)
                         
