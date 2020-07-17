@@ -26,6 +26,7 @@
 		<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{ GMAPS_API_KEY}}&libraries=places&callback=initAutocomplete" defer></script>
 
 		<title>LivelyHood - Volunteer Sign-Up</title>
+		<link rel="shortcut icon" type="image/png" href="{% static 'css/icons/favicon.ico' %}"/>
 
         <!-- CUSTOM STYLESHEETS -->
         <link href="{% static 'css/style.css' %}" rel="stylesheet"/>
@@ -67,7 +68,7 @@
 		<div class="page" id="address-page">
 			{% include "errand_matcher/volunteer-address.html" %}
 		</div>
-
+		
 		<div class="page" id="transport-page">
 			{% include "errand_matcher/volunteer-transport.html" %}
 		</div>

@@ -52,7 +52,8 @@ class Requestor(models.Model):
     date_of_birth = models.DateField()
     lon = models.FloatField()
     lat = models.FloatField()
-
+    address_str = models.CharField(default='', max_length=1024)
+    apt_no = models.CharField(default='', max_length=8)
     contact_preference = models.PositiveSmallIntegerField(choices=CONTACT_PREFERENCE_CHOICES, default=1)
 
     def __str__(self):

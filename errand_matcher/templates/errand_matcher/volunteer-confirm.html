@@ -5,6 +5,7 @@
 	Confirm your details and you're good to go.
 </div>
 
+{% csrf_token %}
 <div class="conf-item">
 	<div class="body-13">First name</div>
 	<div class="body_bold_16" id="firstname-review" name="firstname-review"></div>
@@ -17,7 +18,7 @@
 
 <div class="conf-item">
 	<div class="body-13">Email</div>
-	<div id="email-review" class="body_bold_16" name="email-review"> {{email}}</div>
+	<div id="email-review" class="body_bold_16" name="email-review"></div>
 </div>
 
 <div class="conf-item">

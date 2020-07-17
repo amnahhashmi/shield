@@ -91,7 +91,6 @@ def volunteer_login(request):
 
 def volunteer_login_otp(request):
     if request.method == 'POST':
-        import pdb; pdb.set_trace()
         otp_input = request.POST.get('otp-input')
         user_otp = UserOTP.objects.filter(token=otp_input).first()
 
@@ -181,7 +180,8 @@ def volunteer_signup(request):
         volunteer.save()
         return HttpResponse(status=204)
     else:
-        return render(request, 'errand_matcher/volunteer-signup.html')
+        return render(request, 'errand_matcher/volunteer-signup.html',
+            {'GMAPS_API_KEY': os.environ.get('GMAPS_API_KEY')})
 
 def requestor(request):
     return render(request, 'errand_matcher/requestor-request.html')

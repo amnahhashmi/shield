@@ -58,7 +58,7 @@ def match_errands():
                 message)
 
         else:
-            if errand.request_round < 10:
+            if errand.request_round < 5:
                 # TO DO: what if there are no volunteers?
                 volunteers = helper.match_errand_to_volunteers(errand)
                 deadline_str = '{} at 6 p.m.'.format(

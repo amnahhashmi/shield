@@ -1,33 +1,15 @@
-{% if current_email is None %}
-	<div class="h5_32 item">
-		What's your email?
-	</div>
+<div class="h5_32 item">
+	What's your email?
+</div>
 
-	<form class="email-form" action="confirmation" method="post">
-		{% csrf_token %}
-		<label for="email-input" class="text-box">
-			<input type="email" class="text-input body_bold_16" name="current-email" id="email-input" placeholder="email address">
-		</label>
-		<input type="submit" id="send-confirmation-email-button" class="inline-button-box button body_bold_16" value="Validate email"/>
-	</form>
-	<div class="body_16_fontonly subhead item warning" id="email-warning">
-		Please enter a valid email address.
-	</div>
-{% else %}
-	<div class="h5_32 item">
-		Got it!
-	</div>
-	<div class="body_16_fontonly subhead item">
-		Please check your email and follow the confirmation link to finish setup. If you do not see the email in a few minutes, please check your spam or junk folder.
-	</div>
+<div class="text-box" for="email-input">
+	<input type="email" class="text-input  body_16_fontonly" id="email-input" placeholder="email address" /> 
+</div>
 
-	<form class="email-form" action="confirmation" method="post">
-		{% csrf_token %}
-		<label for="email-input" class="email-box">
-			<input type="hidden" name="current-email" id="email-input" placeholder="email address" value="{{ current_email}} ">
-		</label>
-		<input type="submit" id="send-confirmation-email-button" class="inline-button-box button body_bold_15" value="Resend confirmation email">
-	</form>
-{% endif %}
+<div class="body_16_fontonly subhead item warning" id="email-warning">
+	Please enter a valid email address.
+</div>
 
-
+<div class="body_bold_16 inline-button-box button next-button">
+	Next
+</div>

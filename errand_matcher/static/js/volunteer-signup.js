@@ -66,44 +66,92 @@ function initAutocomplete() {
   })
 }
 
+function validateName() {
+  if ($('#firstname-input').val().length > 0 && $('#lastname-input').val().length > 0){
+    $("#name-warning").hide();
+
+    // Set review field to user input
+    $('#firstname-review').text($('#firstname-input').val());
+    $('#lastname-review').text($('#lastname-input').val());
+    $('body').trigger("pageEvent", pageIndex + 1);
+  }
+  else {
+     // Show warning
+     $("#name-warning").show();
+  }
+}
+
+function validatePhone() {
+  phone = $('#phone-input').val();
+  phone = phone.replace(/[^0-9]/g,'');
+
+  $(this).val(
+    (phone.slice(0,3) ? "("+phone.slice(0,3)+")" : "") +
+    (phone.slice(3,6) ? "-"+phone.slice(3,6) : "") +
+    (phone.slice(6,10) ? "-"+phone.slice(6,10) : "")
+  );
+
+  if (phone.length==10) {
+    $("#phone-warning").hide();
+    // Set review field to user input
+    $('#phone-review').text(phone);
+    $('body').trigger("pageEvent", pageIndex + 1);
+  } else {
+    $("#phone-warning").show();
+  }
+}
+
+function validateEmail() {
+  var regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
+  if (regex.test($('#email-input').val())) {
+    // Set review field to user input
+    $("#email-warning").hide()
+    $('#email-review').text($("#email-input").val());
+    $('body').trigger("pageEvent", pageIndex + 1);
+  } else {
+    // Show warning and prevent submit
+    $("#email-warning").show();
+  }
+}
+
 $(document).ready(function() {
 
-    var pages = $(".page")
-    pageIndex = 0;
+  var pages = $(".page")
+  pageIndex = 0;
 
-    $(".req-input").change(function(){
-      // If all requirements are checked
-        if ($('.req-input:checked').length == $('.req-input').length) {
+  $(".req-input").change(function(){
+    // If all requirements are checked
+      if ($('.req-input:checked').length == $('.req-input').length) {
 
-          // Show acknowledge
-            $('.acknowledge').css('display','flex')
-            $('.acknowledge').focus()
-          }
-          else {
+        // Show acknowledge
+          $('.acknowledge').css('display','flex')
+          $('.acknowledge').focus()
+        }
+        else {
 
-            // Hide affirmative and acknowledge
-            $('.acknowledge').css('display', 'none')
-            $('.affirmative').css('display','none')
-          }
-      });
-
-    $(".acknowledge-input").change(function(){
-      if ($('.acknowledge-input:checked')) {
-
-        // show affirmative
-        $('.affirmative').css('display','flex')
-          $('.affirmative').focus()
-
-          window.setTimeout(function(){
-          // Change page displayed
-            $('body').trigger("pageEvent", pageIndex + 1)
-          }, 2000)
-      }
-      else {
-        // hide affirmative
-        $('.affirmative').css('display','none')
-      }
+          // Hide affirmative and acknowledge
+          $('.acknowledge').css('display', 'none')
+          $('.affirmative').css('display','none')
+        }
     });
+
+  $(".acknowledge-input").change(function(){
+    if ($('.acknowledge-input:checked')) {
+
+      // show affirmative
+      $('.affirmative').css('display','flex')
+        $('.affirmative').focus()
+
+        window.setTimeout(function(){
+        // Change page displayed
+          $('body').trigger("pageEvent", pageIndex + 1)
+        }, 2000)
+    }
+    else {
+      // hide affirmative
+      $('.affirmative').css('display','none')
+    }
+  });
 
   // custom event for toggling between pages of signup form
   $("body").bind("pageEvent", function(e, index){
@@ -124,25 +172,37 @@ $(document).ready(function() {
 
   })
 
+  // Progress onBlur or on Enter key pressed
+  $('.text-input').bind('blur keyup', function(e) {
+    if (e.type === 'blur' || e.keyCode === 13) {
+      if (pageIndex == 1) {
+        validateName()
+      }
+      if (pageIndex == 2) {
+        validatePhone()
+      }
+      if (pageIndex == 3) {
+        validateEmail()
+      }
+    }  
+  })
+
   // button behavior
   $(".next-button").click(function(){
-    
-    // Email validation and set email review to user inpurt
-    if (pageIndex == 2) {
-      var regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
-      if (regex.test($('#email-input').val())) {
-        // Hide warning and submit
-        $("#email-warning").hide()
-        $('#send-confirmation-email-button').submit()
-      } else {
-        // Show warning and prevent submit
-        $("#email-warning").show();
-        e.preventDefault();
-      }
+    if (pageIndex == 1) {
+      validateName()
+    }
+
+    if (pageIndex == 2) { 
+      validatePhone()
+    }
+
+    if (pageIndex == 3) { 
+      validateEmail()
     }
 
     // Set transportation review to user input
-    if (pageIndex == 3) {
+    if (pageIndex == 5) {
       var transportations = $.map($("input[name='transport']:checked"), function(item){
         return $(item).val()
       })
@@ -151,12 +211,12 @@ $(document).ready(function() {
     }
 
     // Set frequencyreview to user input
-    if (pageIndex == 4) {
+    if (pageIndex == 6) {
       $('#frequency-review').text($("input[name='frequency']:checked").val())
     }
 
     // Set language review to user input
-    if (pageIndex == 5) {
+    if (pageIndex == 7) {
       var languages = $.map($("input[name='languages']:checked"), function(item){
         return $(item).val()
       })
@@ -165,7 +225,7 @@ $(document).ready(function() {
     }
 
     // Validate user certified health and safety protocl
-    if (pageIndex == 6) {
+    if (pageIndex == 8) {
       if (!$("#certify-health-safety-protocol-cbox").is(":checked")) {
         $("#health-safety-warning").show()
         return;
@@ -185,40 +245,9 @@ $(document).ready(function() {
     }
   })
 
-  // If all name input fields are full on blur/defocus, automatically progress
-  $('#name-page').find(".text-input").blur(function(e){
-    if ($('#firstname-input').val().length > 0 && $('#lastname-input').val().length > 0){
-
-      // Set review field to user input
-      $('#firstname-review').text($('#firstname-input').val());
-      $('#lastname-review').text($('#lastname-input').val());
-      $('body').trigger("pageEvent", pageIndex + 1);
-    }
-  });
-
-  // phone input cleaning + validation 
-  $('#phone-input').blur(function(e){
-    phone = $(this).val();
-    phone = phone.replace(/[^0-9]/g,'');
-
-    $(this).val(
-      (phone.slice(0,3) ? "("+phone.slice(0,3)+")" : "") +
-      (phone.slice(3,6) ? "-"+phone.slice(3,6) : "") +
-      (phone.slice(6,10) ? "-"+phone.slice(6,10) : "")
-    );
-
-    if (phone.length==10) {
-      // Set review field to user input
-      $('#phone-review').text(phone);
-      $('body').trigger("pageEvent", pageIndex + 1);
-    } else {
-      $("#phone-warning").show();
-    }
-  });
-
-  $('#address-input').blur(function(e){
-    google.maps.event.trigger(autocomplete, 'place_changed');
-  });
+  $("#livelyhood-home-button").click(function(){
+      window.location.pathname = '/';
+  })
 
   // Submit volunteer form
   $(".finish-set-up").click(function(event){
@@ -226,9 +255,9 @@ $(document).ready(function() {
     var csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
     var add_volunteer_url;
     if (location.port) {
-       add_volunteer_url = window.location.protocol +'//' + document.domain + ':' + location.port + '/volunteer';
+       add_volunteer_url = window.location.protocol +'//' + document.domain + ':' + location.port + '/volunteer/signup';
     } else {
-      add_volunteer_url = window.location.protocol +'//' + document.domain + '/volunteer';
+      add_volunteer_url = window.location.protocol +'//' + document.domain + '/volunteer/signup';
     }
 
     // make POST ajax call
@@ -245,7 +274,8 @@ $(document).ready(function() {
               "transportation": $("#transportation-review").text(),
               "language": $("#language-review").text(),
               "lat": $("#address-input").attr("lat"),
-              "lon": $("#address-input").attr("lon")
+              "lon": $("#address-input").attr("lon"),
+              "address-input": $("#address-input").val()
             },
             success: function(response){
               console.log(response);

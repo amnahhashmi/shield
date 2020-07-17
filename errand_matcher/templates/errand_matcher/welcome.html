@@ -1,4 +1,3 @@
-{% load static %}
 <div class="h5_32 item" id="welcome-name">
 </div>
 <div class="body_16_fontonly subhead item">
@@ -8,24 +7,27 @@
 <div class="h5_32 item">What's next?</div>
 
 <div class="item">
-	<span style="vertical-align: middle;"><img src="{% static 'css/icons/number-1.png' %}"></span>
+	<span class="body_bold_16">1</span> 
 	<span class="body_16_fontonly"> When someone nearby needs help, you'll be notified of their request.</span>
 </div>
 <div class="item">
-	<span style="vertical-align: middle;"><img src="{% static 'css/icons/number-2.png' %}"></span>
+	<span class="body_bold_16">2</span> 
 	<span class="body_16_fontonly"> Confirm if you'll be able to help at this time.</span>
 </div>
 <div class="item">
-	<span style="vertical-align: middle;"><img src="{% static 'css/icons/number-3.png' %}"></span>
+	<span class="body_bold_16">3</span> 
 	<span class="body_16_fontonly"> Reach out to the at-risk community member for details on what they need and how you'll be reimbursed.</span>
 </div>
 <div class="item">
-	<span style="vertical-align: middle;"><img src="{% static 'css/icons/number-4.png' %}"></span>
+	<span class="body_bold_16">4</span> 
 	<span class="body_16_fontonly"> Go shopping for what they need and deliver it to their home, following our <a href="{% url 'health_and_safety' %}">Safety Best Practices</a>.</span>
 </div>
 
-<div class="body_bold_16 inline-button-box button" id="livelyhood-home-button">
-	LivelyHood
+<div class="body_bold_16 item">
+	Want to do more? Spread the word and let your friends now!
+</div>
+<div class="body_bold_16 button item">
+	<a class="body_bold_16" href="{% url 'index' %}">LivelyHood</a>
 </div>
 
 
