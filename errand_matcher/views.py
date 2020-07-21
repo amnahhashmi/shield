@@ -38,7 +38,7 @@ def health_and_safety(request):
     return render(request, 'errand_matcher/health-and-safety.html')
 
 def error(request):
-    return render(request, 'errand_matcher/404.html')
+    return render(request, 'errand_matcher/404.html', {'base_url': helper.get_base_url()})
 
 @csrf_exempt
 def sms_inbound(request):
@@ -284,7 +284,7 @@ def accept_errand(request, errand_id, volunteer_number):
         return HttpResponse(status=204)
 
     else:
-        # TO DO: verify that volunteer is associatedl with errand
+        # TO DO: verify that volunteer is associated with errand
         errand = Errand.objects.get(id=errand_id)
         parsed_mobile_number = phonenumbers.parse('+1{}'.format(volunteer_number))
         # TO DO: failure case if multiple volunteers or DNE?
@@ -354,4 +354,4 @@ def view_errand(request, errand_id, access_id):
             })
 
     else:
-        pass
+        return render(request, 'errand_matcher/404.html', {'base_url': helper.get_base_url()})

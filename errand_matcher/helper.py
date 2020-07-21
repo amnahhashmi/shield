@@ -42,12 +42,12 @@ def get_support_mobile_number():
     return site_configuration.mobile_number_on_call
 
 def strip_mobile_number(mobile_number):
-    mobile_number_str = format_mobile_number(mobile_number)
+    mobile_number_str = format_mobile_number(mobile_number, )
     mobile_number_stripped = mobile_number_str.replace('+1', '')
     return mobile_number_stripped
 
-def format_mobile_number(mobile_number):
-    return phonenumbers.format_number(mobile_number, phonenumbers.PhoneNumberFormat.NATIONAL)
+def format_mobile_number(mobile_number, number_format=phonenumbers.PhoneNumberFormat.NATIONAL):
+    return phonenumbers.format_number(mobile_number, number_format)
 
 def get_volunteer_from_mobile_number_str(mobile_number_str):
     parsed_mobile_number = phonenumbers.parse('+1{}'.format(mobile_number_str))

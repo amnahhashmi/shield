@@ -408,6 +408,7 @@ textarea {
 .strong-button {
 	background: #000000;
 	color: #FFFFFF;
+	text-align: center;
 }
 
 .conf-item {
