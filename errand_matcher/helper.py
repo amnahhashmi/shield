@@ -27,6 +27,16 @@ def send_sms(to_number, message):
         to=to_number)
     return
 
+def get_base_url():
+    url_lookup = {
+        'LOCAL': 'http://127.0.0.1:8000',
+        'STAGING': 'https://staging-shieldcovid.herokuapp.com',
+        'PROD': 'https://www.livelyhood.io'
+    }
+    
+    deploy_stage = os.environ.get('DEPLOY_STAGE')
+    return url_lookup[deploy_stage]
+
 def get_support_mobile_number():
     site_configuration = SiteConfiguration.objects.first()
     return site_configuration.mobile_number_on_call

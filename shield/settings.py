@@ -30,9 +30,11 @@ deploy_stage = os.environ.get('DEPLOY_STAGE')
 if deploy_stage == 'LOCAL':
     DEBUG = True
     SECURE_SSL_REDIRECT = False
+    SESSION_COOKIE_SECURE = False
 else:
     DEBUG = False
     SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
 
 ALLOWED_HOSTS = ['0.0.0.0', 
     'localhost', 
@@ -42,7 +44,6 @@ ALLOWED_HOSTS = ['0.0.0.0',
     'www.livelyhood.io']
 
 CSRF_USE_SESSIONS = True
-SESSION_COOKIE_SECURE = True
 
 # Application definition
 

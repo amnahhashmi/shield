@@ -31,17 +31,6 @@ errand_urgency_lookup = {
     'Within 3 days': 2
 }
 
-def get_base_url():
-    url_lookup = {
-        'LOCAL': 'http://127.0.0.1:8000',
-        'STAGING': 'https://staging-shieldcovid.herokuapp.com',
-        'PROD': 'https://www.livelyhood.io'
-    }
-
-    deploy_stage = os.environ.get('DEPLOY_STAGE')
-    base_url = url_lookup[deploy_stage]
-    return base_url
-
 def index(request):
     return render(request, 'errand_matcher/index.html')
 
@@ -178,6 +167,14 @@ def volunteer_signup(request):
             speaks_chinese = speaks_chinese,
             consented = True)
         volunteer.save()
+
+        tiny_faq_url = helper.make_tiny_url("{}#above-faq".format(helper.get_base_url()))
+        message = "Thanks for signing up to help make deliveries for at-risk members of your community!"\
+        " We'll text you when someone nearby needs your help. In the meantime, you can get ready by reading our FAQs:{}"\
+        " . And if you ever need help, you can always text us here.\n"\
+        "Reply STOP to stop receiving notifications of new requests.".format(tiny_faq_url)
+        helper.send_sms(helper.format_mobile_number(volunteer.mobile_number), message)
+
         return HttpResponse(status=204)
     else:
         return render(request, 'errand_matcher/volunteer-signup.html',
@@ -281,7 +278,7 @@ def accept_errand(request, errand_id, volunteer_number):
         errand.save()
 
         # send text to volunteer with unique link
-        url = "{}/errand/{}/status/{}".format(get_base_url(), errand.id, errand.access_id)
+        url = "{}/errand/{}/status/{}".format(helper.get_base_url(), errand.id, errand.access_id)
         message = "Thanks for accepting this request! See details at {}".format(url)
         helper.send_sms(helper.format_mobile_number(v.mobile_number), message)
         return HttpResponse(status=204)
@@ -337,7 +334,7 @@ def accept_errand(request, errand_id, volunteer_number):
             'address': address,
             'requestor_number': requestor_number,
             'staff_number': staff_number,
-            'base_url': get_base_url()
+            'base_url': helper.get_base_url()
             })
 
 def view_errand(request, errand_id, access_id):
@@ -353,7 +350,7 @@ def view_errand(request, errand_id, access_id):
             'address': address,
             'requestor_number': requestor_number,
             'staff_number': staff_number,
-            'base_url': get_base_url()
+            'base_url': helper.get_base_url()
             })
 
     else:
