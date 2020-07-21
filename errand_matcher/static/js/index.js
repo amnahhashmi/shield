@@ -39,7 +39,7 @@ $(document).ready(function() {
 	}
 
 	$('.volunteer-button').click(function(){
-		window.location.href = "volunteer";
+		window.location.href = "volunteer/signup";
 	})
 
 	$('.requestor-button').click(function(){

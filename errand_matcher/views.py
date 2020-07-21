@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseNotAllowed
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.hashers import make_password
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
@@ -8,11 +9,12 @@ import os
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 import errand_matcher.helper as helper
-from errand_matcher.models import ConfirmationToken 
 from errand_matcher.models import Errand
-from errand_matcher.models import User, Volunteer, Requestor
+from errand_matcher.models import User, Volunteer, Requestor, UserOTP
 from errand_matcher.models import SiteConfiguration
 import phonenumbers
+import uuid
+from datetime import timedelta
 
 frequency_choice_lookup = {
     'Anytime': 1,
@@ -30,22 +32,14 @@ errand_urgency_lookup = {
     'Within 3 days': 2
 }
 
-def get_base_url():
-    url_lookup = {
-        'LOCAL': 'http://127.0.0.1:8000',
-        'STAGING': 'https://staging-shieldcovid.herokuapp.com',
-        'PROD': 'https://www.livelyhood.io'
-    }
-
-    deploy_stage = os.environ.get('DEPLOY_STAGE')
-    base_url = url_lookup[deploy_stage]
-    return base_url
-
 def index(request):
     return render(request, 'errand_matcher/index.html')
 
 def health_and_safety(request):
     return render(request, 'errand_matcher/health-and-safety.html')
+
+def error(request):
+    return render(request, 'errand_matcher/404.html', {'base_url': helper.get_base_url()})
 
 @csrf_exempt
 def sms_inbound(request):
@@ -53,12 +47,66 @@ def sms_inbound(request):
     body = request.POST['body']
 
     # forward text to on-call staffer
-    site_configuration = SiteConfiguration.objects.first()
-    message = '{}: {}'.format(site_configuration.mobile_number, body)
-    helper.send_sms(site_configuration.mobile_number_on_call, message)
+    message = '{}: {}'.format(from_number, body)
+    helper.send_sms(helper.format_mobile_number(helper.get_support_mobile_number()), message)
     return
 
-def begin_signup(request):
+def volunteer(request):
+    return render(request, 'errand_matcher/volunteer.html')
+
+def volunteer_login(request):
+    if request.method == 'POST':
+        mobile_number_str = request.POST.get('phone-input')
+
+        # Is mobile number associated with Volunteer?
+        volunteer = helper.get_volunteer_from_mobile_number_str(mobile_number_str)
+
+        # If Volunteer found, create OTP
+        if volunteer is not None:
+            user_otp = UserOTP.objects.create(mobile_number = volunteer.mobile_number)
+
+            # deliver OTP
+            message = "Livelyhood here! {} is your one-time password for online login. Please do not share.".format(
+                user_otp.token)
+            helper.send_sms(helper.format_mobile_number(user_otp.mobile_number), message)
+            
+            return render(request, 'errand_matcher/volunteer-login-otp.html')
+        # If no Volunteer found, show warning and redirect back to signup
+        else:
+            return render(request, 'errand_matcher/volunteer-login.html', {
+                'warning': 'Not found'})
+            
+    else:
+        return render(request, 'errand_matcher/volunteer-login.html')
+
+def volunteer_login_otp(request):
+    if request.method == 'POST':
+        otp_input = request.POST.get('otp-input')
+        user_otp = UserOTP.objects.filter(token=otp_input).first()
+
+        # If OTP found, login
+        if user_otp is not None:
+            volunteer = Volunteer.objects.filter(mobile_number=user_otp.mobile_number).first()
+            user = authenticate(request, username = volunteer.email_address, 
+                    password = helper.strip_mobile_number(volunteer.mobile_number))
+            # Redirect to a success page if authenticated
+            if user is not None:
+                login(request, user)
+            # Else an 'invalid login' error message.
+            else:
+                pass
+        
+        # If OTP not found, show warning and redirect back to signup
+        else:
+            return render(request, 'errand_matcher/volunteer-login-otp.html', {
+                'warning': 'Not found'
+                })
+
+    else:
+        return render(request, 'errand_matcher/volunteer-login-otp.html')
+
+
+def volunteer_signup(request):
     if request.method == 'POST':
         first_name = request.POST['first_name']
         last_name = request.POST['last_name']
@@ -120,47 +168,18 @@ def begin_signup(request):
             speaks_chinese = speaks_chinese,
             consented = True)
         volunteer.save()
+
+        tiny_faq_url = helper.make_tiny_url("{}#above-faq".format(helper.get_base_url()))
+        message = "Thanks for signing up to help make deliveries for at-risk members of your community!"\
+        " We'll text you when someone nearby needs your help. In the meantime, you can get ready by reading our FAQs:{}"\
+        " . And if you ever need help, you can always text us here.\n"\
+        "Reply STOP to stop receiving notifications of new requests.".format(tiny_faq_url)
+        helper.send_sms(helper.format_mobile_number(volunteer.mobile_number), message)
+
         return HttpResponse(status=204)
     else:
-        return render(request, 'errand_matcher/begin-signup.html')
-
-def confirm_email(request):
-    if request.method == 'POST':
-        current_email = request.POST.get('current-email')
-        # AH 4.16.20: to reduce signup friction, removing activation email
-        # token = ConfirmationToken(email=current_email)
-        # token.save()
-        # url = request.META['HTTP_HOST'] + '/activate/' + str(token.id)
-        # message = Mail(
-        #     from_email='livelyhood.tech@gmail.com',
-        #     to_emails=current_email,
-        #     subject='Welcome to Livelyhood',
-        #     html_content='Follow the link to finish activating your account')
-        # message.template_id = 'd-b0b0a7af49f24ca38b29c125384abba8'
-        # message.dynamic_template_data = {
-        #     'volunteerURL': url
-        # }
-        # try:
-        #     sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
-        #     response = sg.send(message)
-        # except Exception as e:
-        #     print(e.message)
-    # return render(request, 'errand_matcher/email-confirmation-end.html', {'current_email': current_email})
-        return render(request, 'errand_matcher/complete-signup.html',
-         {'token_state': 'Active', 'email': current_email})
-    else:
-        return HttpResponseNotAllowed(('POST',))
-
-def activate(request, token_id):
-    token = ConfirmationToken.objects.filter(id=token_id).first()
-    if token is None:
-        token_state = 'Does Not Exist'
-    else:
-        if token.active:
-            token_state = 'Active'
-        else:
-            token_state = 'Expired'
-    return render(request, 'errand_matcher/complete-signup.html', {'token_state': token_state, 'email': token.email})
+        return render(request, 'errand_matcher/volunteer-signup.html',
+            {'GMAPS_API_KEY': os.environ.get('GMAPS_API_KEY')})
 
 def requestor(request):
     return render(request, 'errand_matcher/requestor-request.html')
@@ -248,24 +267,25 @@ def accept_errand(request, errand_id, volunteer_number):
     if request.method == 'POST':
         # To DO: what if errand isn't open?
         errand = Errand.objects.get(id=errand_id)
-        parsed_mobile_number = phonenumbers.parse('+1{}'.format(volunteer_number))
-        # TO DO: failure case if multiple volunteers or DNE?
-        volunteer = Volunteer.objects.filter(mobile_number=parsed_mobile_number).first()
+        volunteer = helper.get_volunteer_from_mobile_number_str(volunteer_number)
 
         # update errand
         errand.status = 2
         errand.claimed_time = timezone.now()
         errand.claimed_volunteer = volunteer
+        errand.access_id = uuid.uuid4()
         errand.save()
 
+        # send text to volunteer with unique link
+        url = "{}/errand/{}/status/{}".format(helper.get_base_url(), errand.id, errand.access_id)
+        message = "Thanks for accepting this request! See details at {}".format(url)
+        helper.send_sms(helper.format_mobile_number(volunteer.mobile_number), message)
         return HttpResponse(status=204)
 
     else:
-        # TO DO: verify that volunteer is associatedl with errand
+        # TO DO: verify that volunteer is associated with errand
         errand = Errand.objects.get(id=errand_id)
-        parsed_mobile_number = phonenumbers.parse('+1{}'.format(volunteer_number))
-        # TO DO: failure case if multiple volunteers or DNE?
-        volunteer = Volunteer.objects.filter(mobile_number=parsed_mobile_number).first()
+        volunteer = helper.get_volunteer_from_mobile_number_str(volunteer_number)
         
         # TO DO: failure case if no modes
         modes = []
@@ -291,8 +311,7 @@ def accept_errand(request, errand_id, volunteer_number):
 
         address = helper.gmaps_reverse_geocode((errand.requestor.lat, errand.requestor.lon))
 
-        requestor_number = phonenumbers.format_number(
-            errand.requestor.mobile_number, phonenumbers.PhoneNumberFormat.NATIONAL)
+        requestor_number = helper.format_mobile_number(errand.requestor.mobile_number)
 
         contact_preference = 'Texting' if errand.requestor.contact_preference == 1 else 'Phone call'
 
@@ -311,5 +330,28 @@ def accept_errand(request, errand_id, volunteer_number):
             'address': address,
             'requestor_number': requestor_number,
             'staff_number': staff_number,
-            'base_url': get_base_url()
+            'base_url': helper.get_base_url()
             })
+
+def view_errand(request, errand_id, access_id):
+    errand = Errand.objects.filter(access_id=access_id).first()
+    days_to_add = 1 if errand.urgency == 1 else 3
+    errand_expiration = errand.requested_time + timedelta(days=days_to_add)
+    errand_expiration_hours = math.floor((errand_expiration - timezone.now()).total_seconds() / 3600)
+    contact_preference = 'Texting' if errand.requestor.contact_preference == 1 else 'Phone call'
+    address = helper.gmaps_reverse_geocode((errand.requestor.lat, errand.requestor.lon))
+    requestor_number = helper.format_mobile_number(errand.requestor.mobile_number)
+    if errand is not None:
+        return render(request, 'errand_matcher/errand-view.html', {
+            'errand_number': int(errand.id),
+            'requestor': errand.requestor,
+            'time_left': errand_expiration_hours,
+            'additional_info': errand.additional_info,
+            'contact_preference': contact_preference,
+            'address': address,
+            'requestor_number': requestor_number,
+            'base_url': helper.get_base_url()
+            })
+
+    else:
+        return render(request, 'errand_matcher/404.html', {'base_url': helper.get_base_url()})

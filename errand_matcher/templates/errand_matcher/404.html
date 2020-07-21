@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>LivelyHood</title>
+	<link rel="shortcut icon" type="image/png" href="{% static 'css/icons/favicon.ico' %}"/>
+
+	<!-- Google fonts -->
+	<link href="https://fonts.googleapis.com/css?family=Playfair+Display" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Work+Sans&display=swap" rel="stylesheet">
+
+	<!-- CUSTOM STYLESHEETS -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet"/>
+    <link href="{% static 'css/404.css' %}" rel="stylesheet"/>
+</head>
+
+<body>
+
+	<div id="notfound">
+		<div class="notfound">
+			<div class="notfound-404">
+				<h1>4<span></span>4</h1>
+			</div>
+			<h2>Oops! Page Not Found</h2>
+			<p>The page you are looking for does not exist, has been removed, has changed its name, or is temporarily unavailable.</p>
+			<a href="{{ base_url }}">Back to LivelyHood</a>
+		</div>
+	</div>
+
+</body>
+
+</html>

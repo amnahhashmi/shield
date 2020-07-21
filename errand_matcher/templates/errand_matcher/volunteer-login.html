@@ -13,14 +13,11 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	<script src="https://momentjs.com/downloads/moment.js"></script>
 
-	<title>LivelyHood Requestor Login</title>
+	<title>LivelyHood Volunteer Login</title>
 	<link rel="shortcut icon" type="image/png" href="{% static 'css/icons/favicon.ico' %}"/>
 
     <!-- CUSTOM STYLESHEETS -->
     <link href="{% static 'css/style.css' %}" rel="stylesheet"/>
-
-    <!-- PAGE SOURCE -->
-    <script src="{% static 'js/requestor-login.js' %}"></script>
 
 </head>
 <body>
@@ -28,25 +25,15 @@
 		Sign in
 	</div>
 
-	<div class="body_16_fontonly subhead item">
-		Enter your date of birth as numbers only. So if your birthday is June 15, 1948, type in 06151948. 
-	</div>
-
-	<form class="requestor-login-form" action="login" method="post">
+	<form class="volunteer-login-form" action="login" method="post">
 		{% csrf_token %}
 		<div class="text-box" for="phone-input">
 			<input type="text" class="text-input  body_16_fontonly" id="phone-input" name="phone-input" placeholder="Phone number" /> 
 		</div>
 		<div class="body_16_fontonly subhead item warning" id="phone-warning">
-			Please enter a 10-digit U.S. phone number.
+			Please enter a 10-digit U.S. phone number to receive a one-time password.
 		</div>
-		<div class="text-box" for="dob-input">
-			<input type="date" class="text-input  body_16_fontonly" id="dob-input" name="dob-input" placeholder="Birthdate" /> 
-		</div>
-		<div class="body_16_fontonly subhead item warning" id="dob-warning">
-			Please enter a valid date from the past.
-		</div>
-		<input type="submit" id="requestor-login-button" class="inline-button-box button body_bold_16" value="Next"/>
+		<input type="submit" id="volunteer-login-button" class="inline-button-box button body_bold_16" value="Next"/>
 	</form>
 </body>
 </html>

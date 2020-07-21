@@ -30,9 +30,11 @@ deploy_stage = os.environ.get('DEPLOY_STAGE')
 if deploy_stage == 'LOCAL':
     DEBUG = True
     SECURE_SSL_REDIRECT = False
+    SESSION_COOKIE_SECURE = False
 else:
     DEBUG = False
     SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
 
 ALLOWED_HOSTS = ['0.0.0.0', 
     'localhost', 
@@ -42,7 +44,6 @@ ALLOWED_HOSTS = ['0.0.0.0',
     'www.livelyhood.io']
 
 CSRF_USE_SESSIONS = True
-SESSION_COOKIE_SECURE = True
 
 # Application definition
 
@@ -55,7 +56,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'errand_matcher',
     'phonenumber_field',
-    'django_celery_beat'
+    'django_celery_beat',
+    'django_otp',
+    'django_otp.plugins.otp_totp',
+    'django_otp.plugins.otp_hotp',
+    'django_otp.plugins.otp_static',
 ]
 
 MIDDLEWARE = [
@@ -65,6 +70,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django_otp.middleware.OTPMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]

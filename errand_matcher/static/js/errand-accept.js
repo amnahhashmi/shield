@@ -41,6 +41,10 @@ $(document).ready(function() {
         })
     })
 
+    $("#livelyhood-home-button").click(function(){
+      window.location.pathname = '/';
+  	})
+
 	// display last page if errand not open
 	if ($("#errand_status").val() != 1) {
 		$("body").trigger("pageEvent",2)

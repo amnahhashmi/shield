@@ -8,6 +8,7 @@ from twilio.rest import Client
 import os
 from django.utils import timezone
 from datetime import timedelta
+import phonenumbers
 
 def make_tiny_url(url):
     request_url = ('http://tinyurl.com/api-create.php?' + 
@@ -25,6 +26,34 @@ def send_sms(to_number, message):
         from_=twilio_number,
         to=to_number)
     return
+
+def get_base_url():
+    url_lookup = {
+        'LOCAL': 'http://127.0.0.1:8000',
+        'STAGING': 'https://staging-shieldcovid.herokuapp.com',
+        'PROD': 'https://www.livelyhood.io'
+    }
+    
+    deploy_stage = os.environ.get('DEPLOY_STAGE')
+    return url_lookup[deploy_stage]
+
+def get_support_mobile_number():
+    site_configuration = SiteConfiguration.objects.first()
+    return site_configuration.mobile_number_on_call
+
+def strip_mobile_number(mobile_number):
+    mobile_number_str = format_mobile_number(mobile_number, number_format=phonenumbers.PhoneNumberFormat.E164)
+    mobile_number_stripped = mobile_number_str.replace('+1', '')
+    return mobile_number_stripped
+
+def format_mobile_number(mobile_number, number_format=phonenumbers.PhoneNumberFormat.NATIONAL):
+    return phonenumbers.format_number(mobile_number, number_format)
+
+def get_volunteer_from_mobile_number_str(mobile_number_str):
+    parsed_mobile_number = phonenumbers.parse('+1{}'.format(mobile_number_str))
+    # TO DO: failure case if multiple volunteers or DNE?
+    volunteer = Volunteer.objects.filter(mobile_number=parsed_mobile_number).first()
+    return volunteer
 
 def match_errand_to_volunteers(errand):
     # exclude volunteers contacted on open errands

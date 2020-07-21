@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+	<!-- import fonts -->
+	<link href="https://fonts.googleapis.com/css?family=Work+Sans&display=swap" rel="stylesheet">
+
+	<!-- import jQuery -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script src="https://momentjs.com/downloads/moment.js"></script>
+
+	<title>LivelyHood Volunteer</title>
+	<link rel="shortcut icon" type="image/png" href="{% static 'css/icons/favicon.ico' %}"/>
+
+    <!-- CUSTOM STYLESHEETS -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet"/>
+</head>
+<body>
+	<div class="h5_32 item">Volunteer</div>
+
+	<div class="body_16_fontonly inline-button-box button" id="volunteer-signup-button">
+		<span style="font-size: 20px">New to LivelyHood?</span>
+		<span>Sign up with your details to help your community</span>
+	</div>
+
+	<div class="body_16_fontonly inline-button-box button" id="volunteer-login-button">
+		<span style="font-size: 20px">I've volunteered before</span>
+		<span>Log into your account to see your current deliveries</span>
+	</div>
+</body>
+<script>
+	$(document).ready(function() {
+		$("#volunteer-signup-button").click(function(){
+			window.location.pathname = "/volunteer/signup";
+		});
+
+		$("#volunteer-login-button").click(function(){
+			window.location.pathname = "/volunteer/login";
+		});
+	});
+</script>
+<html>
