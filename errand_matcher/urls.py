@@ -10,7 +10,6 @@ urlpatterns = [
     path('volunteer', views.volunteer, name='volunteer'),
     path('volunteer/signup', views.volunteer_signup, name='volunteer_signup'),
     path('volunteer/login', views.volunteer_login, name='volunteer_login'),
-    path('volunteer/login-otp', views.volunteer_login_otp, name='volunteer_login_otp'),
     path('requestor', views.requestor, name='requestor'),
     path('requestor/signup', views.requestor_signup, name='requestor_signup'),
     path('requestor/login', views.requestor_login, name='requestor_login'),

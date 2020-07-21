@@ -224,7 +224,6 @@ $(document).ready(function() {
       $('#language-review').text(languages_as_str)
     }
 
-    // Validate user certified health and safety protocl
     if (pageIndex == 8) {
       if (!$("#certify-health-safety-protocol-cbox").is(":checked")) {
         $("#health-safety-warning").show()
@@ -248,6 +247,10 @@ $(document).ready(function() {
   $("#livelyhood-home-button").click(function(){
       window.location.pathname = '/';
   })
+
+  $('#address-input').blur(function(e){
+    google.maps.event.trigger(autocomplete, 'place_changed');
+  });
 
   // Submit volunteer form
   $(".finish-set-up").click(function(event){
@@ -275,7 +278,6 @@ $(document).ready(function() {
               "language": $("#language-review").text(),
               "lat": $("#address-input").attr("lat"),
               "lon": $("#address-input").attr("lon"),
-              "address-input": $("#address-input").val()
             },
             success: function(response){
               console.log(response);
