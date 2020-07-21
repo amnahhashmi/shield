@@ -24,11 +24,20 @@
 	</head>
 	<body>
 		<div class="h5_32 item">
-    		Delivery #{{errand.id}}
+    		Delivery # {{errand_number}}
 		</div>
 		<div class="body_16_fontonly subhead item">
-		    Thanks for making a difference! Your requestor's details are below:
+		    Thanks for helping {{requestor.user.first_name}} out! Every little help makes a difference :).
 		</div>
+		<div class="conf-item">
+		    <div class="body-13">Time left to deliver</div>
+		    <div class="body_bold_16">
+		        <div class="body_bold_16">{{ time_left }} hour(s)</div>
+		    </div>
+		</div>
+
+		<hr style="width: 100%; height:0px; border: 1px solid rgba(0, 0, 0, 0.1); margin: 0px 10px;"></hr>
+
 		<div class="conf-item">
 		    <div class="body-13">Name</div>
 		    <div class="body_bold_16">
@@ -57,3 +66,9 @@
 		    <div class="body_bold_16">{{ additional_info }}</div>
 		</div>
 		{% endif %}
+
+		<div class="body_bold_16 inline-button-box button" id="livelyhood-home-button">
+			LivelyHood
+		</div>
+	</body>
+</html>

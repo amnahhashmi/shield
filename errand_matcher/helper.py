@@ -51,6 +51,7 @@ def format_mobile_number(mobile_number, number_format=phonenumbers.PhoneNumberFo
 
 def get_volunteer_from_mobile_number_str(mobile_number_str):
     parsed_mobile_number = phonenumbers.parse('+1{}'.format(mobile_number_str))
+    # TO DO: failure case if multiple volunteers or DNE?
     volunteer = Volunteer.objects.filter(mobile_number=parsed_mobile_number).first()
     return volunteer
 

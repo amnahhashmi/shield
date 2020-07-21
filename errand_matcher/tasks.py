@@ -48,8 +48,7 @@ def match_errands():
                 errand.requested_time)
  
             helper.send_sms(
-                helper.format_mobile_number(get_support_mobile_number()) 
-                message)
+                helper.format_mobile_number(get_support_mobile_number()), message)
 
         else:
             if errand.request_round < 5:
@@ -59,20 +58,17 @@ def match_errands():
                     weekday_lookup[(timezone.now() + timedelta(days=days_to_add)).date().isoweekday()])
 
                 for v in volunteers:
-                    if v.mobile_number == '':
-                        continue
-                    else:
-                        url = "{}/errand/{}/accept/{}".format(
-                            helper.get_base_url(), 
-                            errand.id, 
-                            helper.strip_mobile_number(v.mobile_number))
+                    url = "{}/errand/{}/accept/{}".format(
+                        helper.get_base_url(), 
+                        errand.id, 
+                        helper.strip_mobile_number(v.mobile_number))
 
-                        message = "LivelyHood here! {} needs help getting groceries! Can you make a delivery by {}?"\
-                        " Click here for more information and to let us know if you can help. {}".format(
-                            errand.requestor.user.first_name, deadline_str, url)
-                        
-                        helper.send_sms(helper.format_mobile_number(v.mobile_number), message)
-                        errand.contacted_volunteers.add(v)
+                    message = "LivelyHood here! {} needs help getting groceries! Can you make a delivery by {}?"\
+                    " Click here for more information and to let us know if you can help. {}".format(
+                        errand.requestor.user.first_name, deadline_str, url)
+                    
+                    helper.send_sms(helper.format_mobile_number(v.mobile_number), message)
+                    errand.contacted_volunteers.add(v)
 
                 errand.request_round +=1
                 errand.save()

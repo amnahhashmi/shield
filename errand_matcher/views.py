@@ -14,6 +14,7 @@ from errand_matcher.models import User, Volunteer, Requestor, UserOTP
 from errand_matcher.models import SiteConfiguration
 import phonenumbers
 import uuid
+from datetime import timedelta
 
 frequency_choice_lookup = {
     'Anytime': 1,
@@ -266,9 +267,7 @@ def accept_errand(request, errand_id, volunteer_number):
     if request.method == 'POST':
         # To DO: what if errand isn't open?
         errand = Errand.objects.get(id=errand_id)
-        parsed_mobile_number = phonenumbers.parse('+1{}'.format(volunteer_number))
-        # TO DO: failure case if multiple volunteers or DNE?
-        volunteer = Volunteer.objects.filter(mobile_number=parsed_mobile_number).first()
+        volunteer = helper.get_volunteer_from_mobile_number_str(volunteer_number)
 
         # update errand
         errand.status = 2
@@ -280,15 +279,13 @@ def accept_errand(request, errand_id, volunteer_number):
         # send text to volunteer with unique link
         url = "{}/errand/{}/status/{}".format(helper.get_base_url(), errand.id, errand.access_id)
         message = "Thanks for accepting this request! See details at {}".format(url)
-        helper.send_sms(helper.format_mobile_number(v.mobile_number), message)
+        helper.send_sms(helper.format_mobile_number(volunteer.mobile_number), message)
         return HttpResponse(status=204)
 
     else:
         # TO DO: verify that volunteer is associated with errand
         errand = Errand.objects.get(id=errand_id)
-        parsed_mobile_number = phonenumbers.parse('+1{}'.format(volunteer_number))
-        # TO DO: failure case if multiple volunteers or DNE?
-        volunteer = Volunteer.objects.filter(mobile_number=parsed_mobile_number).first()
+        volunteer = helper.get_volunteer_from_mobile_number_str(volunteer_number)
         
         # TO DO: failure case if no modes
         modes = []
@@ -314,8 +311,7 @@ def accept_errand(request, errand_id, volunteer_number):
 
         address = helper.gmaps_reverse_geocode((errand.requestor.lat, errand.requestor.lon))
 
-        requestor_number = phonenumbers.format_number(
-            errand.requestor.mobile_number, phonenumbers.PhoneNumberFormat.NATIONAL)
+        requestor_number = helper.format_mobile_number(errand.requestor.mobile_number)
 
         contact_preference = 'Texting' if errand.requestor.contact_preference == 1 else 'Phone call'
 
@@ -339,17 +335,21 @@ def accept_errand(request, errand_id, volunteer_number):
 
 def view_errand(request, errand_id, access_id):
     errand = Errand.objects.filter(access_id=access_id).first()
+    days_to_add = 1 if errand.urgency == 1 else 3
+    errand_expiration = errand.requested_time + timedelta(days=days_to_add)
+    errand_expiration_hours = math.floor((errand_expiration - timezone.now()).total_seconds() / 3600)
+    contact_preference = 'Texting' if errand.requestor.contact_preference == 1 else 'Phone call'
+    address = helper.gmaps_reverse_geocode((errand.requestor.lat, errand.requestor.lon))
+    requestor_number = helper.format_mobile_number(errand.requestor.mobile_number)
     if errand is not None:
-        return render(request, 'errand_matcher/errand-accept.html', {
+        return render(request, 'errand_matcher/errand-view.html', {
+            'errand_number': int(errand.id),
             'requestor': errand.requestor,
-            'errand_urgency': urgency_str,
-            'distance': distance_str,
-            'errand_status': errand.status,
+            'time_left': errand_expiration_hours,
             'additional_info': errand.additional_info,
             'contact_preference': contact_preference,
             'address': address,
             'requestor_number': requestor_number,
-            'staff_number': staff_number,
             'base_url': helper.get_base_url()
             })
 
