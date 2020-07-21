@@ -42,7 +42,7 @@ def get_support_mobile_number():
     return site_configuration.mobile_number_on_call
 
 def strip_mobile_number(mobile_number):
-    mobile_number_str = format_mobile_number(mobile_number, )
+    mobile_number_str = format_mobile_number(mobile_number, number_format=phone)
     mobile_number_stripped = mobile_number_str.replace('+1', '')
     return mobile_number_stripped
 
