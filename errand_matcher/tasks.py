@@ -48,7 +48,7 @@ def match_errands():
                 errand.requested_time)
  
             helper.send_sms(
-                helper.format_number(site_configuration.mobile_number_on_call), 
+                helper.format_mobile_number(get_support_mobile_number()) 
                 message)
 
         else:
