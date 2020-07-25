@@ -94,7 +94,10 @@ def match_errand_to_volunteers(errand):
     eligible_volunteers = Volunteer.objects.exclude(
         mobile_number__in=volunteers_on_open_errands+volunteers_already_fulfilled_prefs+[''])
 
-    by_distance = sorted(eligible_volunteers, 
+    # confirm volunteers have valid phone numbers
+    valid_phones = [ev for ev in eligible_volunteers if phonenumbers.is_valid_number(ev.mobile_number)]
+
+    by_distance = sorted(valid_phones, 
         key=lambda v: distance((v.lat,v.lon),(errand.requestor.lat,errand.requestor.lon)))
 
     return by_distance[:5] if len(by_distance) > 5 else by_distance

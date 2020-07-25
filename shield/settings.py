@@ -169,7 +169,7 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_BACKEND = os.environ.get('REDIS_URL', '')
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_BEAT_SCHEDULE = {
-    'match-errands-every-five-minutes': {
+    'match-errands-every-thirty-minutes': {
        'task': 'errand_matcher.tasks.match_errands',
        'schedule': crontab(minute='*/30'),
        'args': (),
