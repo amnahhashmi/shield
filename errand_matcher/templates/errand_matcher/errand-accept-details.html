@@ -24,6 +24,13 @@
 	<div class="body_bold_16">{{ distance }}</div>
 </div>
 
+{% if additional_info %}
+<div class="conf-item">
+    <div class="body-13">Additional details</div>
+    <div class="body_bold_16">{{ additional_info }}</div>
+</div>
+{% endif %}
+
 <div class="inline-button-box button strong-button button-title" id="accept-request-button">
 	Accept request
 </div>
