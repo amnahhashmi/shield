@@ -29,6 +29,10 @@ $(document).ready(function() {
 		collapseTopNav();
 	})
 
+	$('.partners-link').click(function(){
+		window.location.href = "partner";
+	})
+
 	function collapseTopNav() {
 		var topnav = document.getElementById("topnav");
         if (topnav.className === "topnav") {

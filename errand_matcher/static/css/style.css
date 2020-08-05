@@ -349,6 +349,8 @@ textarea {
 	display: flex;
 	flex-direction: row;
 	padding: 16px 24px;
+	margin-bottom: 24px;
+    margin-top: 6px
 
 	background: #FFFFFF;
 	border: 1px solid #B1B1B1;
@@ -408,6 +410,24 @@ textarea {
 .strong-button {
 	background: #000000;
 	color: #FFFFFF;
+}
+
+.weak-button {
+
+	display: flex;
+	flex-direction: column;
+	padding: 10px;
+
+	background: #FFFFFF;
+	border-radius: 8px;
+	filter: drop-shadow(0px 2px 16px rgba(0, 0, 0, 0.1));
+
+	/* Inside Auto Layout */
+
+	flex: none;
+	order: 0;
+	align-self: flex-start;
+	margin: 0px 0px;
 }
 
 .conf-item {
@@ -645,3 +665,125 @@ body {
 	margin-bottom: 24px;
 }
 
+.vertical-line {
+	width: 462px;
+	height: 0px;
+
+	border: 1px solid #000000;
+	transform: rotate(90deg);
+}
+
+.column {
+	width: 45%;
+	float: left;
+}
+
+.border-right {
+	border-right: 1px solid #000000;
+}
+
+.forgot-password-link {
+	font-family: Work Sans;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 8px;
+	line-height: 150%;
+	/* #959595 - Mid Grey 2 */
+	color: #959595;
+	width: 100%;
+	text-align: right;
+}
+
+tbody td {
+	border-top: 1px solid #C4C4C4;
+	border-bottom: 1px solid #C4C4C4;
+}
+
+.table-header {
+	/* B2 */
+
+	font-family: Work Sans;
+	font-style: normal;
+	font-weight: 600;
+	font-size: 18px;
+	line-height: 150%;
+	text-align: left;
+
+	padding: 12px;
+	
+	/* Black */
+	color: #000000;
+}
+
+.table-item {
+	/* B3 */
+
+	font-family: Work Sans;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 14px;
+	line-height: 150%;
+	/* identical to box height, or 16px */
+
+	padding: 12px;
+
+	/* Black */
+
+	color: #000000;
+}
+
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+  height: 950px;
+}
+
+#datepicker-instructions {
+	/* B3 */
+
+	font-family: Work Sans;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 11px;
+	line-height: 150%;
+	/* identical to box height, or 16px */
+
+
+	color: #000000;
+}
+
+.textarea-input {
+	/* Auto Layout */
+
+	display: flex;
+	flex-direction: row;
+	padding: 16px 24px;
+
+	background: #FFFFFF;
+	border: 2px solid #000000;
+	box-sizing: border-box;
+	border-radius: 8px;
+	resize: none;
+
+	width: 90%;
+	height: unset;
+	margin-left: 0px
+}

@@ -1,0 +1,84 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<!-- import jQuery -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+	<title>LivelyHood Partners</title>
+	<link rel="shortcut icon" type="image/png" href="{% static 'css/icons/favicon.ico' %}"/>
+
+
+	<link href="https://fonts.googleapis.com/css?family=Playfair+Display" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Work+Sans&display=swap" rel="stylesheet">
+
+	<!-- CUSTOM STYLESHEETS -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet"/>
+    <link href="{% static 'css/index.css' %}" rel="stylesheet"/>
+
+	<!-- PAGE SOURCE -->
+    <script src="{% static 'js/partners.js' %}"></script>
+</head>
+
+<body>
+	<div class="topnav" id="topnav">
+		<!-- TODO: Check all links are correct. -->
+		<a class="topnav-item button top-link" id="home-item">LivelyHood</a>
+		<a class="topnav-item-collapsible button health-and-safety-link">Health and safety protocol</a>
+		<a class="topnav-item-collapsible button faq-link">FAQs</a>
+		<a class="topnav-item-collapsible button about-link">About</a>
+		<a class="topnav-item-collapsible button about-link">Contact</a>
+		<a class="topnav-item-collapsible button partners-link">Partners</a>
+		<a class="icon">☰</a>
+	</div>
+	<div class="contents">
+		<h3 class="main-heading">Scale deliveries to your community.</h3>
+
+		<p class="main-text">Does your organization serve vulnerable community members? Our volunteer base can help with grocery runs, food pantry pickups, and more.<br><br><b>Currently in the Boston area.</b></p>
+
+		<div class="horizontal-container row">
+			<div class="column border-right" style="padding-right: 48px;">
+				<h5 class="h5_32">Set Up a Partner Account</h5>
+
+				<p class="body_23">Start discovering volunteers to deliver food to vulnerable members of your community.</p>
+				<p class="body_23">Fill out the form below, and we'll contact you about creating an account.</p>
+
+				<form action="/partners/setup" method="post">
+					{% csrf_token %}
+					<label for="setup-name" class="body_bold_16">Your Name*</label>
+					<input type="text" class="text-input body_16_fontonly" id="setup-name" name="setup-name" placeholder="name" required/>
+					<label for="setup-email" class="body_bold_16">Email*</label>
+					<input type="text" class="text-input body_16_fontonly" id="setup-email" name="setup-email" placeholder="email" required/> 
+					<label for="setup-organization" class="body_bold_16">Organization*</label>
+					<input type="text" class="text-input body_16_fontonly" id="setup-organization" name="setup-organization" placeholder="organization" required/>
+					<label for="setup-phone-number" class="body_bold_16">Phone Number*</label>
+					<input type="text" class="text-input body_16_fontonly" id="setup-phone-number" name="setup-phone-number" placeholder="phone number" required/>  
+					<input type="submit" class="inline-button-box body_bold_16" style="align-items: center; width: 75%; border-width: 0px; margin: 0px" value="Submit"/>
+				</form>
+			</div>
+
+			<div class="column" style="padding-left: 48px; float: right">
+				<h5 class="h5_32">Sign In</h5>
+				<form action="/partner/" method="post">
+					{% csrf_token %}
+					<label for="partners-login-email" class="body_bold_16">Email*</label>
+					<input type="email" class="text-input body_16_fontonly" id="partners-login-email" name="partners-login-email" placeholder="email" required/>
+					<label for="partners-login-password" class="body_bold_16">Password*</label>
+					<input type="password" class="text-input body_16_fontonly" style="margin-bottom: 6px" id="partners-login-password" name="partners-login-password" placeholder="password" required/>
+					<div style="text-align: right">
+						<a class="forgot-password-link" href="">Forgot my password</a>
+					</div>
+					<input type="submit" class="inline-button-box body_bold_16" style="align-items: center; width: 75%; border-width: 0px; margin: 0px" value="Submit"/>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div class="footer">
+		<div class="horizontal-container">
+	    <p class="footer-copyright">(c) 2020 LivelyHood, All rights reserved</p>
+	</div>
+</body>
+
+</html>

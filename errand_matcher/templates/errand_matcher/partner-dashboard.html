@@ -1,0 +1,144 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<!-- import jQuery -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+	<title>LivelyHood Partners Dashboard</title>
+	<link rel="shortcut icon" type="image/png" href="{% static 'css/icons/favicon.ico' %}"/>
+
+
+	<link href="https://fonts.googleapis.com/css?family=Playfair+Display" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Work+Sans&display=swap" rel="stylesheet">
+
+	<!-- CUSTOM STYLESHEETS -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet"/>
+
+    <!-- PAGE SOURCE -->
+    <script src="{% static 'js/partner.js' %}"></script>
+
+</head>
+
+<body>
+	<div class="topnav" id="topnav">
+		<!-- TODO: Check all links are correct. -->
+		<a class="topnav-item button top-link" id="home-item">LivelyHood</a>
+		<a class="topnav-item-collapsible button health-and-safety-link">Health and safety protocol</a>
+		<a class="topnav-item-collapsible button faq-link">FAQs</a>
+		<a class="topnav-item-collapsible button about-link">About</a>
+		<a class="topnav-item-collapsible button about-link">Contact</a>
+		<a class="topnav-item-collapsible button partners-link active">Partners</a>
+		<a class="icon">☰</a>
+	</div>
+
+	<div id="add-delivery-modal" class="modal">
+		<div class="modal-content">
+	    	<h5 class="h5_32">Add Delivery</h5>
+	    	<p class="body_23"> Requestor Information</p>
+	    	<form id="add-delivery-form" action="/partners/setup" method="post">
+	    		{% csrf_token %}
+	    		<div class="row">
+		    		<div class="column" style="width: 33%">
+		    			<p class="body_16_fontonly warning" id="phone-warning" style="color:red">Please enter a 10-digit U.S. phone number.</p>
+						<label for="add-requestor-phone" class="body_bold_16">Phone*</label>
+						<input type="text" class="text-input body_16_fontonly" style="border: 2px solid #000000; width: 90%" id="add-requestor-phone" name="add-requestor-phone" required/>
+						<label for="add-requestor-first-name" class="body_bold_16">Requestor First Name*</label>
+						<input type="text" class="text-input body_16_fontonly" style="border: 2px solid #000000; width: 90%" id="add-requestor-first-name" name="add-requestor-first-name" required/> 
+						<label for="add-requestor-address" class="body_bold_16">Address*</label>
+						<input type="text" class="text-input body_16_fontonly" style="border: 2px solid #000000; width: 90%" id="add-requestor-address" name="add-requestor-address"onFocus="geolocate()" autocomplete="chrome-off" required/>
+					</div>
+					<div class="column" style="width: 33%">
+						<label for="add-requestor-language" class="body_bold_16">Language</label>
+						<select id="add-requestor-language" class="text-input body_16_fontonly" style="width: 90%" name="add-requestor-language">
+							<option value="English">English</option>
+							<option value="Spanish">Spanish</option>
+							<option value="Chinese">Chinese</option>
+						</select>
+						<label for="add-requestor-last-name" class="body_bold_16">Requestor Last Name*</label>
+						<input type="text" class="text-input body_16_fontonly" style="border: 2px solid #000000; width: 90%" id="add-requestor-last-name" name="add-requestor-last-name" required/> 
+						<label for="add-requestor-apartment" class="body_bold_16">Apartment</label>
+						<input type="text" class="text-input body_16_fontonly" style="width: 90%" id="add-requestor-apartment" name="add-requestor-apartment"onFocus="geolocate()" autocomplete="chrome-off" />
+					</div>
+					<div class="column" style="width: 33%">
+						<label for="errand-due-by" class="body_bold_16">Delivery By*</label>
+						<p id="datepicker-instructions">Pick a date within the next 30 days (not including today)</p>
+						<div id="datepicker"/></div>
+					</div>
+				</div>
+				<div class="row">
+					<p class="body_23"> Delivery Information</p>
+					<label for="volunteer-instructions" class="body_bold_16">Volunteer Instructions*</label>
+					<textarea class="textarea-input body_16_fontonly" id="volunteer-instructions" name="volunteer-instructions" placeholder="Include information that would help the volunteer execute the delivery (e.g., food pantry address, phone, hours for pick-up orders, requestor dietary restrictions, special requests, dropoff logistics)" required></textarea>
+					<label for="internal-notes" class="body_bold_16">Internal Notes</label>
+					<textarea class="textarea-input body_16_fontonly" id="internal-notes" name="internal-notes" placeholder="Store helpful notes for you and your organization here. This will not be shown to the volunteer or requestor."></textarea>
+				</div>
+				<div class="row">
+					<input type="submit" class="inline-button-box body_bold_16" style="align-items: center; width: 25%; border-width: 0px;float: right; margin: 16px 24px" id="add-delivery-submit" value="Add"/>
+					<div class="inline-button-box weak-button body_bold_16" id="cancel-delivery-button" style="align-items: center; width: 25%; float:right; margin: 16px 24px">Cancel</div>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<div class="horizontal-container" style="margin-top: 64px;">
+		<div class="inline-button-box button button-title" id="add-delivery-button">
+			Add a Delivery
+		</div>
+		
+		{% if errands %}
+			<table id="partner-errands">
+				<thead>
+					<tr>
+						<th class="table-header">ENTRY DATE</th>
+						<th class="table-header">REQUESTER</th>
+						<th class="table-header">PHONE</th>
+						<th class="table-header">DELIVER BY</th>
+						<th class="table-header">INSTRUCTIONS</th>
+						<th class="table-header">INTERNAL NOTE</th>
+						<th class="table-header">STATUS</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for errand in errands %}
+					<tr>
+						<td class="table-item" style="text-align: right">{{errand.requested_time}}</td>
+						<td class="table-item">
+							<span style="vertical-align: middle;"><img src="{% static 'css/icons/account_circle-black-36dp.svg' %}"></span>{{errand.requestor.user.first_name}} {{errand.requestor.user.last_name}}</td>
+						<td class="table-item">{{errand.requestor.mobile_number}}</td>
+						<td class="table-item">{{errand.due_by}}</td>
+						<td class="table-item">{{errand.additional_info}}</td>
+						<td class="table-item">{{errand.requestor.internal_note}}</td>
+						<td>
+							{% if errand.status == 0 %}
+							<span style="vertical-align: middle;"><img src="{% static 'css/icons/four_1.svg' %}"></span>
+							{% elif errand.status == 1 %}
+							<span style="vertical-align: middle;"><img src="{% static 'css/icons/four_2.svg' %}"></span>
+							{% elif errand.status == 2 %}
+							<span style="vertical-align: middle;"><img src="{% static 'css/icons/four_3.svg' %}"></span>
+							{% elif errand.status == 3 %}
+							<span style="vertical-align: middle;"><img src="{% static 'css/icons/four_4.svg' %}"></span>
+							{% else %}
+							<span style="vertical-align: middle;"><img src="{% static 'css/icons/four_unfilled.svg' %}"></span>
+							{% endif %}
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	{% else %}
+
+	{% endif %}
+	</div>
+<!-- 	<div class="footer">
+		<div class="horizontal-container">
+	    <p class="footer-copyright">(c) 2020 LivelyHood, All rights reserved</p>
+	</div> -->
+</body>
+
+</html>

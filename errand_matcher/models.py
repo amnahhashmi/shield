@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.utils import timezone
 from phonenumber_field.modelfields import PhoneNumberField
 import uuid
 import math
@@ -8,7 +9,8 @@ import random
 class User(AbstractUser):
     USER_TYPE_CHOICES = (
         (1, 'volunteer'),
-        (2, 'requestor')
+        (2, 'requestor'),
+        (3, 'partner')
     )
 
     user_type = models.PositiveSmallIntegerField(choices=USER_TYPE_CHOICES, default=1)
@@ -41,6 +43,7 @@ class Volunteer(models.Model):
         return '{} {}'.format(self.user.first_name, 
             self.user.last_name)
 
+
 class Requestor(models.Model):
     CONTACT_PREFERENCE_CHOICES = (
         (1, 'sms'),
@@ -49,51 +52,49 @@ class Requestor(models.Model):
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     mobile_number = PhoneNumberField()
-    date_of_birth = models.DateField()
     lon = models.FloatField()
     lat = models.FloatField()
     address_str = models.CharField(default='', max_length=1024)
     apt_no = models.CharField(default='', max_length=8)
-    contact_preference = models.PositiveSmallIntegerField(choices=CONTACT_PREFERENCE_CHOICES, default=1)
+    internal_note = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return '{} {}'.format(self.user.first_name, 
             self.user.last_name)
 
+
+class Partner(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    organization = models.CharField(default='', max_length=128)
+
+
 class SiteConfiguration(models.Model):
     mobile_number_on_call = PhoneNumberField()
+    max_request_rounds = models.PositiveSmallIntegerField(default=5)
+
 
 class Errand(models.Model):
     STATUS_CHOICES = (
+        (0, 'submitted'),
         (1, 'open'),
         (2, 'in progress'),
         (3, 'complete'),
         (4, 'failed')
     )
 
-    URGENCY_CHOICES = (
-        (1, 'less than 24 hours'),
-        (2, 'within 3 days')
-    )
-
-    REVIEW_CHOICES = (
-        (1, 'positive'),
-        (2, 'negative')
-    )
-
     requested_time = models.DateTimeField()
     claimed_time = models.DateTimeField(blank=True, null=True)
     completed_time = models.DateTimeField(blank=True, null=True)
     status = models.PositiveSmallIntegerField(choices=STATUS_CHOICES)
-    urgency = models.PositiveSmallIntegerField(choices=URGENCY_CHOICES)
+    due_by = models.DateTimeField(default=timezone.now())
     requestor = models.ForeignKey(Requestor, on_delete=models.CASCADE)
     request_round = models.PositiveSmallIntegerField(default=0)
     claimed_volunteer = models.ForeignKey(Volunteer, on_delete=models.CASCADE, related_name='claimed_volunteer', blank=True, null=True)
     contacted_volunteers = models.ManyToManyField(Volunteer, related_name='contacted_volunteers', blank=True)
-    requestor_review = models.PositiveSmallIntegerField(choices=REVIEW_CHOICES, blank=True, null=True)
-    volunteer_review = models.PositiveSmallIntegerField(choices=REVIEW_CHOICES, blank=True, null=True)
     additional_info = models.TextField(blank=True, null=True)
     access_id = models.UUIDField(blank=True, null=True)
+    affiliated_partner = models.ForeignKey(Partner, on_delete=models.CASCADE, related_name='affiliated_partner', blank=True, null=True)
+
 
 class UserOTP(models.Model):
     def generate_token():
@@ -108,9 +109,3 @@ class UserOTP(models.Model):
     mobile_number = PhoneNumberField()
     token = models.CharField(default=generate_token(), max_length=6)
     created_at = models.DateTimeField(auto_now_add=True)
-
-
-
-
-
-

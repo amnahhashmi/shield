@@ -3,6 +3,7 @@ from __future__ import absolute_import, unicode_literals
 from celery import shared_task
 from celery.utils.log import get_task_logger
 import errand_matcher.helper as helper
+import errand_matcher.messages as messages
 from errand_matcher.models import Errand
 from errand_matcher.models import SiteConfiguration
 from errand_matcher.models import UserOTP
@@ -15,63 +16,29 @@ from django.utils import timezone
 
 logger = get_task_logger(__name__)
 
-weekday_lookup = {
-    1: 'Monday',
-    2: 'Tuesday',
-    3: 'Wednesday',
-    4: 'Thursday',
-    5: 'Friday',
-    6: 'Saturday',
-    7: 'Sunday'
-}
-
 @shared_task
 def match_errands():
     logger.info('Matching errands')
     errands = Errand.objects.filter(status=1)
     for errand in errands:
-
-        # convert to failed status if exceeded 1 day since creation
-        # for urgent or 3 days for non-urgent
-        days_to_add = 1 if errand.urgency == 1 else 3
-        errand_expiration = errand.requested_time + timedelta(days=days_to_add)
-        if timezone.now() > errand_expiration:
+        # convert to failed status if past due
+        if timezone.now() > errand.due_by:
             errand.status = 4
             errand.save()
 
-            # alert on-call staffer
-            site_configuration = SiteConfiguration.objects.first()
-            message = 'ERRAND FAILURE! {} {}: {} requested at {}'.format(
-                errand.requestor.user.first_name, 
-                errand.requestor.user.last_name,
-                helper.strip_mobile_number(errand.requestor.mobile_number),
-                errand.requested_time)
- 
-            helper.send_sms(
-                helper.format_mobile_number(get_support_mobile_number()), message)
+        # alert on-call staffer if errand still unclaimed after last round
+        if errand.request_round == helper.get_max_request_rounds():
+            messages.alert_staff_of_unclaimed_errand(errand)
+            continue
 
-        else:
-            if errand.request_round < 5:
-                # TO DO: what if there are no volunteers?
-                volunteers = helper.match_errand_to_volunteers(errand)
-                deadline_str = '{} at 6 p.m.'.format(
-                    weekday_lookup[(timezone.now() + timedelta(days=days_to_add)).date().isoweekday()])
-
-                for v in volunteers:
-                    url = "{}/errand/{}/accept/{}".format(
-                        helper.get_base_url(), 
-                        errand.id, 
-                        helper.strip_mobile_number(v.mobile_number))
-
-                    message = "LivelyHood here! {} needs help getting groceries! Can you make a delivery by {}?"\
-                    " Click here for more information and to let us know if you can help. {}".format(
-                        errand.requestor.user.first_name, deadline_str, url)
-                    
-                    helper.send_sms(helper.format_mobile_number(v.mobile_number), message)
-                    errand.contacted_volunteers.add(v)
-
-                errand.request_round +=1
-                errand.save()
+        # TO DO: what if there are no volunteers?
+        volunteers = helper.match_errand_to_volunteers(errand)
+        for volunteer in volunteers:
+            messages.alert_volunteer_to_claim_errand(errand, volunteer)
+            errand.contacted_volunteers.add(volunteer)
+        
+        errand.request_round +=1
+        errand.save()
 
 TWILIO_FLOWS = {
     'Req_Happy_VolDelivered': 'FW554a336fe5d6c246d934a9e77e6dadb6',
