@@ -39,7 +39,7 @@ def match_errands():
         errand.request_round +=1
         errand.save()
 
-
+@shared_task
 def activate_errands():
     errands = Errand.objects.filter(status=0)
     for errand in errands:
