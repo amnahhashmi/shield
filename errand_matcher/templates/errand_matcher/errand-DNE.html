@@ -1,0 +1,30 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+		<!-- import fonts -->
+		<link href="https://fonts.googleapis.com/css?family=Work+Sans&display=swap" rel="stylesheet">
+
+		<!-- import jQuery -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+		<title>LivelyHood - Accept Delivery</title>
+		<link rel="shortcut icon" type="image/png" href="{% static 'css/icons/favicon.ico' %}"/>
+		<base href="{{base_url}}" />
+
+        <!-- CUSTOM STYLESHEETS -->
+        <link href="{% static 'css/style.css' %}" rel="stylesheet"/>
+	</head>
+	<body>
+		<div class="h5_32 item">
+		    Delivery cancelled
+		</div>
+		<div class="body_16_fontonly subhead item">
+		    Sorry, someone cancelled this delivery! Thanks for being a good samaritan, and we'll let you know when the next one comes up. 
+		</div>
+	</body>
+</html>

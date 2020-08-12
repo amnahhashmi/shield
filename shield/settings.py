@@ -75,6 +75,10 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend'
+]
+
 ROOT_URLCONF = 'shield.urls'
 
 TEMPLATES = [
@@ -171,14 +175,23 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_BEAT_SCHEDULE = {
     'match-errands-every-thirty-minutes': {
        'task': 'errand_matcher.tasks.match_errands',
-       'schedule': crontab(minute='*/30', hour='11-22'),
+       'schedule': crontab(minute='*/5', hour='11-22'),
        'args': (),
     },
-    # 'send-complete-messages-every-day': {
-    #    'task': 'errand_matcher.tasks.send_errand_completion_messages',
-    #    'schedule': crontab(minute=0, hour=18),
-    #    'args': (),
-    # },
+
+    'activate-errands-every-5-minutes': {
+        'task': 'errand_matcher.tasks.activate_errands',
+        'schedule': crontab(minute='*/5'),
+        'args': ()
+    }
 }
+
+# Email Settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 
 django_heroku.settings(locals())

@@ -1,5 +1,6 @@
 from django.contrib import admin
-from errand_matcher.models import User, Volunteer, Requestor
+from django.contrib.auth.admin import UserAdmin
+from errand_matcher.models import User, Volunteer, Requestor, Partner
 from errand_matcher.models import Errand
 from errand_matcher.models import SiteConfiguration
 import csv
@@ -23,9 +24,7 @@ class ExportCsvMixin:
 
     export_as_csv.short_description = "Export Selected"
 
-@admin.register(User)
-class UserAdmin(admin.ModelAdmin, ExportCsvMixin):
-    actions = ["export_as_csv"]
+admin.site.register(User, UserAdmin) 
 
 @admin.register(Volunteer)
 class VolunteerAdmin(admin.ModelAdmin, ExportCsvMixin):
@@ -51,11 +50,13 @@ class RequestorAdmin(admin.ModelAdmin, ExportCsvMixin):
         return '{} {}'.format(obj.user.first_name,
             obj.user.last_name)
 
+admin.site.register(Partner)
+
 @admin.register(Errand)
 class ErrandAdmin(admin.ModelAdmin, ExportCsvMixin):
     actions = ["export_as_csv"]
     list_display = ('get_requestor_name', 'get_requestor_mobile_number', 
-        'requested_time', 'status', 'urgency', 'request_round', 'claimed_time', 
+        'requested_time', 'status', 'due_by', 'request_round', 'claimed_time', 
         'get_claimed_volunteer_name', 'get_claimed_volunteer_mobile_number',
         'completed_time')
 
