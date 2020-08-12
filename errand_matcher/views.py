@@ -1,11 +1,15 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseNotAllowed
-from django.contrib.auth import authenticate, login
+from django.core.mail import send_mail
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.hashers import make_password, make_random_password
+from django.contrib.auth.hashers import make_password
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.contrib.auth.password_validation import validate_password
 from django.shortcuts import redirect
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from django.utils import timezone
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 import math
 import os
 from sendgrid import SendGridAPIClient
@@ -279,8 +283,16 @@ def accept_errand(request, errand_id, volunteer_number):
         return HttpResponse(status=204)
 
     else:
-        # TO DO: verify that volunteer is associated with errand
-        errand = Errand.objects.get(id=errand_id)
+        
+        errand = Errand.objects.filter(id=errand_id).first()
+
+        # errand no longer exists
+        if errand is None:
+            return render(request, 'errand_matcher/errand-DNE.html', {
+            'base_url': helper.get_base_url()
+            })
+        
+        # TO DO: verify that volunteer is associated with errand        
         volunteer = helper.get_volunteer_from_mobile_number_str(volunteer_number)
         
         # TO DO: failure case if no modes
@@ -352,70 +364,215 @@ def view_errand(request, errand_id, access_id):
 
 def partner(request):
     if request.method == 'POST':
-        username = request.POST['partners-login-email']
-        password = request.POST['partners-login-password']
+        username = request.POST['partner-login-email']
+        password = request.POST['partner-login-password']
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
             return redirect('/partner/dashboard/')
         else:
-            pass
-            # Return an 'invalid login' error message.
+            return render(request, 'errand_matcher/partner.html', {'warning': 'Your credentials are not correct.'})
     else:
-        return render(request, 'errand_matcher/partner.html')
+        if request.user.is_authenticated:
+            return redirect('/partner/dashboard/')
+        else:
+            return render(request, 'errand_matcher/partner.html')
+
+def partner_setup(request):
+    if request.method == 'POST':
+        name = request.POST['setup-name']
+        org = request.POST['setup-organization']
+        email = request.POST['setup-email']
+        phone = request.POST['setup-phone-number']
+        send_mail(
+                "LivelyHood Partner Organization Interest",
+                "We received a request to setup a partner account:\n"\
+                "Name: {}\n"\
+                "Organization: {}\n"\
+                "Email: {}\n"\
+                "Phone: {}\n".format(name, org, email, phone),
+                'livelyhood.io@gmail.com',
+                ['livelyhood.io@gmail.com'])
+        return render(request, 'errand_matcher/partner.html', {'setup_done': 'true', 'base_url': helper.get_base_url()})
+    else:
+        return HttpResponseNotAllowed()
 
 def partner_request(request):
     if request.method == 'POST':
-        requestor_number = request.POST['add-requestor-phone']
-        requestor = helper.get_user_from_mobile_number_str(requestor_number, user_type='requestor')
-        if requestor is None:
+        edit_errand_id = request.POST.get('edit-errand-id')
+        if edit_errand_id is None:
+
+            # new request
+            requestor_number = request.POST['add-requestor-phone']
             requestor_first_name = request.POST['add-requestor-first-name']
             requestor_last_name = request.POST['add-requestor-last-name']
             requestor_address = request.POST['add-requestor-address']
             requestor_apartment = request.POST['add-requestor-apartment']
-
-            user = User(
-                username=requestor_number,
-                first_name=requestor_first_name,
-                last_name=requestor_last_name,
-                email='',
-                password=User.objects.make_random_password(),
-                user_type=2)
-            user.save()
-
+            requestor_internal_note = request.POST['internal-notes']
+            errand_due_by = request.POST['errand-due-by']
+            errand_instructions = request.POST['volunteer-instructions']
             coord_location = helper.gmaps_geocode(requestor_address)
 
-            requestor = Requestor(
-                user=user,
-                mobile_number='+1' + requestor_number,
-                lon=coord_location['lng'],
-                lat=coord_location['lat'],
-                address_str = requestor_address,
-                apt_no = requestor_apartment,
-                # Default to calling as contact preference
-                contact_preference = 'call')
-            requestor.save()
+            requestor = helper.get_user_from_mobile_number_str(requestor_number, user_type='requestor')
+
+            if requestor is None:
+                user = User(
+                    username=requestor_number,
+                    first_name=requestor_first_name,
+                    last_name=requestor_last_name,
+                    email='',
+                    password=User.objects.make_random_password(),
+                    user_type=2)
+                user.save()
+
+                requestor = Requestor(
+                    user=user,
+                    mobile_number='+1' + requestor_number,
+                    lon=coord_location['lng'],
+                    lat=coord_location['lat'],
+                    address_str = requestor_address,
+                    apt_no = requestor_apartment,
+                    internal_note = requestor_internal_note)
+                requestor.save()
+            else:
+                user = requestor.user
+                user.first_name = requestor_first_name
+                user.last_name = requestor_last_name
+                user.save()
+
+                requestor.address_str = requestor_address
+                requestor.apt_no = requestor_apartment
+                requestor.lon = coord_location['lng']
+                requestor.lat = coord_location['lat']
+                requestor.save()
+
+            errand = Errand(
+                requested_time = timezone.now(),
+                status=0,
+                due_by=errand_due_by,
+                requestor=requestor,
+                additional_info=errand_instructions,
+                affiliated_partner=request.user.partner)
+            errand.save()
+            return redirect('/partner/dashboard/')
+
         else:
-            user = requestor.user
+
+            #edit existing request
+            errand_id = request.POST['edit-errand-id']
+            requestor_id = request.POST['edit-requestor-id']
+            
+            requestor_number = request.POST['edit-requestor-phone']
+            requestor_first_name = request.POST['edit-requestor-first-name']
+            requestor_last_name = request.POST['edit-requestor-last-name']
+            requestor_address = request.POST['edit-requestor-address']
+            requestor_apartment = request.POST['edit-requestor-apartment']
+            requestor_internal_note = request.POST['edit-internal-notes']
+            errand_due_by = request.POST['edit-errand-due-by']
+            errand_instructions = request.POST['edit-volunteer-instructions']
+
+            user = User.objects.get(id=requestor_id)
+            user.username = requestor_number
             user.first_name = requestor_first_name
             user.last_name = requestor_last_name
             user.save()
 
+            requestor = user.requestor
+            requestor.mobile_number = '+1' + requestor_number
+            requestor.address_str = requestor_address
+            requestor.apt_no = requestor_apartment
+            requestor.internal_note = requestor_internal_note
+            requestor.save()
+
+            errand = Errand.objects.get(id=errand_id)
+            errand.due_by = errand_due_by
+            errand.additional_info = errand_instructions
+            errand.save()
+            return redirect('/partner/dashboard/')
+    else:
+        return render(request, 'errand_matcher/404.html', {'base_url': helper.get_base_url()})
+
+@csrf_protect
+def partner_request_delete(request, errand_id):
+    if request.method == 'DELETE':
+        errand = Errand.objects.get(id=errand_id)
+        errand.delete()
+        return HttpResponse(status=200)
+    else:
+        return HttpResponseNotAllowed()
 
 def partner_password_reset(request):
-    pass
+    if request.method == 'POST':
+        recover_email = request.POST['recover-email']
+        user = User.objects.filter(username=recover_email).first()
+        if user is not None:
+            # Generate a password reset token
+            uidb64 = urlsafe_base64_encode(str(user.pk).encode())
+            password_reset_token = PasswordResetTokenGenerator().make_token(user)
+            password_reset_url = helper.get_base_url() + "/partner/reset/{}/{}".format(uidb64, password_reset_token)
+            send_mail(
+                "LivelyHood Password Reset",
+                "Hi there, we received a password reset request for your account. Please click here to reset your password:\n"\
+                "{}\n"\
+                "If you did not request a password change, please ignore this message. Thanks,\n"\
+                "Team LivelyHood\n"\
+                "{}".format(password_reset_url, password_reset_url, helper.get_base_url()),
+                'livelyhood.io@gmail.com',
+                [recover_email])
+            return render(request, 'errand_matcher/partner-password-reset-done.html', {'base_url': helper.get_base_url()})
+
+    else:
+        return render(request, 'errand_matcher/partner-password-reset.html', {'base_url': helper.get_base_url()})
+
 
 def partner_password_reset_done(request):
-    pass
+    return render(request, 'errand_matcher/partner-password-reset-done.html', {'base_url': helper.get_base_url()})
 
-def partner_reset_confirm(request, token):
-    pass
+def partner_reset_confirm(request, uidb64, token):
+    if request.method == 'POST':
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = User.objects.filter(pk=uid).first()
+        password = request.POST['new-password']
+        try:
+            validate_password(password)
+        except:
+            return render(request, 'errand_matcher/partner-password-reset-confirm.html', 
+                {'base_url': helper.get_base_url(), 'warning': 'Your password is not valid.', 'user': user})
 
-def partner_reset_complete(request):
-    pass
+        user.set_password(password)
+        user.save()
+        authenticated_user = authenticate(request, username = user.username, 
+                 password = password)
+        login(request, authenticated_user)
+        return redirect('/partner/dashboard/')
+
+    else:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = User.objects.filter(pk=uid).first()
+        token_generator = PasswordResetTokenGenerator()
+        if user is not None and token_generator.check_token(user, token):
+            return render(request, 'errand_matcher/partner-password-reset-confirm.html', 
+                {'base_url': helper.get_base_url(), 'user': user})
+        else:
+            return redirect('/error/')
 
 @login_required(login_url='/partner/')
 def partner_dashboard(request):
-    errands = Errand.objects.filter(affiliated_partner=request.user.partner)
-    return render(request, 'errand_matcher/partner-dashboard.html', {'errands': errands})
+    errands = Errand.objects.filter(affiliated_partner=request.user.partner).order_by('requested_time')
+    if timezone.now().hour < 21: 
+        min_date = timezone.now().date() + timedelta(days=1)
+    else:
+        min_date = timezone.now().date() + timedelta(days=2)
+    max_date = timezone.now().date() + timedelta(days=30)
+
+    return render(request, 'errand_matcher/partner-dashboard.html', 
+        {'user': request.user,
+        'errands': errands,
+        'GMAPS_API_KEY': os.environ.get('GMAPS_API_KEY'),
+        'min_date': min_date.isoformat(),
+        'max_date': max_date.isoformat()})
+
+def partner_signout(request):
+    logout(request)
+    return redirect('/partner/dashboard/')
 

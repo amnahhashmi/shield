@@ -18,7 +18,6 @@ logger = get_task_logger(__name__)
 
 @shared_task
 def match_errands():
-    logger.info('Matching errands')
     errands = Errand.objects.filter(status=1)
     for errand in errands:
         # convert to failed status if past due
@@ -39,6 +38,15 @@ def match_errands():
         
         errand.request_round +=1
         errand.save()
+
+
+def activate_errands():
+    errands = Errand.objects.filter(status=0)
+    for errand in errands:
+        # convert to open status if within 5 days of due by
+        if timezone.now() > errand.due_by + timedelta(days=-5):
+            errand.status = 1
+            errand.save()
 
 TWILIO_FLOWS = {
     'Req_Happy_VolDelivered': 'FW554a336fe5d6c246d934a9e77e6dadb6',

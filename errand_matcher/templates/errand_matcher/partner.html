@@ -42,10 +42,15 @@
 			<div class="column border-right" style="padding-right: 48px;">
 				<h5 class="h5_32">Set Up a Partner Account</h5>
 
+				{% if setup_done %}
+				<p class="body_23">Thanks for the information!</p>
+				<p class="body_23">Please expect to hear from #TeamLivelyHood soon :)</p>
+
+				{% else %}
 				<p class="body_23">Start discovering volunteers to deliver food to vulnerable members of your community.</p>
 				<p class="body_23">Fill out the form below, and we'll contact you about creating an account.</p>
 
-				<form action="/partners/setup" method="post">
+				<form action="/partner/setup/" method="post">
 					{% csrf_token %}
 					<label for="setup-name" class="body_bold_16">Your Name*</label>
 					<input type="text" class="text-input body_16_fontonly" id="setup-name" name="setup-name" placeholder="name" required/>
@@ -57,18 +62,23 @@
 					<input type="text" class="text-input body_16_fontonly" id="setup-phone-number" name="setup-phone-number" placeholder="phone number" required/>  
 					<input type="submit" class="inline-button-box body_bold_16" style="align-items: center; width: 75%; border-width: 0px; margin: 0px" value="Submit"/>
 				</form>
+
+				{% endif %}
 			</div>
 
 			<div class="column" style="padding-left: 48px; float: right">
 				<h5 class="h5_32">Sign In</h5>
+				{% if warning %}
+				<p class="body_16_fontonly" style="color:red">{{warning}}</p>
+				{% endif %}
 				<form action="/partner/" method="post">
 					{% csrf_token %}
-					<label for="partners-login-email" class="body_bold_16">Email*</label>
-					<input type="email" class="text-input body_16_fontonly" id="partners-login-email" name="partners-login-email" placeholder="email" required/>
-					<label for="partners-login-password" class="body_bold_16">Password*</label>
-					<input type="password" class="text-input body_16_fontonly" style="margin-bottom: 6px" id="partners-login-password" name="partners-login-password" placeholder="password" required/>
+					<label for="partner-login-email" class="body_bold_16">Email*</label>
+					<input type="email" class="text-input body_16_fontonly" id="partner-login-email" name="partner-login-email" placeholder="email" required/>
+					<label for="partner-login-password" class="body_bold_16">Password*</label>
+					<input type="password" class="text-input body_16_fontonly" style="margin-bottom: 6px" id="partner-login-password" name="partner-login-password" placeholder="password" required/>
 					<div style="text-align: right">
-						<a class="forgot-password-link" href="">Forgot my password</a>
+						<a class="forgot-password-link" href="password_reset/">Forgot my password</a>
 					</div>
 					<input type="submit" class="inline-button-box body_bold_16" style="align-items: center; width: 75%; border-width: 0px; margin: 0px" value="Submit"/>
 				</form>

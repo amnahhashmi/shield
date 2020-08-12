@@ -9,12 +9,16 @@
 	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 
+	<!-- import Google Maps JavaScript API -->
+	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{ GMAPS_API_KEY}}&libraries=places&callback=initAutocomplete" defer></script>
+
 	<title>LivelyHood Partners Dashboard</title>
 	<link rel="shortcut icon" type="image/png" href="{% static 'css/icons/favicon.ico' %}"/>
 
-
+	<!-- import Google fonts and bootstrap -->
 	<link href="https://fonts.googleapis.com/css?family=Playfair+Display" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css?family=Work+Sans&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
 	<!-- CUSTOM STYLESHEETS -->
     <link href="{% static 'css/style.css' %}" rel="stylesheet"/>
@@ -33,6 +37,7 @@
 		<a class="topnav-item-collapsible button about-link">About</a>
 		<a class="topnav-item-collapsible button about-link">Contact</a>
 		<a class="topnav-item-collapsible button partners-link active">Partners</a>
+		<a class="topnav-item" id="user-menu-button" style="float:right"><img src="{% static 'css/icons/account_circle-black-36dp.svg' %}">{{user.partner.organization}}</a>
 		<a class="icon">☰</a>
 	</div>
 
@@ -40,7 +45,7 @@
 		<div class="modal-content">
 	    	<h5 class="h5_32">Add Delivery</h5>
 	    	<p class="body_23"> Requestor Information</p>
-	    	<form id="add-delivery-form" action="/partners/setup" method="post">
+	    	<form id="add-delivery-form" action="/partner/request/" method="post">
 	    		{% csrf_token %}
 	    		<div class="row">
 		    		<div class="column" style="width: 33%">
@@ -48,7 +53,8 @@
 						<label for="add-requestor-phone" class="body_bold_16">Phone*</label>
 						<input type="text" class="text-input body_16_fontonly" style="border: 2px solid #000000; width: 90%" id="add-requestor-phone" name="add-requestor-phone" required/>
 						<label for="add-requestor-first-name" class="body_bold_16">Requestor First Name*</label>
-						<input type="text" class="text-input body_16_fontonly" style="border: 2px solid #000000; width: 90%" id="add-requestor-first-name" name="add-requestor-first-name" required/> 
+						<input type="text" class="text-input body_16_fontonly" style="border: 2px solid #000000; width: 90%" id="add-requestor-first-name" name="add-requestor-first-name" required/>
+						<p class="body_16_fontonly warning" id="address-warning">Please select an address from the drop-down menu.</p> 
 						<label for="add-requestor-address" class="body_bold_16">Address*</label>
 						<input type="text" class="text-input body_16_fontonly" style="border: 2px solid #000000; width: 90%" id="add-requestor-address" name="add-requestor-address"onFocus="geolocate()" autocomplete="chrome-off" required/>
 					</div>
@@ -66,18 +72,18 @@
 					</div>
 					<div class="column" style="width: 33%">
 						<label for="errand-due-by" class="body_bold_16">Delivery By*</label>
-						<p id="datepicker-instructions">Pick a date within the next 30 days (not including today)</p>
-						<div id="datepicker"/></div>
+						<input type="date" class="text-input body_16_fontonly" style="border: 2px solid #000000; width: 90%" name="errand-due-by" min={{min_date}} max={{max_date}} required/>
+						<p class="b3-11px-font" id="datepicker-instructions">Click on the calendar button to pick a date within the next 30 days (not including today)</p>
 					</div>
 				</div>
-				<div class="row">
+				<div style="float: left; width: 100%;">
 					<p class="body_23"> Delivery Information</p>
 					<label for="volunteer-instructions" class="body_bold_16">Volunteer Instructions*</label>
 					<textarea class="textarea-input body_16_fontonly" id="volunteer-instructions" name="volunteer-instructions" placeholder="Include information that would help the volunteer execute the delivery (e.g., food pantry address, phone, hours for pick-up orders, requestor dietary restrictions, special requests, dropoff logistics)" required></textarea>
 					<label for="internal-notes" class="body_bold_16">Internal Notes</label>
 					<textarea class="textarea-input body_16_fontonly" id="internal-notes" name="internal-notes" placeholder="Store helpful notes for you and your organization here. This will not be shown to the volunteer or requestor."></textarea>
 				</div>
-				<div class="row">
+				<div>
 					<input type="submit" class="inline-button-box body_bold_16" style="align-items: center; width: 25%; border-width: 0px;float: right; margin: 16px 24px" id="add-delivery-submit" value="Add"/>
 					<div class="inline-button-box weak-button body_bold_16" id="cancel-delivery-button" style="align-items: center; width: 25%; float:right; margin: 16px 24px">Cancel</div>
 				</div>
@@ -85,60 +91,146 @@
 		</div>
 	</div>
 
-	<div class="horizontal-container" style="margin-top: 64px;">
-		<div class="inline-button-box button button-title" id="add-delivery-button">
+	<div id="edit-delivery-modal" class="modal">
+		<div class="modal-content">
+	    	<h5 class="h5_32">Edit Delivery</h5>
+	    	<p class="body_23"> Requestor Information</p>
+	    	<form id="edit-delivery-form" action="/partner/request/" method="post">
+	    		{% csrf_token %}
+	    		<div class="row">
+		    		<div class="column" style="width: 33%">
+		    			<p class="body_16_fontonly warning" id="phone-warning" style="color:red">Please enter a 10-digit U.S. phone number.</p>
+						<label for="edit-requestor-phone" class="body_bold_16">Phone*</label>
+						<input type="text" class="text-input body_16_fontonly" style="border: 2px solid #000000; width: 90%" id="edit-requestor-phone" name="edit-requestor-phone" required/>
+						<label for="edit-requestor-first-name" class="body_bold_16">Requestor First Name*</label>
+						<input type="text" class="text-input body_16_fontonly" style="border: 2px solid #000000; width: 90%" id="edit-requestor-first-name" name="edit-requestor-first-name" required/>
+						<p class="body_16_fontonly warning" id="address-warning">Please select an address from the drop-down menu.</p> 
+						<label for="edit-requestor-address" class="body_bold_16">Address*</label>
+						<input type="text" class="text-input body_16_fontonly" style="border: 2px solid #000000; width: 90%" id="edit-requestor-address" name="edit-requestor-address"onFocus="geolocate()" autocomplete="chrome-off" required/>
+					</div>
+					<div class="column" style="width: 33%">
+						<label for="edit-requestor-language" class="body_bold_16">Language</label>
+						<select id="edit-requestor-language" class="text-input body_16_fontonly" style="width: 90%" name="edit-requestor-language">
+							<option value="English">English</option>
+							<option value="Spanish">Spanish</option>
+							<option value="Chinese">Chinese</option>
+						</select>
+						<label for="edit-requestor-last-name" class="body_bold_16">Requestor Last Name*</label>
+						<input type="text" class="text-input body_16_fontonly" style="border: 2px solid #000000; width: 90%" id="edit-requestor-last-name" name="edit-requestor-last-name" required/> 
+						<label for="edit-requestor-apartment" class="body_bold_16">Apartment</label>
+						<input type="text" class="text-input body_16_fontonly" style="width: 90%" id="edit-requestor-apartment" name="edit-requestor-apartment"onFocus="geolocate()" autocomplete="chrome-off" />
+					</div>
+					<div class="column" style="width: 33%">
+						<label for="edit-errand-due-by" class="body_bold_16">Delivery By*</label>
+						<input type="date" class="text-input body_16_fontonly" style="border: 2px solid #000000; width: 90%" name="edit-errand-due-by" id="edit-errand-due-by" min={{min_date}} max={{max_date}} required/>
+						<p class="b3-11px-font" id="datepicker-instructions">Click on the calendar button to pick a date within the next 30 days (not including today)</p>
+					</div>
+				</div>
+				<input type="hidden" name="edit-requestor-id" id="edit-requestor-id"/>
+				<input type="hidden" name="edit-errand-id" id="edit-errand-id"/>
+				<div style="float: left; width: 100%;">
+					<p class="body_23"> Delivery Information</p>
+					<label for="edit-volunteer-instructions" class="body_bold_16">Volunteer Instructions*</label>
+					<textarea class="textarea-input body_16_fontonly" id="edit-volunteer-instructions" name="edit-volunteer-instructions" required></textarea>
+					<label for="edit-internal-notes" class="body_bold_16">Internal Notes</label>
+					<textarea class="textarea-input body_16_fontonly" id="edit-internal-notes" name="edit-internal-notes"></textarea>
+				</div>
+				<div>
+					<input type="submit" class="inline-button-box body_bold_16" style="align-items: center; width: 25%; border-width: 0px;float: right; margin: 16px 24px" id="edit-delivery-submit" value="Save"/>
+					<div class="inline-button-box weak-button body_bold_16" id="cancel-changes-button" style="align-items: center; width: 25%; float:right; margin: 16px 24px">Cancel Changes</div>
+					<div class="inline-button-box weak-button body_bold_16" id="cancel-existing-delivery-button" style="align-items: center; width: 25%; float:right; margin: 16px 24px">Cancel Delivery</div>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<div class="modal-right-sidebar modal" id="user-sidebar">
+		<div class="modal-content" style="margin: unset; width: 100%">
+			<div>
+				<span id="close-user-menu" style="vertical-align: middle;" ><img src="{% static 'css/icons/criss-cross.svg' %}" style="float: right; height: 24px; width: 24px"></span>
+			</div>
+			<div class="h5_32" style="align-self:; left"> Hello, {{user.partner.organization}}!</div>
+			<div class="body_bold_16">You've been a partner since {{user.date_joined|date:"F Y"}}</div>
+			</br>
+			<div class="body_bold_16">Account Settings</div>
+			<div><a class="b3-11px-font" href="/partner/signout/">Sign out</div>
+
+		</div>
+	</div>
+
+	<div style="width: 1200px; margin: auto;">
+		<div class="inline-button-box button button-title" id="add-delivery-button" style="margin-top: 88px; margin-bottom: 16px;margin-left: 0; width: 300px; color: black">
 			Add a Delivery
 		</div>
-		
 		{% if errands %}
-			<table id="partner-errands">
-				<thead>
-					<tr>
-						<th class="table-header">ENTRY DATE</th>
-						<th class="table-header">REQUESTER</th>
-						<th class="table-header">PHONE</th>
-						<th class="table-header">DELIVER BY</th>
-						<th class="table-header">INSTRUCTIONS</th>
-						<th class="table-header">INTERNAL NOTE</th>
-						<th class="table-header">STATUS</th>
-					</tr>
-				</thead>
-				<tbody>
-					{% for errand in errands %}
-					<tr>
-						<td class="table-item" style="text-align: right">{{errand.requested_time}}</td>
-						<td class="table-item">
-							<span style="vertical-align: middle;"><img src="{% static 'css/icons/account_circle-black-36dp.svg' %}"></span>{{errand.requestor.user.first_name}} {{errand.requestor.user.last_name}}</td>
-						<td class="table-item">{{errand.requestor.mobile_number}}</td>
-						<td class="table-item">{{errand.due_by}}</td>
-						<td class="table-item">{{errand.additional_info}}</td>
-						<td class="table-item">{{errand.requestor.internal_note}}</td>
-						<td>
-							{% if errand.status == 0 %}
-							<span style="vertical-align: middle;"><img src="{% static 'css/icons/four_1.svg' %}"></span>
-							{% elif errand.status == 1 %}
-							<span style="vertical-align: middle;"><img src="{% static 'css/icons/four_2.svg' %}"></span>
-							{% elif errand.status == 2 %}
-							<span style="vertical-align: middle;"><img src="{% static 'css/icons/four_3.svg' %}"></span>
-							{% elif errand.status == 3 %}
-							<span style="vertical-align: middle;"><img src="{% static 'css/icons/four_4.svg' %}"></span>
-							{% else %}
-							<span style="vertical-align: middle;"><img src="{% static 'css/icons/four_unfilled.svg' %}"></span>
-							{% endif %}
-						</td>
-					</tr>
-					{% endfor %}
-				</tbody>
-			</table>
-		</div>
+		<table id="partner-errands">
+			<thead>
+				<tr>
+					<th class="table-header">ENTRY DATE</th>
+					<th class="table-header">REQUESTER</th>
+					<th class="table-header">PHONE</th>
+					<th class="table-header">DELIVER BY</th>
+					<th class="table-header">INSTRUCTIONS</th>
+					<th class="table-header">INTERNAL NOTE</th>
+					<th class="table-header">STATUS</th>
+					<th class="table-header">          </th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for errand in errands %}
+				<tr>
+					<td class="table-item" style="text-align: right">{{errand.requested_time}}</td>
+					<td class="table-item">
+						<span style="vertical-align: middle;"><img src="{% static 'css/icons/account_circle-black-36dp.svg' %}"></span>{{errand.requestor.user.first_name}} {{errand.requestor.user.last_name}}</td>
+						<p id="first_name_{{errand.requestor.user.id}}_{{errand.id}}" hidden>{{errand.requestor.user.first_name}}</p>
+						<p id="last_name_{{errand.requestor.user.id}}_{{errand.id}}" hidden>{{errand.requestor.user.last_name}}</p>
+						<p id="address_str_{{errand.requestor.user.id}}_{{errand.id}}" hidden>{{errand.requestor.address_str}}</p>
+						<p id="apt_no_{{errand.requestor.user.id}}_{{errand.id}}" hidden>{{errand.requestor.apt_no}}</p>
+					<td class="table-item" id="mobile_number_{{errand.requestor.user.id}}_{{errand.id}}" >{{errand.requestor.mobile_number}}</td>
+					<td class="table-item" id="due_by_{{errand.requestor.user.id}}_{{errand.id}}">{{errand.due_by|date:"M. j, Y"}}</td>
+					<td class="table-item" id="additional_info_{{errand.requestor.user.id}}_{{errand.id}}">{{errand.additional_info}}</td>
+					<td class="table-item" id="internal_note_{{errand.requestor.user.id}}_{{errand.id}}">
+						{% if errand.requestor.internal_note %}
+							{{errand.requestor.internal_note}}
+						{% endif %}
+					</td>
+					<td>
+						{% if errand.status == 0 %}
+						<p class="hover_8" id="errand_status_text_{{forloop.counter}}" >Request submitted</p>
+						<span class="errand-status-icon" id= "errand_status_icon_{{forloop.counter}}" style="vertical-align: middle;"><img src="{% static 'css/icons/four_1.svg' %}"></span>
+						{% elif errand.status == 1 %}
+						<p class="hover_8" id="errand_status_text_{{forloop.counter}}">Request distributed</p>
+						<span class="errand-status-icon" id= "errand_status_icon_{{forloop.counter}}" style="vertical-align: middle;"><img src="{% static 'css/icons/four_2.svg' %}"></span>
+						{% elif errand.status == 2 %}
+						<p class="hover_8" id="errand_status_text_{{forloop.counter}}">Request claimed</p>
+						<span class="errand-status-icon" id= "errand_status_icon_{{forloop.counter}}" style="vertical-align: middle;"><img src="{% static 'css/icons/four_3.svg' %}"></span>
+						{% elif errand.status == 3 %}
+						<p class="hover_8" id="errand_status_text_{{forloop.counter}}">Request complete</p>
+						<span class="errand-status-icon" id= "errand_status_icon_{{forloop.counter}}" style="vertical-align: middle;"><img src="{% static 'css/icons/four_4.svg' %}"></span>
+						{% else %}
+						<p class="hover_8" id="errand_status_text_{{forloop.counter}}">Request failed</p>
+						<span class="errand-status-icon" id= "errand_status_icon_{{forloop.counter}}" style="vertical-align: middle;"><img src="{% static 'css/icons/four_unfilled.svg' %}"></span>
+						{% endif %}
+					</td>
+					<td style="text-align: center; padding: 16px 24px;">
+						{% if errand.status < 2 %}
+						<span class="edit-delivery-button icon-button" id="edit_{{errand.requestor.user.id}}_{{errand.id}}" style="vertical-align: middle;" ><img style="height: 24px; width: 24px" src="{% static 'css/icons/edit.svg' %}"></span>
+						<span class="cancel-delivery-button icon-button" id="cancel_{{errand.requestor.user.id}}_{{errand.id}}" style="vertical-align: middle;" ><img src="{% static 'css/icons/criss-cross.svg' %}" style="height: 24px; width: 24px"></span>
+						{% endif %}
+					</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
 	{% else %}
-
+		<h3 class="main-heading" style="padding: 32px 0px">Looks like you don't have any scheduled deliveries yet!</h3>
+		<span><img style="height: 144px; width: 144px" src="{% static 'css/icons/cute-rocket-launching.svg' %}"></span>
+		<p class="body_bold_16" style="padding: 32px 0px">Click Add a Delivery to get started.</p>
 	{% endif %}
 	</div>
-<!-- 	<div class="footer">
-		<div class="horizontal-container">
+	<div class="footer" style="height: 155px; padding: 0px; position: absolute; bottom: 0; width: 100%;">
 	    <p class="footer-copyright">(c) 2020 LivelyHood, All rights reserved</p>
-	</div> -->
+	</div>
 </body>
 
 </html>
