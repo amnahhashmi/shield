@@ -28,7 +28,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 deploy_stage = os.environ.get('DEPLOY_STAGE')
 if deploy_stage in ['LOCAL', 'STAGING'] :
-    DEBUG = False
+    DEBUG = True
     SECURE_SSL_REDIRECT = False
     SESSION_COOKIE_SECURE = False
 else:
