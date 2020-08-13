@@ -13,7 +13,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 import math
 import os
 from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail
+from sendgrid.helpers.mail import *
 import errand_matcher.helper as helper
 from errand_matcher.models import Errand
 from errand_matcher.models import User, Volunteer, Requestor, UserOTP
@@ -384,15 +384,28 @@ def partner_setup(request):
         org = request.POST['setup-organization']
         email = request.POST['setup-email']
         phone = request.POST['setup-phone-number']
-        send_mail(
-                "LivelyHood Partner Organization Interest",
-                "We received a request to setup a partner account:\n"\
+
+        content = "We received a request to setup a partner account:\n"\
                 "Name: {}\n"\
                 "Organization: {}\n"\
                 "Email: {}\n"\
-                "Phone: {}\n".format(name, org, email, phone),
-                'livelyhood.io@gmail.com',
-                ['livelyhood.io@gmail.com'])
+                "Phone: {}\n".format(name, org, email, phone)
+
+        message = Mail(
+            from_email='team@livelyhood.io',
+            to_emails='livelyhood.io@gmail.com',
+            subject='LivelyHood Partner Organization Interest',
+            html_content=content)
+        
+        try:
+            sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
+            response = sg.send(message)
+            print(response.status_code)
+            print(response.body)
+            print(response.headers)
+        except Exception as e:
+            print(e.message)
+
         return render(request, 'errand_matcher/partner.html', {'setup_done': 'true', 'base_url': helper.get_base_url()})
     else:
         return HttpResponseNotAllowed()
@@ -510,16 +523,29 @@ def partner_password_reset(request):
             uidb64 = urlsafe_base64_encode(str(user.pk).encode())
             password_reset_token = PasswordResetTokenGenerator().make_token(user)
             password_reset_url = helper.get_base_url() + "/partner/reset/{}/{}".format(uidb64, password_reset_token)
-            send_mail(
-                "LivelyHood Password Reset",
-                "Hi there, we received a password reset request for your account. Please click here to reset your password:\n"\
-                "{}\n"\
-                "If you did not request a password change, please ignore this message. Thanks,\n"\
-                "Team LivelyHood\n"\
-                "{}".format(password_reset_url, password_reset_url, helper.get_base_url()),
-                'livelyhood.io@gmail.com',
-                [recover_email])
-            return render(request, 'errand_matcher/partner-password-reset-done.html', {'base_url': helper.get_base_url()})
+
+            content = "<p>Hi there, we received a password reset request for your account. Please click here to reset your password:</p>"\
+                "<p><a href='{}''>{}</a></p>"\
+                "<p>If you did not request a password change, please ignore this message. Thanks,</p>"\
+                "<p>Team LivelyHood</p>"\
+                "<p>{}</p>".format(password_reset_url, password_reset_url, helper.get_base_url())
+
+            message = Mail(
+                from_email='team@livelyhood.io',
+                to_emails=recover_email,
+                subject='LivelyHood Password Reset',
+                html_content=content)
+        
+            try:
+                sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
+                response = sg.send(message)
+                print(response.status_code)
+                print(response.body)
+                print(response.headers)
+            except Exception as e:
+                print(e.message)
+            
+        return render(request, 'errand_matcher/partner-password-reset-done.html', {'base_url': helper.get_base_url()})
 
     else:
         return render(request, 'errand_matcher/partner-password-reset.html', {'base_url': helper.get_base_url()})

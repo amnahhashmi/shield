@@ -55,7 +55,7 @@ class Requestor(models.Model):
     lon = models.FloatField()
     lat = models.FloatField()
     address_str = models.CharField(default='', max_length=1024)
-    apt_no = models.CharField(default='', max_length=8)
+    apt_no = models.CharField(default='', blank=True, null=True, max_length=8)
     internal_note = models.TextField(blank=True, null=True)
 
     def __str__(self):
@@ -66,6 +66,7 @@ class Requestor(models.Model):
 class Partner(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     organization = models.CharField(default='', max_length=128)
+    mobile_number = PhoneNumberField(default='555-555-5555')
 
 
 class SiteConfiguration(models.Model):

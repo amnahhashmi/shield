@@ -50,7 +50,18 @@ class RequestorAdmin(admin.ModelAdmin, ExportCsvMixin):
         return '{} {}'.format(obj.user.first_name,
             obj.user.last_name)
 
-admin.site.register(Partner)
+@admin.register(Partner)
+class PartnerAdmin(admin.ModelAdmin, ExportCsvMixin):
+    actions = ["export_as_csv"]
+    list_display = ('get_user_name', 'get_user_email', 'mobile_number', 
+        'organization')
+    
+    def get_user_name(self, obj):
+        return '{} {}'.format(obj.user.first_name,
+            obj.user.last_name)
+
+    def get_user_email(self, obj):
+        return obj.user.email
 
 @admin.register(Errand)
 class ErrandAdmin(admin.ModelAdmin, ExportCsvMixin):
