@@ -100,10 +100,15 @@ $(document).ready(function() {
 			var displayTextID = "#errand_status_text_" + this.id.slice(-1);
 			$(displayTextID).show()
 		}, function() {
-			var displayTextID = "#errand_status_text" + this.id.slice(-1);
 			$(".hover_8").hide()
 		}
 	);
+
+	// popover behavior
+	$('[data-toggle="popover"]').popover({
+        placement : 'top',
+        trigger : 'hover'
+    });
 
 	// edit delivery button modal behavior
 	$(".edit-delivery-button").click(function(){

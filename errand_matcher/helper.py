@@ -1,4 +1,4 @@
-from errand_matcher.models import Errand, Requestor, Volunteer
+from errand_matcher.models import Errand, Requestor, Volunteer, SiteConfiguration
 import math
 import googlemaps
 from urllib.parse import urlencode

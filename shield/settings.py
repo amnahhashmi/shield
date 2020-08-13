@@ -39,7 +39,7 @@ else:
 ALLOWED_HOSTS = ['0.0.0.0', 
     'localhost', 
     '127.0.0.1', 
-    'staging-shieldcovid.herokuapp.com', 
+    'staging-shieldcovid.herokuapp.com',
     'shieldcovid.herokuapp.com', 
     'www.livelyhood.io']
 
@@ -142,7 +142,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/New_York'
 
 USE_I18N = True
 

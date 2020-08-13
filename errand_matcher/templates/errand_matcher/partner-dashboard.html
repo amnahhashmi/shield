@@ -12,6 +12,12 @@
 	<!-- import Google Maps JavaScript API -->
 	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{ GMAPS_API_KEY}}&libraries=places&callback=initAutocomplete" defer></script>
 
+	<!-- import Bootstrap popover -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+	<!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
 	<title>LivelyHood Partners Dashboard</title>
 	<link rel="shortcut icon" type="image/png" href="{% static 'css/icons/favicon.ico' %}"/>
 
@@ -47,7 +53,7 @@
 	    	<p class="body_23"> Requestor Information</p>
 	    	<form id="add-delivery-form" action="/partner/request/" method="post">
 	    		{% csrf_token %}
-	    		<div class="row">
+	    		<div>
 		    		<div class="column" style="width: 33%">
 		    			<p class="body_16_fontonly warning" id="phone-warning" style="color:red">Please enter a 10-digit U.S. phone number.</p>
 						<label for="add-requestor-phone" class="body_bold_16">Phone*</label>
@@ -60,7 +66,7 @@
 					</div>
 					<div class="column" style="width: 33%">
 						<label for="add-requestor-language" class="body_bold_16">Language</label>
-						<select id="add-requestor-language" class="text-input body_16_fontonly" style="width: 90%" name="add-requestor-language">
+						<select id="add-requestor-language" class="text-input body_16_fontonly" style="width: 90%; margin-bottom: 28px" name="add-requestor-language">
 							<option value="English">English</option>
 							<option value="Spanish">Spanish</option>
 							<option value="Chinese">Chinese</option>
@@ -68,7 +74,7 @@
 						<label for="add-requestor-last-name" class="body_bold_16">Requestor Last Name*</label>
 						<input type="text" class="text-input body_16_fontonly" style="border: 2px solid #000000; width: 90%" id="add-requestor-last-name" name="add-requestor-last-name" required/> 
 						<label for="add-requestor-apartment" class="body_bold_16">Apartment</label>
-						<input type="text" class="text-input body_16_fontonly" style="width: 90%" id="add-requestor-apartment" name="add-requestor-apartment"onFocus="geolocate()" autocomplete="chrome-off" />
+						<input type="text" class="text-input body_16_fontonly" style="width: 90%; margin-bottom: 28px" id="add-requestor-apartment" name="add-requestor-apartment" />
 					</div>
 					<div class="column" style="width: 33%">
 						<label for="errand-due-by" class="body_bold_16">Delivery By*</label>
@@ -97,7 +103,7 @@
 	    	<p class="body_23"> Requestor Information</p>
 	    	<form id="edit-delivery-form" action="/partner/request/" method="post">
 	    		{% csrf_token %}
-	    		<div class="row">
+	    		<div>
 		    		<div class="column" style="width: 33%">
 		    			<p class="body_16_fontonly warning" id="phone-warning" style="color:red">Please enter a 10-digit U.S. phone number.</p>
 						<label for="edit-requestor-phone" class="body_bold_16">Phone*</label>
@@ -110,7 +116,7 @@
 					</div>
 					<div class="column" style="width: 33%">
 						<label for="edit-requestor-language" class="body_bold_16">Language</label>
-						<select id="edit-requestor-language" class="text-input body_16_fontonly" style="width: 90%" name="edit-requestor-language">
+						<select id="edit-requestor-language" class="text-input body_16_fontonly" style="width: 90%; margin-bottom: 28px" name="edit-requestor-language">
 							<option value="English">English</option>
 							<option value="Spanish">Spanish</option>
 							<option value="Chinese">Chinese</option>
@@ -118,7 +124,7 @@
 						<label for="edit-requestor-last-name" class="body_bold_16">Requestor Last Name*</label>
 						<input type="text" class="text-input body_16_fontonly" style="border: 2px solid #000000; width: 90%" id="edit-requestor-last-name" name="edit-requestor-last-name" required/> 
 						<label for="edit-requestor-apartment" class="body_bold_16">Apartment</label>
-						<input type="text" class="text-input body_16_fontonly" style="width: 90%" id="edit-requestor-apartment" name="edit-requestor-apartment"onFocus="geolocate()" autocomplete="chrome-off" />
+						<input type="text" class="text-input body_16_fontonly" style="width: 90%; margin-bottom: 28px" id="edit-requestor-apartment" name="edit-requestor-apartment"/>
 					</div>
 					<div class="column" style="width: 33%">
 						<label for="edit-errand-due-by" class="body_bold_16">Delivery By*</label>
@@ -158,7 +164,7 @@
 		</div>
 	</div>
 
-	<div style="width: 1200px; margin: auto;">
+	<div class="contents">
 		<div class="inline-button-box button button-title" id="add-delivery-button" style="margin-top: 88px; margin-bottom: 16px;margin-left: 0; width: 300px; color: black">
 			Add a Delivery
 		</div>
@@ -181,34 +187,33 @@
 				<tr>
 					<td class="table-item" style="text-align: right">{{errand.requested_time}}</td>
 					<td class="table-item">
-						<span style="vertical-align: middle;"><img src="{% static 'css/icons/account_circle-black-36dp.svg' %}"></span>{{errand.requestor.user.first_name}} {{errand.requestor.user.last_name}}</td>
+						<div data-toggle="popover" title="{{errand.requestor.user.first_name}} {{errand.requestor.user.last_name}}" data-content="{{errand.requestor.address_str}} {{errand.requestor.apt_no}}">
+							<span style="vertical-align: middle;"><img src="{% static 'css/icons/account_circle-black-36dp.svg' %}"></span>{{errand.requestor.user.first_name}} {{errand.requestor.user.last_name}}
+						</div>
 						<p id="first_name_{{errand.requestor.user.id}}_{{errand.id}}" hidden>{{errand.requestor.user.first_name}}</p>
 						<p id="last_name_{{errand.requestor.user.id}}_{{errand.id}}" hidden>{{errand.requestor.user.last_name}}</p>
 						<p id="address_str_{{errand.requestor.user.id}}_{{errand.id}}" hidden>{{errand.requestor.address_str}}</p>
 						<p id="apt_no_{{errand.requestor.user.id}}_{{errand.id}}" hidden>{{errand.requestor.apt_no}}</p>
+					</td>
 					<td class="table-item" id="mobile_number_{{errand.requestor.user.id}}_{{errand.id}}" >{{errand.requestor.mobile_number}}</td>
 					<td class="table-item" id="due_by_{{errand.requestor.user.id}}_{{errand.id}}">{{errand.due_by|date:"M. j, Y"}}</td>
 					<td class="table-item" id="additional_info_{{errand.requestor.user.id}}_{{errand.id}}">{{errand.additional_info}}</td>
-					<td class="table-item" id="internal_note_{{errand.requestor.user.id}}_{{errand.id}}">
-						{% if errand.requestor.internal_note %}
-							{{errand.requestor.internal_note}}
-						{% endif %}
-					</td>
+					<td class="table-item" id="internal_note_{{errand.requestor.user.id}}_{{errand.id}}">{{errand.requestor.internal_note}}</td>
 					<td>
 						{% if errand.status == 0 %}
-						<p class="hover_8" id="errand_status_text_{{forloop.counter}}" >Request submitted</p>
+						<p class="hover_8" id="errand_status_text_{{forloop.counter}}" style="margin:0px">Request submitted</p>
 						<span class="errand-status-icon" id= "errand_status_icon_{{forloop.counter}}" style="vertical-align: middle;"><img src="{% static 'css/icons/four_1.svg' %}"></span>
 						{% elif errand.status == 1 %}
-						<p class="hover_8" id="errand_status_text_{{forloop.counter}}">Request distributed</p>
+						<p class="hover_8" id="errand_status_text_{{forloop.counter}}" style="margin:0px">Request distributed</p>
 						<span class="errand-status-icon" id= "errand_status_icon_{{forloop.counter}}" style="vertical-align: middle;"><img src="{% static 'css/icons/four_2.svg' %}"></span>
 						{% elif errand.status == 2 %}
-						<p class="hover_8" id="errand_status_text_{{forloop.counter}}">Request claimed</p>
+						<p class="hover_8" id="errand_status_text_{{forloop.counter}}" style="margin:0px">Request claimed</p>
 						<span class="errand-status-icon" id= "errand_status_icon_{{forloop.counter}}" style="vertical-align: middle;"><img src="{% static 'css/icons/four_3.svg' %}"></span>
 						{% elif errand.status == 3 %}
-						<p class="hover_8" id="errand_status_text_{{forloop.counter}}">Request complete</p>
+						<p class="hover_8" id="errand_status_text_{{forloop.counter}}" style="margin:0px">Request complete</p>
 						<span class="errand-status-icon" id= "errand_status_icon_{{forloop.counter}}" style="vertical-align: middle;"><img src="{% static 'css/icons/four_4.svg' %}"></span>
 						{% else %}
-						<p class="hover_8" id="errand_status_text_{{forloop.counter}}">Request failed</p>
+						<p class="hover_8" id="errand_status_text_{{forloop.counter}}" style="margin:0px">Request failed</p>
 						<span class="errand-status-icon" id= "errand_status_icon_{{forloop.counter}}" style="vertical-align: middle;"><img src="{% static 'css/icons/four_unfilled.svg' %}"></span>
 						{% endif %}
 					</td>
