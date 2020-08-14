@@ -457,6 +457,7 @@ def partner_request(request):
                 requestor.apt_no = requestor_apartment
                 requestor.lon = coord_location['lng']
                 requestor.lat = coord_location['lat']
+                requestor.internal_note = requestor_internal_note
                 requestor.save()
 
             errand = Errand(
