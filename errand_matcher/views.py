@@ -267,7 +267,7 @@ def accept_errand(request, errand_id, volunteer_number):
     if request.method == 'POST':
         # To DO: what if errand isn't open?
         errand = Errand.objects.get(id=errand_id)
-        volunteer = helper.get_user_from_mobile_number_str(volunteer_number)
+        volunteer = helper.get_user_from_mobile_number_str(str(volunteer_number))
 
         # update errand
         errand.status = 2
@@ -293,7 +293,7 @@ def accept_errand(request, errand_id, volunteer_number):
             })
         
         # TO DO: verify that volunteer is associated with errand        
-        volunteer = helper.get_user_from_mobile_number_str(volunteer_number)
+        volunteer = helper.get_user_from_mobile_number_str(str(volunteer_number))
         
         # TO DO: failure case if no modes
         modes = []
