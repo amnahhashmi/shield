@@ -14,7 +14,7 @@ import math
 import os
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import *
-import errand_matcher.helper as helper
+import errand_matcher.messages as messages
 from errand_matcher.models import Errand
 from errand_matcher.models import User, Volunteer, Requestor, UserOTP
 from errand_matcher.models import SiteConfiguration
@@ -170,12 +170,7 @@ def volunteer_signup(request):
             consented = True)
         volunteer.save()
 
-        tiny_faq_url = helper.make_tiny_url("{}#above-faq".format(helper.get_base_url()))
-        message = "Thanks for signing up to help make deliveries for at-risk members of your community!"\
-        " We'll text you when someone nearby needs your help. In the meantime, you can get ready by reading our FAQs:{}"\
-        " . And if you ever need help, you can always text us here.\n"\
-        "Reply STOP to stop receiving notifications of new requests.".format(tiny_faq_url)
-        helper.send_sms(helper.format_mobile_number(volunteer.mobile_number), message)
+        messages.welcome_new_volunteer(volunteer)
 
         return HttpResponse(status=204)
     else:
@@ -188,10 +183,9 @@ def requestor(request):
 def requestor_login(request):
     if request.method == 'POST':
         mobile_number = request.POST.get('phone-input')
-        dob = request.POST.get('dob-input')
+        import pdb; pdb.set_trace()
         parsed_mobile_number = phonenumbers.parse('+1{}'.format(mobile_number))
-        requestor = Requestor.objects.filter(mobile_number=parsed_mobile_number, 
-            date_of_birth=dob).first()
+        requestor = Requestor.objects.filter(mobile_number=parsed_mobile_number).first()
 
         # Requestor not found, sign up
         if requestor is None:
@@ -208,6 +202,7 @@ def requestor_login(request):
 
 def requestor_signup(request):
     if request.method == 'POST':
+        import pdb; pdb.set_trace()
         first_name = request.POST['firstname-review']
         last_name = request.POST['lastname-review']
         mobile_number = request.POST['phone-review']

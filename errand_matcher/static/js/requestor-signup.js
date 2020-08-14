@@ -23,26 +23,6 @@ function geolocate() {
   }
 }
 
-function distance(lat1, lon1, lat2, lon2) {
-	if ((lat1 == lat2) && (lon1 == lon2)) {
-		return 0;
-	}
-	else {
-		var radlat1 = Math.PI * lat1/180;
-		var radlat2 = Math.PI * lat2/180;
-		var theta = lon1-lon2;
-		var radtheta = Math.PI * theta/180;
-		var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
-		if (dist > 1) {
-			dist = 1;
-		}
-		dist = Math.acos(dist);
-		dist = dist * 180/Math.PI;
-		dist = dist * 60 * 1.1515;
-		return dist;
-	}
-}
-
 // // Initialize the Google Maps API autocomplete widget for address entry.
 function initAutocomplete() {
 
@@ -97,6 +77,7 @@ function initAutocomplete() {
 		}
 	});
 
+
 	// This prevents chrome's address autocomplete feature from interfering with the maps widget.
 	var observer = new MutationObserver(function() {
         observer.disconnect();
@@ -107,7 +88,62 @@ function initAutocomplete() {
         attributes: true,
         attributeFilter: ['autocomplete']
     });
+}
 
+function distance(lat1, lon1, lat2, lon2) {
+	if ((lat1 == lat2) && (lon1 == lon2)) {
+		return 0;
+	}
+	else {
+		var radlat1 = Math.PI * lat1/180;
+		var radlat2 = Math.PI * lat2/180;
+		var theta = lon1-lon2;
+		var radtheta = Math.PI * theta/180;
+		var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+		if (dist > 1) {
+			dist = 1;
+		}
+		dist = Math.acos(dist);
+		dist = dist * 180/Math.PI;
+		dist = dist * 60 * 1.1515;
+		return dist;
+	}
+}
+
+
+function validateName() {
+  if ($('#firstname-input').val().length > 0 && $('#lastname-input').val().length > 0){
+    $("#name-warning").hide();
+
+    // Set review field to user input
+    $('#firstname-review').text($('#firstname-input').val());
+    $('#lastname-review').text($('#lastname-input').val());
+    $('body').trigger("pageEvent", pageIndex + 1);
+  }
+  else {
+     // Show warning
+     $("#name-warning").show().focus();
+  }
+}
+
+function validatePhone() {
+  phone = $('#phone-input').val();
+  phone = phone.replace(/[^0-9]/g,'');
+
+  $(this).val(
+    (phone.slice(0,3) ? "("+phone.slice(0,3)+")" : "") +
+    (phone.slice(3,6) ? "-"+phone.slice(3,6) : "") +
+    (phone.slice(6,10) ? "-"+phone.slice(6,10) : "")
+  );
+
+  if (phone.length==10) {
+    $("#phone-warning").hide();
+    // Set review field to user input
+    $('#phone-review').text(phone);
+    $('body').trigger("pageEvent", pageIndex + 1);
+  } else {
+    $("#phone-warning").show().focus();
+  }
 }
 
 $(document).ready(function() {
@@ -132,94 +168,46 @@ $(document).ready(function() {
 
 		$("stop").slice(1,3).attr("offset",progressBarLocation)
 
-	})
+	});
 
-	// 
-	$("body").bind("partialSubmitEvent", function(e) {
-
-		switch(pageIndex) {
-
-			// requirements checkbox validation
-			// requestor must meet at least one requirement
-			case 0:
-				if ($('.req-input:checked').length == 0) {
-					$('#requirements-warning').show().focus()
-					return;
-				} else {
-					break;
-				}
-
-			// name input validation
-			// requestor must enter something for both first and last name
-			case 1:
-				if ($('#firstname-input').val().length == 0 || $('#lastname-input').val().length == 0){
-					$('#name-warning').show().focus()
-					return;
-				} else {
-					$('#firstname-review').val($('#firstname-input').val());
-					$('#lastname-review').val($('#lastname-input').val());
-					break;
-				}
-
-			// date of birth validation
-			// must input a complete, valid date which is in the past
-			case 2:
-				date_input = moment($('#dob-input').val(),"YYYY-MM-DD")
-				if(!date_input.isValid() || !date_input.isBefore()){
-					// $("#dob-warning").show().focus()
-					return;
-					// TODO: further validation to accord with 65+ restriction? 
-				} else {
-					break;
-				}
-
-			case 3:
-				if ($("input[name='contact']:checked").length == 0) {
-					return;
-				} else {
-					$("#contact-review").val($("input[name='contact']:checked").val())
-					break;
-				}
-
-			case 4:
-				// validate date
-		        date_input = moment($('#dob-input').val(),"YYYY-MM-DD")
-		        if(!date_input.isValid() || !date_input.isBefore()){
-		            $("#dob-warning").show().focus()
-		            return;
-		        } else {
-		            $("#dob-warning").hide()
-		            // Set review field to user input
-					$('#dob-review').val($("#dob-input").val());
-					break;
-		        }
-
-			case 5:
-				phone = $("#phone-input").val();
-				phone = phone.replace(/[^0-9]/g,'');
-
-				$("#phone-input").val(
-					(phone.slice(0,3) ? "("+phone.slice(0,3)+")" : "") +
-					(phone.slice(3,6) ? "-"+phone.slice(3,6) : "") +
-					(phone.slice(6,10) ? "-"+phone.slice(6,10) : "")
-				);
-
-				if (phone.length!=10) {
-					$("#phone-warning").show();
-					return;
-				} else {
-					// Set review field to user input
-					$('#phone-review').val($("#phone-input").val());
-					break;
-				}
-		}
-
-		$('body').trigger("pageEvent", pageIndex + 1)
+	// Progress onBlur or on Enter key pressed
+	$('.text-input').bind('blur keyup', function(e) {
+	    if (e.type === 'blur' || e.keyCode === 13) {
+	    	if (pageIndex == 1) {
+	        	validateName()
+	      	}
+	      	if (pageIndex == 2) {
+	        	validatePhone()
+	      	}
+	    }  
 	})
 
 	// button behavior
 	$(".next-button").click(function(){
-		$('body').trigger("partialSubmitEvent")
+		if (pageIndex == 0) {
+
+	    	// If none of the requirements are checked
+	     	if ($('.req-input:checked').length == 0) {
+     			$('#requirements-warning').show()
+     		
+			} else {
+				$('#requirements-warning').hide()
+				window.setTimeout(function(){
+		        // Change page displayed
+		          $('body').trigger("pageEvent", pageIndex + 1)
+		        }, 2000)
+			}
+		}
+
+		if (pageIndex == 1) {
+			validateName()
+		}
+
+		if (pageIndex == 2) {
+			validateEmail()
+		}
+
+		$('body').trigger("pageEvent", pageIndex + 1)
 	})
 
 
@@ -234,20 +222,6 @@ $(document).ready(function() {
 
 	$("#redo-button").click(function(){
 		window.location.pathname = "/requestor";
-	});
-
-	// If all name input fields are full on blur/defocus, automatically progress
-	$('#firstname-input, #lastname-input').blur(function(e){
-		if ($('#firstname-input').val().length > 0 && $('#lastname-input').val().length > 0){
-			$('body').trigger("partialSubmitEvent");
-		}
-	});
-
-	// single input blur with nonempty input -> progress form
-	$('#phone-input, #dob-input').blur(function(e){
-		if($(e.target).val().length > 0) {
-			$('body').trigger("partialSubmitEvent")
-		}
 	});
 
 	$('#address-input').blur(function(e){
