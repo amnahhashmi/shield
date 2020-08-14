@@ -62,7 +62,10 @@ def format_mobile_number(mobile_number, number_format=phonenumbers.PhoneNumberFo
 
 
 def get_user_from_mobile_number_str(mobile_number_str, user_type='volunteer'):
-    parsed_mobile_number = phonenumbers.parse('+1{}'.format(mobile_number_str))
+    if len(mobile_number_str) == 12:
+        parsed_mobile_number = mobile_number_str
+    else:
+        parsed_mobile_number = phonenumbers.parse('+1{}'.format(mobile_number_str))
     
     # TO DO: failure case if multiple users or DNE?
     if user_type == 'volunteer':

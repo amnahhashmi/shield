@@ -428,6 +428,9 @@ def partner_request(request):
 
             requestor = helper.get_user_from_mobile_number_str(requestor_number, user_type='requestor')
 
+            if len(requestor_number) == 10:
+                requestor_number = '+1' + requestor_number
+
             if requestor is None:
                 user = User(
                     username=requestor_number,
@@ -440,7 +443,7 @@ def partner_request(request):
 
                 requestor = Requestor(
                     user=user,
-                    mobile_number='+1' + requestor_number,
+                    mobile_number=requestor_number,
                     lon=coord_location['lng'],
                     lat=coord_location['lat'],
                     address_str = requestor_address,
@@ -491,8 +494,11 @@ def partner_request(request):
             user.last_name = requestor_last_name
             user.save()
 
+            if len(requestor_number) == 10:
+                requestor_number = '+1' + requestor_number
+
             requestor = user.requestor
-            requestor.mobile_number = '+1' + requestor_number
+            requestor.mobile_number = requestor_number
             requestor.address_str = requestor_address
             requestor.apt_no = requestor_apartment
             requestor.internal_note = requestor_internal_note
