@@ -341,7 +341,6 @@ def accept_errand(request, errand_id, volunteer_number):
 def view_errand(request, errand_id, access_id):
     errand = Errand.objects.filter(access_id=access_id).first()
     errand_expiration_hours = math.floor((errand.due_by - timezone.now()).total_seconds() / 3600)
-    contact_preference = 'Texting' if errand.requestor.contact_preference == 1 else 'Phone call'
     address = helper.gmaps_reverse_geocode((errand.requestor.lat, errand.requestor.lon))
     requestor_number = helper.format_mobile_number(errand.requestor.mobile_number)
     if errand is not None:
@@ -350,7 +349,6 @@ def view_errand(request, errand_id, access_id):
             'requestor': errand.requestor,
             'time_left': errand_expiration_hours,
             'additional_info': errand.additional_info,
-            'contact_preference': contact_preference,
             'address': address,
             'requestor_number': requestor_number,
             'base_url': helper.get_base_url()
