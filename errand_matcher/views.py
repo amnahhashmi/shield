@@ -321,8 +321,6 @@ def accept_errand(request, errand_id, volunteer_number):
 
         requestor_number = helper.format_mobile_number(errand.requestor.mobile_number)
 
-        contact_preference = 'Texting' if errand.requestor.contact_preference == 1 else 'Phone call'
-
         # on-staff number
         site_configuration = SiteConfiguration.objects.first()
         staff_number = phonenumbers.format_number(
@@ -334,7 +332,6 @@ def accept_errand(request, errand_id, volunteer_number):
             'distance': distance_str,
             'errand_status': errand.status,
             'additional_info': errand.additional_info,
-            'contact_preference': contact_preference,
             'address': address,
             'requestor_number': requestor_number,
             'staff_number': staff_number,
