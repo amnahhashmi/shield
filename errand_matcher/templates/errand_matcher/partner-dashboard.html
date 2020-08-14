@@ -207,8 +207,10 @@
 						<p class="hover_8" id="errand_status_text_{{forloop.counter}}" style="margin:0px">Request distributed</p>
 						<span class="errand-status-icon" id= "errand_status_icon_{{forloop.counter}}" style="vertical-align: middle;"><img src="{% static 'css/icons/four_2.svg' %}"></span>
 						{% elif errand.status == 2 %}
-						<p class="hover_8" id="errand_status_text_{{forloop.counter}}" style="margin:0px">Request claimed</p>
-						<span class="errand-status-icon" id= "errand_status_icon_{{forloop.counter}}" style="vertical-align: middle;"><img src="{% static 'css/icons/four_3.svg' %}"></span>
+						<div data-toggle="popover" title="claimed by" data-content="{{errand.claimed_volunteer.user.first_name}} {{errand.claimed_volunteer.user.last_name}} {{errand.claimed_volunteer.mobile_number}">
+							<p class="hover_8" id="errand_status_text_{{forloop.counter}}" style="margin:0px">Request claimed</p>
+							<span class="errand-status-icon" id= "errand_status_icon_{{forloop.counter}}" style="vertical-align: middle;"><img src="{% static 'css/icons/four_3.svg' %}"></span>
+						</div>
 						{% elif errand.status == 3 %}
 						<p class="hover_8" id="errand_status_text_{{forloop.counter}}" style="margin:0px">Request complete</p>
 						<span class="errand-status-icon" id= "errand_status_icon_{{forloop.counter}}" style="vertical-align: middle;"><img src="{% static 'css/icons/four_4.svg' %}"></span>
