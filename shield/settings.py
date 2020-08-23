@@ -183,6 +183,11 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'errand_matcher.tasks.activate_errands',
         'schedule': crontab(minute='*/5'),
         'args': ()
+    },
+    'delete-tokens-every-10-minutes': {
+        'task': 'errand_matcher.tasks.cleanup_tokens',
+        'schedule': crontab(minute='*/10'),
+        'args': ()
     }
 }
 

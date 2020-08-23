@@ -23,6 +23,72 @@ function geolocate() {
   }
 }
 
+// // Initialize the Google Maps API autocomplete widget for address entry.
+function initAutocomplete() {
+    // Create the autocomplete object, restricting the search predictions to
+    // geographical location types.
+    autocomplete = new google.maps.places.Autocomplete(
+        document.getElementById('address-input'), {types: ['geocode']});
+
+    // Avoid paying for data that you don't need by restricting the set of
+    // place fields that are returned to just the address components.
+    autocomplete.setFields(['address_component','geometry']);
+
+    // When the user selects an address from the drop-down, populate the
+    // address fields in the form.
+    autocomplete.addListener('place_changed', function(){
+
+        var place = autocomplete.getPlace();
+        var address = {};
+
+        $.each(place ? place.address_components : [], function(){
+            var property = {}
+            property[this.types[0]] = this.short_name;
+            $.extend(address, property)
+        });
+
+        // SV Question: What should we do if address is provided with no ZIP code (but valid lat/lng)?
+        if (!place || !place.geometry || !address['postal_code']) {
+            // User entered the name of a Place that was not suggested and
+            // pressed the Enter key, or the Place Details request failed.
+            $("#address-warning").show();
+            return;
+        } else {
+            lat = place.geometry.location.lat()
+            lng = place.geometry.location.lng()
+            
+            // User entered address outside of range from target (HBS)
+            target_lat = 42.36722
+            target_lng = -71.12253
+            dist = distance(lat, lng, target_lat, target_lng);
+            if (dist > 10) {
+                $("#address-warning").hide()
+                $("#outside-of-boston-warning").show();
+                return;
+            }
+            else {
+                $("#address-input").attr("lat",lat)
+                $("#address-input").attr("lon",lng)
+                $("#address-review").val($("#address-input").val());
+                $('body').trigger('pageEvent', pageIndex + 1)
+            }
+
+        }
+    });
+
+
+    // This prevents chrome's address autocomplete feature from interfering with the maps widget.
+    var observer = new MutationObserver(function() {
+        observer.disconnect();
+        $("#address-input").attr("autocomplete", "chrome-off");
+    });
+
+    observer.observe($("#address-input").get(0), {
+        attributes: true,
+        attributeFilter: ['autocomplete']
+    });
+}
+
 function distance(lat1, lon1, lat2, lon2) {
 	if ((lat1 == lat2) && (lon1 == lon2)) {
 		return 0;
@@ -43,216 +109,146 @@ function distance(lat1, lon1, lat2, lon2) {
 	}
 }
 
-// // Initialize the Google Maps API autocomplete widget for address entry.
-function initAutocomplete() {
 
-	// Create the autocomplete object, restricting the search predictions to
-	// geographical location types.
-	autocomplete = new google.maps.places.Autocomplete(
-		document.getElementById('address-input'), {types: ['geocode']});
+function validateName() {
+  if ($('#firstname-input').val().length > 0 && $('#lastname-input').val().length > 0){
+    $("#name-warning").hide();
 
-	// Avoid paying for data that you don't need by restricting the set of
-	// place fields that are returned to just the address components.
-	autocomplete.setFields(['address_component','geometry']);
+    // Set review field to user input
+    $('#firstname-review').val($('#firstname-input').val());
+    $('#lastname-review').val($('#lastname-input').val());
+    $('body').trigger("pageEvent", pageIndex + 1);
+  }
+  else {
+     // Show warning
+     $("#name-warning").show().focus();
+  }
+}
 
-	// When the user selects an address from the drop-down, populate the
-	// address fields in the form.
-	autocomplete.addListener('place_changed', function(){
+function validatePhone() {
+  phone = $('#phone-input').val();
+  phone = phone.replace(/[^0-9]/g,'');
 
-		var place = autocomplete.getPlace();
-		var address = {};
+  $(this).val(
+    (phone.slice(0,3) ? "("+phone.slice(0,3)+")" : "") +
+    (phone.slice(3,6) ? "-"+phone.slice(3,6) : "") +
+    (phone.slice(6,10) ? "-"+phone.slice(6,10) : "")
+  );
 
-		$.each(place ? place.address_components : [], function(){
-			var property = {}
-			property[this.types[0]] = this.short_name;
-			$.extend(address, property)
-		});
+  if (phone.length==10) {
+    $("#phone-warning").hide();
+    // Set review field to user input
+    $('#phone-review').val(phone);
+    $('body').trigger("pageEvent", pageIndex + 1);
+  } else {
+    $("#phone-warning").show().focus();
+  }
+}
 
-		// SV Question: What should we do if address is provided with no ZIP code (but valid lat/lng)?
-		if (!place || !place.geometry || !address['postal_code']) {
-			// User entered the name of a Place that was not suggested and
-	    	// pressed the Enter key, or the Place Details request failed.
-			$("#address-warning").show();
-			return;
-		} else {
-			lat = place.geometry.location.lat()
-			lng = place.geometry.location.lng()
-			
-			// User entered address outside of range from target (HBS)
-			target_lat = 42.36722
-			target_lng = -71.12253
-			dist = distance(lat, lng, target_lat, target_lng);
-			if (dist > 10) {
-				$("#address-warning").hide()
-				$("#outside-of-boston-warning").show();
-				return;
-			}
-			else {
-				$("#address-input").attr("lat",lat)
-				$("#address-input").attr("lon",lng)
-				$("#address-review").val($("#address-input").val());
-				$('body').trigger('pageEvent', pageIndex + 1)
-			}
-
-		}
-	});
-
-	// This prevents chrome's address autocomplete feature from interfering with the maps widget.
-	var observer = new MutationObserver(function() {
-        observer.disconnect();
-        $("#address-input").attr("autocomplete", "chrome-off");
-    });
-
-    observer.observe($("#address-input").get(0), {
-        attributes: true,
-        attributeFilter: ['autocomplete']
-    });
-
+function validateAptNo() {
+    if ($('#apt-no-input').val().length > 0){
+        $("#apt-no-warning").hide()
+        $('#apt-no-review').val($('#apt-no-input').val());
+        $('body').trigger('pageEvent', pageIndex + 1);
+    }
+    else {
+        $('#apt-no-warning').show()
+    }
 }
 
 $(document).ready(function() {
 
-	var pages = $(".page")
-	pageIndex = 0;
+    var pages = $(".page")
+    pageIndex = 0;
 
-	// custom event for toggling between pages of signup form
-	$("body").bind("pageEvent", function(e, index){
+    // custom event for toggling between pages of signup form
+    $("body").bind("pageEvent", function(e, index){
 
-		// hide all pages
-		$(pages).hide()
+        // hide all pages
+        $(pages).hide()
 
-		// show desired page
-		$(pages[index]).show()
+        // show desired page
+        $(pages[index]).show()
 
-		// set pageIndex to reflect shown page 
-		pageIndex = index
+        // set pageIndex to reflect shown page 
+        pageIndex = index
 
-		// update progress bar
-		progressBarLocation = (2 + pageIndex)/ pages.length
+        // update progress bar
+        progressBarLocation = (2 + pageIndex)/ pages.length
 
-		$("stop").slice(1,3).attr("offset",progressBarLocation)
+        $("stop").slice(1,3).attr("offset",progressBarLocation)
 
-	})
+    });
 
-	// 
-	$("body").bind("partialSubmitEvent", function(e) {
+    // Progress onBlur or on Enter key pressed
+    $('.text-input').bind('keyup', function(e) {
+        if (e.keyCode === 13) {
+            if (pageIndex == 1) {
+                validateName()
+            }
+            if (pageIndex == 2) {
+                validatePhone()
+            }
+            if (pageIndex == 4) {
+                validateAptNo()
+            }
+        }  
+    })
 
-		switch(pageIndex) {
+    // button behavior
+    $(".next-button").click(function(){
+        if (pageIndex == 0) {
 
-			// requirements checkbox validation
-			// requestor must meet at least one requirement
-			case 0:
-				if ($('.req-input:checked').length == 0) {
-					$('#requirements-warning').show().focus()
-					return;
-				} else {
-					break;
-				}
+            // If none of the requirements are checked
+            if ($('.req-input:checked').length == 0) {
+                $('#requirements-warning').show()
+            
+            } else {
+                $('#requirements-warning').hide()
+                $('body').trigger("pageEvent", pageIndex + 1)
+            }
+        }
 
-			// name input validation
-			// requestor must enter something for both first and last name
-			case 1:
-				if ($('#firstname-input').val().length == 0 || $('#lastname-input').val().length == 0){
-					$('#name-warning').show().focus()
-					return;
-				} else {
-					$('#firstname-review').val($('#firstname-input').val());
-					$('#lastname-review').val($('#lastname-input').val());
-					break;
-				}
+        if (pageIndex == 1) {
+            validateName()
+        }
 
-			// date of birth validation
-			// must input a complete, valid date which is in the past
-			case 2:
-				date_input = moment($('#dob-input').val(),"YYYY-MM-DD")
-				if(!date_input.isValid() || !date_input.isBefore()){
-					// $("#dob-warning").show().focus()
-					return;
-					// TODO: further validation to accord with 65+ restriction? 
-				} else {
-					break;
-				}
+        if (pageIndex == 2) {
+            validatePhone()
+        }
 
-			case 3:
-				if ($("input[name='contact']:checked").length == 0) {
-					return;
-				} else {
-					$("#contact-review").val($("input[name='contact']:checked").val())
-					break;
-				}
+        if (pageIndex == 4) {
+            validateAptNo()
+        }
+    })
 
-			case 4:
-				// validate date
-		        date_input = moment($('#dob-input').val(),"YYYY-MM-DD")
-		        if(!date_input.isValid() || !date_input.isBefore()){
-		            $("#dob-warning").show().focus()
-		            return;
-		        } else {
-		            $("#dob-warning").hide()
-		            // Set review field to user input
-					$('#dob-review').val($("#dob-input").val());
-					break;
-		        }
+    $("#apt-no-yes-button").click(function(){
+        $("#apt-no-no-button").hide()
+        $("#apt-no-yes-button").hide()
+        $("#apt-no-text-box").show()
+        $("#apt-no-next-button").show()
+    })
 
-			case 5:
-				phone = $("#phone-input").val();
-				phone = phone.replace(/[^0-9]/g,'');
+    $("#apt-no-no-button").click(function(){
+        $('body').trigger("pageEvent", pageIndex + 1)
+    })
 
-				$("#phone-input").val(
-					(phone.slice(0,3) ? "("+phone.slice(0,3)+")" : "") +
-					(phone.slice(3,6) ? "-"+phone.slice(3,6) : "") +
-					(phone.slice(6,10) ? "-"+phone.slice(6,10) : "")
-				);
+    $(".back-button").click(function(){
+        if (pageIndex == 0) {
+            // send to landing page
+            window.location.pathname = '/';
+        } else {
+            $('body').trigger("pageEvent", pageIndex - 1)
+        }
+    })
 
-				if (phone.length!=10) {
-					$("#phone-warning").show();
-					return;
-				} else {
-					// Set review field to user input
-					$('#phone-review').val($("#phone-input").val());
-					break;
-				}
-		}
+    $("#redo-button").click(function(){
+        window.location.pathname = "/requestor";
+    });
 
-		$('body').trigger("pageEvent", pageIndex + 1)
-	})
-
-	// button behavior
-	$(".next-button").click(function(){
-		$('body').trigger("partialSubmitEvent")
-	})
-
-
-	$(".back-button").click(function(){
-		if (pageIndex == 0) {
-			// send to landing page
-			window.location.pathname = '/';
-		} else {
-			$('body').trigger("pageEvent", pageIndex - 1)
-		}
-	})
-
-	$("#redo-button").click(function(){
-		window.location.pathname = "/requestor";
-	});
-
-	// If all name input fields are full on blur/defocus, automatically progress
-	$('#firstname-input, #lastname-input').blur(function(e){
-		if ($('#firstname-input').val().length > 0 && $('#lastname-input').val().length > 0){
-			$('body').trigger("partialSubmitEvent");
-		}
-	});
-
-	// single input blur with nonempty input -> progress form
-	$('#phone-input, #dob-input').blur(function(e){
-		if($(e.target).val().length > 0) {
-			$('body').trigger("partialSubmitEvent")
-		}
-	});
-
-	$('#address-input').blur(function(e){
-		google.maps.event.trigger(autocomplete, 'place_changed');
-	});
+    $('#address-input').blur(function(e){
+        google.maps.event.trigger(autocomplete, 'place_changed');
+    });
 
     $('.icon').click(function(){
         var topnav = document.getElementById("topnav");
@@ -264,44 +260,44 @@ $(document).ready(function() {
         $(topnav).next().css("margin-top",topnav.scrollHeight);
     });
 
-	$('.top-link').click(function(){
-		window.location.href ="/#top";
-	})
+    $('.top-link').click(function(){
+        window.location.href ="/#top";
+    })
 
-	$('.health-and-safety-link').click(function(){
-		window.location.href = "/health";
-	})
+    $('.health-and-safety-link').click(function(){
+        window.location.href = "/health";
+    })
 
-	$('.faq-link').click(function(){
-		window.location.href = "/#above-faq";
-	})
+    $('.faq-link').click(function(){
+        window.location.href = "/#above-faq";
+    })
 
-	$('.about-link').click(function(){
-		window.location.href = "/#above-about";
-	})
+    $('.about-link').click(function(){
+        window.location.href = "/#above-about";
+    })
 
-	function collapseTopNav() {
-		var topnav = document.getElementById("topnav");
+    function collapseTopNav() {
+        var topnav = document.getElementById("topnav");
         if (topnav.className === "topnav") {
           return;
         } else {
           topnav.className = "topnav";
         }
-	}
+    }
 
-	$('#request-button').click(function(){
-		window.location.href = "/errand";
-	})
+    $('#request-button').click(function(){
+        window.location.href = "/errand";
+    })
 
-	$('#faq-button').click(function(){
-		window.location.href = "/#above-faq";
-	})
+    $('#faq-button').click(function(){
+        window.location.href = "/#above-faq";
+    })
 
-	$('#support-button').click(function(){
-		// SV 4/11/20 : Should be a link to support page once that exists
-		window.location.href = "/#above-about";
-	})
+    $('#support-button').click(function(){
+        // SV 4/11/20 : Should be a link to support page once that exists
+        window.location.href = "/#above-about";
+    })
 
-	// display first page
-	$("body").trigger("pageEvent",0)
+    // display first page
+    $("body").trigger("pageEvent",0)
 }); 

@@ -50,25 +50,17 @@
 		{% include "errand_matcher/requestor-name.html" %}
 	</div>
 
+	<div class="page" id="phone-page">
+		{% include "errand_matcher/requestor-phone.html" %}
+	</div>
+
 	<div class="page" id="address-page">
 		{% include "errand_matcher/requestor-address.html" %}
 	</div>
 
-	<div class="page" id="contact-page">
-		{% include "errand_matcher/requestor-contact.html" %}
+	<div class="page" id="apt-no-page">
+		{% include "errand_matcher/requestor-apt-no.html" %}
 	</div>
-
-	{% if date_of_birth is None %}
-	<div class="page" id="dob-page">
-		{% include "errand_matcher/requestor-dob.html" %}
-	</div>
-	{% endif %}
-
-	{% if mobile_number is None %}
-	<div class="page" id="phone-page">
-		{% include "errand_matcher/requestor-phone.html" %}
-	</div>
-	{% endif %}
 
 	<div class="page" id="confirm-page">
 		{% include "errand_matcher/requestor-confirm.html" %}

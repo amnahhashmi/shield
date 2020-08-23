@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseNotAllowed
 from django.core.mail import send_mail
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
@@ -15,6 +16,7 @@ import os
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import *
 import errand_matcher.helper as helper
+import errand_matcher.messages as messages
 from errand_matcher.models import Errand
 from errand_matcher.models import User, Volunteer, Requestor, UserOTP
 from errand_matcher.models import SiteConfiguration
@@ -26,11 +28,6 @@ frequency_choice_lookup = {
     'Anytime': 1,
     '2-3 times a week': 2,
     'Once a week': 3
-}
-
-contact_choice_lookup = {
-    'SMS text': 1,
-    'Phone call': 2
 }
 
 def index(request):
@@ -55,58 +52,6 @@ def sms_inbound(request):
 def volunteer(request):
     return render(request, 'errand_matcher/volunteer.html')
 
-def volunteer_login(request):
-    if request.method == 'POST':
-        mobile_number_str = request.POST.get('phone-input')
-
-        # Is mobile number associated with Volunteer?
-        volunteer = helper.get_user_from_mobile_number_str(mobile_number_str)
-
-        # If Volunteer found, create OTP
-        if volunteer is not None:
-            user_otp = UserOTP.objects.create(mobile_number = volunteer.mobile_number)
-
-            # deliver OTP
-            message = "Livelyhood here! {} is your one-time password for online login. Please do not share.".format(
-                user_otp.token)
-            helper.send_sms(helper.format_mobile_number(user_otp.mobile_number), message)
-            
-            return render(request, 'errand_matcher/volunteer-login-otp.html')
-        # If no Volunteer found, show warning and redirect back to signup
-        else:
-            return render(request, 'errand_matcher/volunteer-login.html', {
-                'warning': 'Not found'})
-            
-    else:
-        return render(request, 'errand_matcher/volunteer-login.html')
-
-def volunteer_login_otp(request):
-    if request.method == 'POST':
-        otp_input = request.POST.get('otp-input')
-        user_otp = UserOTP.objects.filter(token=otp_input).first()
-
-        # If OTP found, login
-        if user_otp is not None:
-            volunteer = Volunteer.objects.filter(mobile_number=user_otp.mobile_number).first()
-            user = authenticate(request, username = volunteer.email_address, 
-                    password = helper.strip_mobile_number(volunteer.mobile_number))
-            # Redirect to a success page if authenticated
-            if user is not None:
-                login(request, user)
-            # Else an 'invalid login' error message.
-            else:
-                pass
-        
-        # If OTP not found, show warning and redirect back to signup
-        else:
-            return render(request, 'errand_matcher/volunteer-login-otp.html', {
-                'warning': 'Not found'
-                })
-
-    else:
-        return render(request, 'errand_matcher/volunteer-login-otp.html')
-
-
 def volunteer_signup(request):
     if request.method == 'POST':
         first_name = request.POST['first_name']
@@ -123,7 +68,7 @@ def volunteer_signup(request):
             first_name=first_name,
             last_name=last_name,
             email=email,
-            password=make_password(mobile_number),
+            password=BaseUserManager().make_random_password(),
             user_type=1)
         user.save()
 
@@ -170,12 +115,7 @@ def volunteer_signup(request):
             consented = True)
         volunteer.save()
 
-        tiny_faq_url = helper.make_tiny_url("{}#above-faq".format(helper.get_base_url()))
-        message = "Thanks for signing up to help make deliveries for at-risk members of your community!"\
-        " We'll text you when someone nearby needs your help. In the meantime, you can get ready by reading our FAQs:{}"\
-        " . And if you ever need help, you can always text us here.\n"\
-        "Reply STOP to stop receiving notifications of new requests.".format(tiny_faq_url)
-        helper.send_sms(helper.format_mobile_number(volunteer.mobile_number), message)
+        messages.welcome_new_volunteer(volunteer)
 
         return HttpResponse(status=204)
     else:
@@ -187,41 +127,63 @@ def requestor(request):
 
 def requestor_login(request):
     if request.method == 'POST':
-        mobile_number = request.POST.get('phone-input')
-        dob = request.POST.get('dob-input')
-        parsed_mobile_number = phonenumbers.parse('+1{}'.format(mobile_number))
-        requestor = Requestor.objects.filter(mobile_number=parsed_mobile_number, 
-            date_of_birth=dob).first()
+        mobile_number_str = request.POST.get('phone-input')
 
-        # Requestor not found, sign up
-        if requestor is None:
-            return render(request, 'errand_matcher/requestor-signup.html',
-             {'GMAPS_API_KEY': os.environ.get('GMAPS_API_KEY'),
-             'mobile_number': mobile_number,
-             'date_of_birth': dob})
+        # Is mobile number associated with Requestor?
+        requestor = helper.get_user_from_mobile_number_str(mobile_number_str, user_type='requestor')
+
+        # If Volunteer found, create OTP
+        if requestor is not None:
+            user_otp = UserOTP.objects.create(mobile_number = requestor.mobile_number)
+
+            # deliver OTP
+            messages.send_otp(user_otp)
         
+            return redirect('requestor_login_otp')
+        # If no Requestor found, show warning and redirect back to signup
         else:
-            return render(request, 'errand_matcher/request-errand.html', 
-                {'requestor_number': mobile_number})
+
+            return render(request, 'errand_matcher/requestor-login.html', {
+                'warning': "Sorry, we couldn't find a user associated with {}".format(mobile_number_str)})
     else:
         return render(request, 'errand_matcher/requestor-login.html')
+
+def requestor_login_otp(request):
+    if request.method == 'POST':
+        otp_input = request.POST.get('otp-input').strip()
+        user_otp = UserOTP.objects.filter(token=otp_input).first()
+
+        # If OTP found, render delivery request page
+        if user_otp is not None:
+            requestor = Requestor.objects.filter(mobile_number=user_otp.mobile_number).first()
+            if requestor is not None:
+                return render(request, 'errand_matcher/request-errand.html', {'requestor': requestor})
+            # Else warning
+            else:
+                return render(request, 'errand_matcher/requestor-login-otp.html', {
+                    'warning': otp_input})
+        
+        # If OTP not found, show warning
+        else:
+            return render(request, 'errand_matcher/requestor-login-otp.html', {
+                'warning': otp_input
+                })
+    else:
+        return render(request, 'errand_matcher/requestor-login-otp.html')
 
 def requestor_signup(request):
     if request.method == 'POST':
         first_name = request.POST['firstname-review']
         last_name = request.POST['lastname-review']
         mobile_number = request.POST['phone-review']
-        contact_preference = request.POST['contact-review']
-        date_of_birth = request.POST['dob-review']
         address = request.POST['address-review']
-
-        # SV 4-10-20 : TODO language preference patch
+        apt_no = request.POST['apt-no-review']
 
         user = User(username=mobile_number, 
             first_name=first_name,
             last_name=last_name,
             email='',
-            password=make_password(date_of_birth),
+            password=BaseUserManager().make_random_password(),
             user_type=2)
         user.save()
 
@@ -231,14 +193,13 @@ def requestor_signup(request):
             user=user,
             # PhoneNumberField requires country code
             mobile_number='+1' + mobile_number,
-            date_of_birth=date_of_birth,
             lon=coord_location['lng'],
             lat=coord_location['lat'],
-            contact_preference = contact_choice_lookup[contact_preference])
+            address_str=address,
+            apt_no=apt_no)
         requestor.save()
         return render(request, 'errand_matcher/request-errand.html', 
-                {'requestor_number': mobile_number, 'requestor_name': first_name})
-
+                {'requestor': requestor, 'requestor_new': True})
     else:
         return render(request, 'errand_matcher/requestor-signup.html',
             {'GMAPS_API_KEY': os.environ.get('GMAPS_API_KEY')})
