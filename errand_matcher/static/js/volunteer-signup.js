@@ -173,8 +173,8 @@ $(document).ready(function() {
   })
 
   // Progress onBlur or on Enter key pressed
-  $('.text-input').bind('blur keyup', function(e) {
-    if (e.type === 'blur' || e.keyCode === 13) {
+  $('.text-input').bind('keyup', function(e) {
+    if (e.keyCode === 13) {
       if (pageIndex == 1) {
         validateName()
       }

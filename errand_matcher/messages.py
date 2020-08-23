@@ -32,3 +32,8 @@ def welcome_new_volunteer(volunteer):
 	"\n\nMessage and data rates may apply. Reply STOP to opt-out of messages".format(tiny_faq_url)
 
 	helper.send_sms(helper.format_mobile_number(volunteer.mobile_number), message)
+
+def send_otp(user_otp):
+	message = "Livelyhood here! {} is your one-time password for online login. Please do not share.".format(
+		user_otp.token)
+	helper.send_sms(helper.format_mobile_number(user_otp.mobile_number), message)

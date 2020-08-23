@@ -116,8 +116,8 @@ function validateName() {
     $("#name-warning").hide();
 
     // Set review field to user input
-    $('#firstname-review').text($('#firstname-input').val());
-    $('#lastname-review').text($('#lastname-input').val());
+    $('#firstname-review').val($('#firstname-input').val());
+    $('#lastname-review').val($('#lastname-input').val());
     $('body').trigger("pageEvent", pageIndex + 1);
   }
   else {
@@ -139,11 +139,22 @@ function validatePhone() {
   if (phone.length==10) {
     $("#phone-warning").hide();
     // Set review field to user input
-    $('#phone-review').text(phone);
+    $('#phone-review').val(phone);
     $('body').trigger("pageEvent", pageIndex + 1);
   } else {
     $("#phone-warning").show().focus();
   }
+}
+
+function validateAptNo() {
+    if ($('#apt-no-input').val().length > 0){
+        $("#apt-no-warning").hide()
+        $('#apt-no-review').val($('#apt-no-input').val());
+        $('body').trigger('pageEvent', pageIndex + 1);
+    }
+    else {
+        $('#apt-no-warning').show()
+    }
 }
 
 $(document).ready(function() {
@@ -171,13 +182,16 @@ $(document).ready(function() {
     });
 
     // Progress onBlur or on Enter key pressed
-    $('.text-input').bind('blur keyup', function(e) {
-        if (e.type === 'blur' || e.keyCode === 13) {
+    $('.text-input').bind('keyup', function(e) {
+        if (e.keyCode === 13) {
             if (pageIndex == 1) {
                 validateName()
             }
             if (pageIndex == 2) {
                 validatePhone()
+            }
+            if (pageIndex == 4) {
+                validateAptNo()
             }
         }  
     })
@@ -192,10 +206,7 @@ $(document).ready(function() {
             
             } else {
                 $('#requirements-warning').hide()
-                window.setTimeout(function(){
-                // Change page displayed
-                  $('body').trigger("pageEvent", pageIndex + 1)
-                }, 2000)
+                $('body').trigger("pageEvent", pageIndex + 1)
             }
         }
 
@@ -204,12 +215,24 @@ $(document).ready(function() {
         }
 
         if (pageIndex == 2) {
-            validateEmail()
+            validatePhone()
         }
 
-        $('body').trigger("pageEvent", pageIndex + 1)
+        if (pageIndex == 4) {
+            validateAptNo()
+        }
     })
 
+    $("#apt-no-yes-button").click(function(){
+        $("#apt-no-no-button").hide()
+        $("#apt-no-yes-button").hide()
+        $("#apt-no-text-box").show()
+        $("#apt-no-next-button").show()
+    })
+
+    $("#apt-no-no-button").click(function(){
+        $('body').trigger("pageEvent", pageIndex + 1)
+    })
 
     $(".back-button").click(function(){
         if (pageIndex == 0) {

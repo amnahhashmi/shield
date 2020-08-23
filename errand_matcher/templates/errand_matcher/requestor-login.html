@@ -28,7 +28,7 @@
 		Sign in
 	</div>
 
-	<form class="requestor-login-form" action="login" method="post">
+	<form action="" method="post">
 		{% csrf_token %}
 		<div class="body_16_fontonly subhead item">
 			Please enter a 10-digit U.S. phone number to receive a one-time password.
@@ -39,7 +39,14 @@
 		<div class="body_16_fontonly subhead item warning" id="phone-warning">
 			Please enter a valid 10-digit U.S. phone number.
 		</div>
-		<input type="submit" id="requestor-login-button" class="inline-button-box button body_bold_16" value="Next"/>
+		<input type="submit" id="requestor-login" class="inline-button-box body_bold_16" style="width: 540px; align-items: center; border: 0px" value="Submit"/>
 	</form>
+	{% if warning %}
+		<p class="body_16_fontonly item" style="color:red">{{warning}}</p>
+		<div class="body_bold_16 inline-button-box button weak-button" style="margin: 24px">
+			<a href="/requestor/signup/" style="color: black; text-decoration:none">Sign up as a new requestor</a>
+		</div>
+	{% endif %}
+
 </body>
 </html>

@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+	<!-- import fonts -->
+	<link href="https://fonts.googleapis.com/css?family=Work+Sans&display=swap" rel="stylesheet">
+
+	<!-- import jQuery -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+	<title>LivelyHood Requestor Login OTP</title>
+	<link rel="shortcut icon" type="image/png" href="{% static 'css/icons/favicon.ico' %}"/>
+
+    <!-- CUSTOM STYLESHEETS -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet"/>
+
+</head>
+<body>
+	<div class="h5_32 item">
+		Verification
+	</div>
+
+	<form class="requestor-login-otp-form" action="otp" method="post">
+		{% csrf_token %}
+		{% if warning %}
+		<div class="body_16_fontonly subhead item" id="fg">
+			Sorry, we couldn't verify {{warning}}.
+		</div>
+		<div class="body_bold_16 inline-button-box button">
+			<a href="/requestor/" style="color: black; text-decoration:none">Try again</a>
+		</div>
+
+		{% else %}
+		<div class="body_16_fontonly subhead item">
+			Please enter the 6-digit code we sent to you.
+		</div>
+		<div class="text-box" for="requestor-otp-input">
+			<input type="text" class="text-input body_16_fontonly" id="otp-input" name="otp-input" placeholder="6-digit code" /> 
+		</div>
+		<input type="submit" id="requestor-login-otp" class="inline-button-box body_bold_16" style="width: 540px; align-items: center; border:0px" value="Submit"/>
+		{% endif %}		
+	</form>
+</body>
+</html>
