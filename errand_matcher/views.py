@@ -373,6 +373,7 @@ def partner_request(request):
 
             # new request
             requestor_number = request.POST['add-requestor-phone']
+            requestor_number_digits = ''.join(i for i in requestor_number if (i.isdigit() or i == '+'))
             requestor_first_name = request.POST['add-requestor-first-name']
             requestor_last_name = request.POST['add-requestor-last-name']
             requestor_address = request.POST['add-requestor-address']
@@ -382,14 +383,14 @@ def partner_request(request):
             errand_instructions = request.POST['volunteer-instructions']
             coord_location = helper.gmaps_geocode(requestor_address)
 
-            requestor = helper.get_user_from_mobile_number_str(requestor_number, user_type='requestor')
+            requestor = helper.get_user_from_mobile_number_str(requestor_number_digits, user_type='requestor')
 
-            if len(requestor_number) == 10:
-                requestor_number = '+1' + requestor_number
+            if len(requestor_number_digits) == 10:
+                requestor_number_digits = '+1' + requestor_number_digits
 
             if requestor is None:
                 user = User(
-                    username=requestor_number,
+                    username=requestor_number_digits,
                     first_name=requestor_first_name,
                     last_name=requestor_last_name,
                     email='',
@@ -399,7 +400,7 @@ def partner_request(request):
 
                 requestor = Requestor(
                     user=user,
-                    mobile_number=requestor_number,
+                    mobile_number=requestor_number_digits,
                     lon=coord_location['lng'],
                     lat=coord_location['lat'],
                     address_str = requestor_address,
@@ -436,6 +437,10 @@ def partner_request(request):
             requestor_id = request.POST['edit-requestor-id']
             
             requestor_number = request.POST['edit-requestor-phone']
+            requestor_number_digits = ''.join(i for i in requestor_number if (i.isdigit() or i == '+'))
+            if len(requestor_number_digits) == 10:
+                requestor_number_digits = '+1' + requestor_number_digits
+
             requestor_first_name = request.POST['edit-requestor-first-name']
             requestor_last_name = request.POST['edit-requestor-last-name']
             requestor_address = request.POST['edit-requestor-address']
@@ -445,16 +450,13 @@ def partner_request(request):
             errand_instructions = request.POST['edit-volunteer-instructions']
 
             user = User.objects.get(id=requestor_id)
-            user.username = requestor_number
+            user.username = requestor_number_digits
             user.first_name = requestor_first_name
             user.last_name = requestor_last_name
             user.save()
 
-            if len(requestor_number) == 10:
-                requestor_number = '+1' + requestor_number
-
             requestor = user.requestor
-            requestor.mobile_number = requestor_number
+            requestor.mobile_number = requestor_number_digits
             requestor.address_str = requestor_address
             requestor.apt_no = requestor_apartment
             requestor.internal_note = requestor_internal_note
