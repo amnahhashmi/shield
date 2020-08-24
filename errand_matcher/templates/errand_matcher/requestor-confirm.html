@@ -6,7 +6,7 @@
 </div>
 
 
-<form class="requestor-signup-form" action="signup" method="post">
+<form class="requestor-signup-form" action="{% url 'prequestor_signup' %} " method="post">
 	{% csrf_token %}
 
 	<div class="conf-item">
