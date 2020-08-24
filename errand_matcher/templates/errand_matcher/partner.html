@@ -78,7 +78,7 @@
 					<label for="partner-login-password" class="body_bold_16">Password*</label>
 					<input type="password" class="text-input body_16_fontonly" style="margin-bottom: 6px" id="partner-login-password" name="partner-login-password" placeholder="password" required/>
 					<div style="text-align: right">
-						<a class="forgot-password-link" href="password_reset/">Forgot my password</a>
+						<a class="forgot-password-link" href="{% url 'partner_password_reset' %}">Forgot my password</a>
 					</div>
 					<input type="submit" class="inline-button-box body_bold_16" style="align-items: center; width: 75%; border-width: 0px; margin: 0px" value="Submit"/>
 				</form>
