@@ -50,7 +50,7 @@
 				<p class="body_23">Start discovering volunteers to deliver food to vulnerable members of your community.</p>
 				<p class="body_23">Fill out the form below, and we'll contact you about creating an account.</p>
 
-				<form action="/partner/setup/" method="post">
+				<form action="{% url 'partner_setup' %}" method="post">
 					{% csrf_token %}
 					<label for="setup-name" class="body_bold_16">Your Name*</label>
 					<input type="text" class="text-input body_16_fontonly" id="setup-name" name="setup-name" placeholder="name" required/>
@@ -71,7 +71,7 @@
 				{% if warning %}
 				<p class="body_16_fontonly" style="color:red">{{warning}}</p>
 				{% endif %}
-				<form action="/partner/" method="post">
+				<form action="{% url 'partner' %}" method="post">
 					{% csrf_token %}
 					<label for="partner-login-email" class="body_bold_16">Email*</label>
 					<input type="email" class="text-input body_16_fontonly" id="partner-login-email" name="partner-login-email" placeholder="email" required/>

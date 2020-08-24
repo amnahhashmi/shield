@@ -24,7 +24,7 @@
 		Verification
 	</div>
 
-	<form class="requestor-login-otp-form" action="otp" method="post">
+	<form class="requestor-login-otp-form" action="{% url 'requestor_login_otp' %}" method="post">
 		{% csrf_token %}
 		{% if warning %}
 		<div class="body_16_fontonly subhead item" id="fg">

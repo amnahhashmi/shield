@@ -51,7 +51,7 @@
 		<div class="modal-content">
 	    	<h5 class="h5_32">Add Delivery</h5>
 	    	<p class="body_23"> Requestor Information</p>
-	    	<form id="add-delivery-form" action="/partner/request/" method="post">
+	    	<form id="add-delivery-form" action="{% url 'partner_request' %}" method="post">
 	    		{% csrf_token %}
 	    		<div>
 		    		<div class="column" style="width: 33%">
@@ -101,7 +101,7 @@
 		<div class="modal-content">
 	    	<h5 class="h5_32">Edit Delivery</h5>
 	    	<p class="body_23"> Requestor Information</p>
-	    	<form id="edit-delivery-form" action="/partner/request/" method="post">
+	    	<form id="edit-delivery-form" action="{% url 'partner_request' %}" method="post">
 	    		{% csrf_token %}
 	    		<div>
 		    		<div class="column" style="width: 33%">

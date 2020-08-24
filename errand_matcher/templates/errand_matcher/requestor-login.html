@@ -28,7 +28,7 @@
 		Sign in
 	</div>
 
-	<form action="" method="post">
+	<form action="{% url 'requestor_login' %}" method="post">
 		{% csrf_token %}
 		<div class="body_16_fontonly subhead item">
 			Please enter a 10-digit U.S. phone number to receive a one-time password.
