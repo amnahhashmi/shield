@@ -6,7 +6,6 @@ local_settings.py
 db.sqlite3
 shield_venv/
 .DS_store
-staticfiles/
 env/
 .vscode/
 .env
