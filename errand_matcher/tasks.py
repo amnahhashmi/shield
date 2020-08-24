@@ -26,7 +26,7 @@ def match_errands():
             errand.save()
 
         # alert on-call staffer if errand still unclaimed after last round
-        if errand.request_round == helper.get_max_request_rounds():
+        if errand.request_round >= helper.get_max_request_rounds():
             messages.alert_staff_of_unclaimed_errand(errand)
             continue
 
