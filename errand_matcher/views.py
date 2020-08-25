@@ -11,6 +11,7 @@ from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from django.utils import timezone
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes
 import math
 import os
 from sendgrid import SendGridAPIClient
@@ -485,12 +486,12 @@ def partner_password_reset(request):
         user = User.objects.filter(username=recover_email).first()
         if user is not None:
             # Generate a password reset token
-            uidb64 = urlsafe_base64_encode(str(user.pk).encode())
+            uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
             password_reset_token = PasswordResetTokenGenerator().make_token(user)
             password_reset_url = helper.get_base_url() + "/partner/reset/{}/{}".format(uidb64, password_reset_token)
 
             content = "<p>Hi there, we received a password reset request for your account. Please click here to reset your password:</p>"\
-                "<p><a href='{}''>{}</a></p>"\
+                "<p><a href='{}'>{}</a></p>"\
                 "<p>If you did not request a password change, please ignore this message. Thanks,</p>"\
                 "<p>Team LivelyHood</p>"\
                 "<p>{}</p>".format(password_reset_url, password_reset_url, helper.get_base_url())
@@ -519,7 +520,7 @@ def partner_password_reset(request):
 def partner_password_reset_done(request):
     return render(request, 'errand_matcher/partner-password-reset-done.html', {'base_url': helper.get_base_url()})
 
-def partner_reset_confirm(request, uidb64, token):
+def partner_password_reset_confirm(request, uidb64, token):
     if request.method == 'POST':
         uid = urlsafe_base64_decode(uidb64).decode()
         user = User.objects.filter(pk=uid).first()
