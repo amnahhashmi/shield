@@ -33,6 +33,7 @@ def welcome_new_volunteer(volunteer):
 
 	helper.send_sms(helper.format_mobile_number(volunteer.mobile_number), message)
 
+
 def send_otp(user_otp):
 	message = "Livelyhood here! {} is your one-time password for online login. Please do not share.".format(
 		user_otp.token)

@@ -5,6 +5,7 @@ from urllib.parse import urlencode
 from urllib.request import urlopen
 import contextlib
 from twilio.rest import Client
+from twilio.base.exceptions import TwilioRestException
 import os
 from django.utils import timezone
 from datetime import timedelta
@@ -22,10 +23,13 @@ def send_sms(to_number, message):
     auth_token = os.environ.get('TWILIO_AUTH_TOKEN')
     twilio_number = os.environ.get('TWILIO_NUMBER')
     client = Client(account_sid, auth_token)
-    message = client.messages.create(
-        body=message,
-        from_=twilio_number,
-        to=to_number)
+    try:
+        message = client.messages.create(
+            body=message,
+            from_=twilio_number,
+            to=to_number)
+    except TwilioRestException as e:
+        print(e)
     return
 
 
