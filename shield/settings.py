@@ -48,13 +48,13 @@ CSRF_USE_SESSIONS = True
 # Application definition
 
 INSTALLED_APPS = [
-    'errand_matcher',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'errand_matcher',
     'phonenumber_field',
     'django_celery_beat',
     'django_otp',
