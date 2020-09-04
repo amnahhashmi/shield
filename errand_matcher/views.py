@@ -380,7 +380,7 @@ def partner_request(request):
             requestor_address = request.POST['add-requestor-address']
             requestor_apartment = request.POST['add-requestor-apartment']
             requestor_internal_note = request.POST['internal-notes']
-            errand_due_by = request.POST['errand-due-by']
+            errand_due_by = request.POST['errand-due-by']+" 23:59:59"
             errand_instructions = request.POST['volunteer-instructions']
             coord_location = helper.gmaps_geocode(requestor_address)
 
@@ -447,7 +447,7 @@ def partner_request(request):
             requestor_address = request.POST['edit-requestor-address']
             requestor_apartment = request.POST['edit-requestor-apartment']
             requestor_internal_note = request.POST['edit-internal-notes']
-            errand_due_by = request.POST['edit-errand-due-by']
+            errand_due_by = request.POST['edit-errand-due-by'] + " 23:59:59"
             errand_instructions = request.POST['edit-volunteer-instructions']
 
             user = User.objects.get(id=requestor_id)
