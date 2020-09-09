@@ -35,18 +35,6 @@
 </head>
 
 <body>
-	<div class="topnav" id="topnav">
-		<!-- TODO: Check all links are correct. -->
-		<a class="topnav-item button top-link" id="home-item">LivelyHood</a>
-		<a class="topnav-item-collapsible button health-and-safety-link">Health and safety protocol</a>
-		<a class="topnav-item-collapsible button faq-link">FAQs</a>
-		<a class="topnav-item-collapsible button about-link">About</a>
-		<a class="topnav-item-collapsible button about-link">Contact</a>
-		<a class="topnav-item-collapsible button partners-link active">Partners</a>
-		<a class="topnav-item" id="user-menu-button" style="float:right"><img src="{% static 'css/icons/account_circle-black-36dp.svg' %}">{{user.partner.organization}}</a>
-		<a class="icon">☰</a>
-	</div>
-
 	<div id="add-delivery-modal" class="modal">
 		<div class="modal-content">
 	    	<h5 class="h5_32">Add Delivery</h5>
@@ -164,80 +152,95 @@
 		</div>
 	</div>
 
-	<div class="contents">
-		<div class="inline-button-box button button-title" id="add-delivery-button" style="margin-top: 88px; margin-bottom: 16px;margin-left: 0; width: 300px; color: black">
-			Add a Delivery
+	<div id="page-container">
+		<div id="content-wrap">
+		<div class="topnav" id="topnav">
+			<!-- TODO: Check all links are correct. -->
+			<a class="topnav-item button top-link" id="home-item">LivelyHood</a>
+			<a class="topnav-item-collapsible button health-and-safety-link">Health and safety protocol</a>
+			<a class="topnav-item-collapsible button faq-link">FAQs</a>
+			<a class="topnav-item-collapsible button about-link">About</a>
+			<a class="topnav-item-collapsible button about-link">Contact</a>
+			<a class="topnav-item-collapsible button partners-link active">Partners</a>
+			<a class="topnav-item" id="user-menu-button" style="float:right"><img src="{% static 'css/icons/account_circle-black-36dp.svg' %}">{{user.partner.organization}}</a>
+			<a class="icon">☰</a>
 		</div>
-		{% if errands %}
-		<table id="partner-errands">
-			<thead>
-				<tr>
-					<th class="table-header">ENTRY DATE</th>
-					<th class="table-header">REQUESTER</th>
-					<th class="table-header">PHONE</th>
-					<th class="table-header">DELIVER BY</th>
-					<th class="table-header">INSTRUCTIONS</th>
-					<th class="table-header">INTERNAL NOTE</th>
-					<th class="table-header">STATUS</th>
-					<th class="table-header">          </th>
-				</tr>
-			</thead>
-			<tbody>
-				{% for errand in errands %}
-				<tr>
-					<td class="table-item" style="text-align: right">{{errand.requested_time}}</td>
-					<td class="table-item">
-						<div data-toggle="popover" title="{{errand.requestor.user.first_name}} {{errand.requestor.user.last_name}}" data-content="{{errand.requestor.address_str}} {{errand.requestor.apt_no}}">
-							<span style="vertical-align: middle;"><img src="{% static 'css/icons/account_circle-black-36dp.svg' %}"></span>{{errand.requestor.user.first_name}} {{errand.requestor.user.last_name}}
-						</div>
-						<p id="first_name_{{errand.requestor.user.id}}_{{errand.id}}" hidden>{{errand.requestor.user.first_name}}</p>
-						<p id="last_name_{{errand.requestor.user.id}}_{{errand.id}}" hidden>{{errand.requestor.user.last_name}}</p>
-						<p id="address_str_{{errand.requestor.user.id}}_{{errand.id}}" hidden>{{errand.requestor.address_str}}</p>
-						<p id="apt_no_{{errand.requestor.user.id}}_{{errand.id}}" hidden>{{errand.requestor.apt_no}}</p>
-					</td>
-					<td class="table-item" id="mobile_number_{{errand.requestor.user.id}}_{{errand.id}}" >{{errand.requestor.mobile_number}}</td>
-					<td class="table-item" id="due_by_{{errand.requestor.user.id}}_{{errand.id}}">{{errand.due_by|date:"M. j, Y"}}</td>
-					<td class="table-item" id="additional_info_{{errand.requestor.user.id}}_{{errand.id}}">{{errand.additional_info}}</td>
-					<td class="table-item" id="internal_note_{{errand.requestor.user.id}}_{{errand.id}}">{{errand.requestor.internal_note}}</td>
-					<td>
-						{% if errand.status == 0 %}
-						<p class="hover_8" id="errand_status_text_{{forloop.counter}}" style="margin:0px">Request submitted</p>
-						<span class="errand-status-icon" id= "errand_status_icon_{{forloop.counter}}" style="vertical-align: middle;"><img src="{% static 'css/icons/four_1.svg' %}"></span>
-						{% elif errand.status == 1 %}
-						<p class="hover_8" id="errand_status_text_{{forloop.counter}}" style="margin:0px">Request distributed</p>
-						<span class="errand-status-icon" id= "errand_status_icon_{{forloop.counter}}" style="vertical-align: middle;"><img src="{% static 'css/icons/four_2.svg' %}"></span>
-						{% elif errand.status == 2 %}
-						<div data-toggle="popover" title="claimed by" data-content="{{errand.claimed_volunteer.user.first_name}} {{errand.claimed_volunteer.user.last_name}} {{errand.claimed_volunteer.mobile_number}}">
-							<p class="hover_8" id="errand_status_text_{{forloop.counter}}" style="margin:0px">Request claimed</p>
-							<span class="errand-status-icon" id= "errand_status_icon_{{forloop.counter}}" style="vertical-align: middle;"><img src="{% static 'css/icons/four_3.svg' %}"></span>
-						</div>
-						{% elif errand.status == 3 %}
-						<p class="hover_8" id="errand_status_text_{{forloop.counter}}" style="margin:0px">Request complete</p>
-						<span class="errand-status-icon" id= "errand_status_icon_{{forloop.counter}}" style="vertical-align: middle;"><img src="{% static 'css/icons/four_4.svg' %}"></span>
-						{% else %}
-						<p class="hover_8" id="errand_status_text_{{forloop.counter}}" style="margin:0px">Request failed</p>
-						<span class="errand-status-icon" id= "errand_status_icon_{{forloop.counter}}" style="vertical-align: middle;"><img src="{% static 'css/icons/four_unfilled.svg' %}"></span>
-						{% endif %}
-					</td>
-					<td style="text-align: center; padding: 16px 24px;">
-						{% if errand.status < 2 %}
-						<span class="edit-delivery-button icon-button" id="edit_{{errand.requestor.user.id}}_{{errand.id}}" style="vertical-align: middle;" ><img style="height: 24px; width: 24px" src="{% static 'css/icons/edit.svg' %}"></span>
-						<span class="cancel-delivery-button icon-button" id="cancel_{{errand.requestor.user.id}}_{{errand.id}}" style="vertical-align: middle;" ><img src="{% static 'css/icons/criss-cross.svg' %}" style="height: 24px; width: 24px"></span>
-						{% endif %}
-					</td>
-				</tr>
-				{% endfor %}
-			</tbody>
-		</table>
-	{% else %}
-		<h3 class="main-heading" style="padding: 32px 0px">Looks like you don't have any scheduled deliveries yet!</h3>
-		<span><img style="height: 144px; width: 144px" src="{% static 'css/icons/cute-rocket-launching.svg' %}"></span>
-		<p class="body_bold_16" style="padding: 32px 0px">Click Add a Delivery to get started.</p>
-	{% endif %}
-	</div>
-	<div class="footer" style="height: 155px; padding: 0px; position: absolute; bottom: 0; width: 100%;">
-	    <p class="footer-copyright">(c) 2020 LivelyHood, All rights reserved</p>
-	</div>
-</body>
 
+		<div class="contents">
+			<div class="inline-button-box button button-title" id="add-delivery-button" style="margin-top: 88px; margin-bottom: 16px;margin-left: 0; width: 300px; color: black">
+				Add a Delivery
+			</div>
+			{% if errands %}
+			<table id="partner-errands">
+				<thead>
+					<tr>
+						<th class="table-header">ENTRY DATE</th>
+						<th class="table-header">REQUESTER</th>
+						<th class="table-header">PHONE</th>
+						<th class="table-header">DELIVER BY</th>
+						<th class="table-header">INSTRUCTIONS</th>
+						<th class="table-header">INTERNAL NOTE</th>
+						<th class="table-header">STATUS</th>
+						<th class="table-header">          </th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for errand in errands %}
+					<tr>
+						<td class="table-item" style="text-align: right">{{errand.requested_time}}</td>
+						<td class="table-item">
+							<div data-toggle="popover" title="{{errand.requestor.user.first_name}} {{errand.requestor.user.last_name}}" data-content="{{errand.requestor.address_str}} {{errand.requestor.apt_no}}">
+								<span style="vertical-align: middle;"><img src="{% static 'css/icons/account_circle-black-36dp.svg' %}"></span>{{errand.requestor.user.first_name}} {{errand.requestor.user.last_name}}
+							</div>
+							<p id="first_name_{{errand.requestor.user.id}}_{{errand.id}}" hidden>{{errand.requestor.user.first_name}}</p>
+							<p id="last_name_{{errand.requestor.user.id}}_{{errand.id}}" hidden>{{errand.requestor.user.last_name}}</p>
+							<p id="address_str_{{errand.requestor.user.id}}_{{errand.id}}" hidden>{{errand.requestor.address_str}}</p>
+							<p id="apt_no_{{errand.requestor.user.id}}_{{errand.id}}" hidden>{{errand.requestor.apt_no}}</p>
+						</td>
+						<td class="table-item" id="mobile_number_{{errand.requestor.user.id}}_{{errand.id}}" >{{errand.requestor.mobile_number}}</td>
+						<td class="table-item" id="due_by_{{errand.requestor.user.id}}_{{errand.id}}">{{errand.due_by|date:"M. j, Y"}}</td>
+						<td class="table-item" id="additional_info_{{errand.requestor.user.id}}_{{errand.id}}">{{errand.additional_info}}</td>
+						<td class="table-item" id="internal_note_{{errand.requestor.user.id}}_{{errand.id}}">{{errand.requestor.internal_note}}</td>
+						<td>
+							{% if errand.status == 0 %}
+							<p class="hover_8" id="errand_status_text_{{forloop.counter}}" style="margin:0px">Request submitted</p>
+							<span class="errand-status-icon" id= "errand_status_icon_{{forloop.counter}}" style="vertical-align: middle;"><img src="{% static 'css/icons/four_1.svg' %}"></span>
+							{% elif errand.status == 1 %}
+							<p class="hover_8" id="errand_status_text_{{forloop.counter}}" style="margin:0px">Request distributed</p>
+							<span class="errand-status-icon" id= "errand_status_icon_{{forloop.counter}}" style="vertical-align: middle;"><img src="{% static 'css/icons/four_2.svg' %}"></span>
+							{% elif errand.status == 2 %}
+							<div data-toggle="popover" title="claimed by" data-content="{{errand.claimed_volunteer.user.first_name}} {{errand.claimed_volunteer.user.last_name}} {{errand.claimed_volunteer.mobile_number}}">
+								<p class="hover_8" id="errand_status_text_{{forloop.counter}}" style="margin:0px">Request claimed</p>
+								<span class="errand-status-icon" id= "errand_status_icon_{{forloop.counter}}" style="vertical-align: middle;"><img src="{% static 'css/icons/four_3.svg' %}"></span>
+							</div>
+							{% elif errand.status == 3 %}
+							<p class="hover_8" id="errand_status_text_{{forloop.counter}}" style="margin:0px">Request complete</p>
+							<span class="errand-status-icon" id= "errand_status_icon_{{forloop.counter}}" style="vertical-align: middle;"><img src="{% static 'css/icons/four_4.svg' %}"></span>
+							{% else %}
+							<p class="hover_8" id="errand_status_text_{{forloop.counter}}" style="margin:0px">Request failed</p>
+							<span class="errand-status-icon" id= "errand_status_icon_{{forloop.counter}}" style="vertical-align: middle;"><img src="{% static 'css/icons/four_unfilled.svg' %}"></span>
+							{% endif %}
+						</td>
+						<td style="text-align: center; padding: 16px 24px;">
+							{% if errand.status < 2 %}
+							<span class="edit-delivery-button icon-button" id="edit_{{errand.requestor.user.id}}_{{errand.id}}" style="vertical-align: middle;" ><img style="height: 24px; width: 24px" src="{% static 'css/icons/edit.svg' %}"></span>
+							<span class="cancel-delivery-button icon-button" id="cancel_{{errand.requestor.user.id}}_{{errand.id}}" style="vertical-align: middle;" ><img src="{% static 'css/icons/criss-cross.svg' %}" style="height: 24px; width: 24px"></span>
+							{% endif %}
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		{% else %}
+			<h3 class="main-heading" style="padding: 32px 0px">Looks like you don't have any scheduled deliveries yet!</h3>
+			<span><img style="height: 144px; width: 144px" src="{% static 'css/icons/cute-rocket-launching.svg' %}"></span>
+			<p class="body_bold_16" style="padding: 32px 0px">Click Add a Delivery to get started.</p>
+		{% endif %}
+		</div>
+	</div>
+	<div id="footer">
+    	<p class="footer-copyright">(c) 2020 LivelyHood, All rights reserved</p>
+    </div>
+    </div>
+</body>
 </html>
