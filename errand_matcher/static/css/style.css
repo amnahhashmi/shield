@@ -132,6 +132,23 @@
     text-align: center;
 }
 
+#page-container {
+  position: relative;
+  min-height: 100vh;
+}
+
+#content-wrap {
+  padding-bottom: 4rem;    /* Footer height */
+}
+
+#footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: #F1F1F1;
+  height: 8rem;            /* Footer height */
+}
+
 .button-box {
 	position: static;
 	padding:24px;
@@ -817,4 +834,6 @@ table tr:last-child {
 .icon-button:hover {
 	cursor: pointer;
 }
+
+
 
