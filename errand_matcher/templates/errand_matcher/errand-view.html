@@ -52,8 +52,15 @@
 
 		<div class="conf-item">
 		    <div class="body-13">Address</div>
-		    <div class="body_bold_16">{{ address }}</div>
+		    <div class="body_bold_16">{{ requestor.address_str }}</div>
 		</div>
+
+		{% if requestor.apt_no %}
+		<div class="conf-item">
+		    <div class="body-13">Apartment</div>
+		    <div class="body_bold_16">{{ requestor.apt_no }}</div>
+		</div>
+		{% endif %}
 
 		{% if additional_info %}
 		<div class="conf-item">
@@ -61,6 +68,11 @@
 		    <div class="body_bold_16">{{ additional_info }}</div>
 		</div>
 		{% endif %}
+
+		{% csrf_token %}
+		<div class="body_bold_16 inline-button-box button" id="errand-complete-button">
+			Mark as done
+		</div>
 
 		<div class="body_bold_16 inline-button-box button" id="livelyhood-home-button">
 			LivelyHood
