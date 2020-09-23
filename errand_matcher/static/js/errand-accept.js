@@ -41,6 +41,21 @@ $(document).ready(function() {
         })
     })
 
+    $("#errand-complete-button").click(function(event){
+    	// make POST ajax call
+        $.ajax({
+            type: 'POST',
+            headers: {'X-CSRFToken': csrftoken},
+            success: function(response){
+            	$('body').trigger("pageEvent", pageIndex + 1)
+            },
+            error: function(jqHXR, exception){
+            	console.log(exception);
+            }
+        })
+    })
+    })
+
     $("#livelyhood-home-button").click(function(){
       window.location.pathname = '/';
   	})

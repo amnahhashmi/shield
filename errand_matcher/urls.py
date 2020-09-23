@@ -25,5 +25,6 @@ urlpatterns = [
     path('errand', views.request_errand, name='request_errand'),
     path('errand/<int:errand_id>/accept/<int:volunteer_number>', views.accept_errand, name='accept_errand'),
     path('errand/<int:errand_id>/status/<uuid:access_id>', views.view_errand, name='view_errand'),
+    path('errand/<int:errand_id>/complete/<uuid:access_id>', views.complete_errand, name='complete_errand'),
     path('sms', views.sms_inbound, name='sms_inbound'),
 ]

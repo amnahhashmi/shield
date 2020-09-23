@@ -39,6 +39,7 @@ def match_errands():
         errand.request_round +=1
         errand.save()
 
+
 @shared_task
 def activate_errands():
     errands = Errand.objects.filter(status=0)
@@ -48,9 +49,15 @@ def activate_errands():
             errand.status = 1
             errand.save()
 
-TWILIO_FLOWS = {
-    'Req_Happy_VolDelivered': 'FW554a336fe5d6c246d934a9e77e6dadb6',
-}
+
+@shared_task
+def send_errand_completion_messages():
+    # ask volunteer to mark in-progress errand (status=2) as done 1 day after due
+    errands = Errand.objects.filter(status=2)
+    for errand in errands:
+        if timezone.now() > errand.due_by:
+            messages.remind_volunteer_to_complete(errand, errand.claimed_volunteer)
+
 
 @shared_task
 def cleanup_tokens():
@@ -59,18 +66,3 @@ def cleanup_tokens():
     tokens_older_than_ten_mins = UserOTP.objects.filter(created_at__lte=ten_minutes_ago)
     tokens_older_than_ten_mins.delete()
 
-@shared_task
-def send_errand_completion_messages():
-    # for errands 1 day ago
-    twenty_four_hour_errands = Errand.objects.filter(status=2, urgency=1, 
-        claimed_time__gte=timezone.now()+timedelta(days=-1))
-    three_day_errands = Errand.objects.filter(status=2, urgency=2,
-        claimed_time__gte=timezone.now()+timedelta(days=-3))
-    for errand in list(twenty_four_hour_errands) + list(three_day_errands):
-        execution = twilio_client.studio \
-            .v1 \
-            .flows(settings.TWILIO_FLOWS['Req_Happy_VolDelivered']) \
-            .executions \
-            .create(to=requestor.mobile_number.as_e164, from_=settings.TWILIO_NUMBER)
-        errand.status=3
-        errand.save()

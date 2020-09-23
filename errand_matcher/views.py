@@ -238,10 +238,8 @@ def accept_errand(request, errand_id, volunteer_number):
         errand.access_id = uuid.uuid4()
         errand.save()
 
-        # send text to volunteer with unique link
-        url = "{}/errand/{}/status/{}".format(helper.get_base_url(), errand.id, errand.access_id)
-        message = "Thanks for accepting this request! See details at {}".format(url)
-        helper.send_sms(helper.format_mobile_number(volunteer.mobile_number), message)
+        messages.confirm_successful_claim(errand, volunteer)
+
         return HttpResponse(status=204)
 
     else:
@@ -279,8 +277,6 @@ def accept_errand(request, errand_id, volunteer_number):
 
         deadline_str = helper.convert_errand_deadline_to_str(errand)
 
-        address = helper.gmaps_reverse_geocode((errand.requestor.lat, errand.requestor.lon))
-
         requestor_number = helper.format_mobile_number(errand.requestor.mobile_number)
 
         # on-staff number
@@ -294,7 +290,6 @@ def accept_errand(request, errand_id, volunteer_number):
             'distance': distance_str,
             'errand_status': errand.status,
             'additional_info': errand.additional_info,
-            'address': address,
             'requestor_number': requestor_number,
             'staff_number': staff_number,
             'base_url': helper.get_base_url()
@@ -303,7 +298,6 @@ def accept_errand(request, errand_id, volunteer_number):
 def view_errand(request, errand_id, access_id):
     errand = Errand.objects.filter(access_id=access_id).first()
     errand_expiration_hours = math.floor((errand.due_by - timezone.now()).total_seconds() / 3600)
-    address = helper.gmaps_reverse_geocode((errand.requestor.lat, errand.requestor.lon))
     requestor_number = helper.format_mobile_number(errand.requestor.mobile_number)
     if errand is not None:
         return render(request, 'errand_matcher/errand-view.html', {
@@ -311,13 +305,23 @@ def view_errand(request, errand_id, access_id):
             'requestor': errand.requestor,
             'time_left': errand_expiration_hours,
             'additional_info': errand.additional_info,
-            'address': address,
             'requestor_number': requestor_number,
             'base_url': helper.get_base_url()
             })
 
     else:
         return render(request, 'errand_matcher/404.html', {'base_url': helper.get_base_url()})
+
+def complete_errand(request, errand_id, access_id):
+    if request.method == 'POST':
+        errand = Errand.objects.filter(access_id=access_id).first()
+        if errand is not None:
+            # status = 3 if complete
+            errand.status = 3
+            errand.save()
+            return HttpResponse(status=204)
+    else:
+        return HttpResponseNotAllowed()
 
 def partner(request):
     if request.method == 'POST':
