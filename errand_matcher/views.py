@@ -495,7 +495,7 @@ def partner_password_reset(request):
                 "<p>If you did not request a password change, please ignore this message. Thanks,</p>"\
                 "<p>Team LivelyHood</p>"\
                 "<p>{}</p>".format(password_reset_url, password_reset_url, helper.get_base_url())
-
+            print(content)
             message = Mail(
                 from_email='team@livelyhood.io',
                 to_emails=recover_email,
