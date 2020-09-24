@@ -199,7 +199,7 @@
 						</td>
 						<td class="table-item" id="mobile_number_{{errand.requestor.user.id}}_{{errand.id}}" >{{errand.requestor.mobile_number}}</td>
 						<td class="table-item" id="due_by_{{errand.requestor.user.id}}_{{errand.id}}">{{errand.due_by|date:"M. j, Y"}}</td>
-						<td class="table-item" id="additional_info_{{errand.requestor.user.id}}_{{errand.id}}">{{errand.additional_info}}</td>
+						<td class="table-item" id="additional_info_{{errand.requestor.user.id}}_{{errand.id}}">{{errand.additional_info|truncatechars:128}}</td>
 						<td class="table-item" id="internal_note_{{errand.requestor.user.id}}_{{errand.id}}">{{errand.requestor.internal_note}}</td>
 						<td>
 							{% if errand.status == 0 %}
