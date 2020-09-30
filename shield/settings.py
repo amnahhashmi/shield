@@ -188,6 +188,10 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'errand_matcher.tasks.cleanup_tokens',
         'schedule': crontab(minute='*/10'),
         'args': ()
+    },
+    'remind-volunteers-to-mark-errand-as-done': {
+        'task': 'errand_matcher.tasks.complete_errands',
+        'schedule': crontab(minute=0, hour=15)
     }
 }
 

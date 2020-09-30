@@ -1,0 +1,37 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+		<!-- import fonts -->
+		<link href="https://fonts.googleapis.com/css?family=Work+Sans&display=swap" rel="stylesheet">
+
+		<!-- import jQuery -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+		<title>LivelyHood - Delivery Complete</title>
+		<link rel="shortcut icon" type="image/png" href="{% static 'css/icons/favicon.ico' %}"/>
+		<base href="{{base_url}}" />
+
+        <!-- CUSTOM STYLESHEETS -->
+        <link href="{% static 'css/style.css' %}" rel="stylesheet"/>
+
+        <!-- PAGE SOURCE -->
+        <script src="{% static 'js/errand-accept.js' %}"></script>
+	</head>
+	<body>
+		<div class="h5_32 item">
+    		Congratulations!
+		</div>
+		<div class="body_16_fontonly subhead item">
+		    Thanks {{errand.claimed_volunteer.user.first_name}} for helping your {{ordinal_errands_completed}} person in need! You made someone's day with your gesture. Please take a minute to complete this survey so we continue to help more people. Click here for survey: <a href="https://forms.gle/ZKd5z3obSFvyejA49">https://forms.gle/ZKd5z3obSFvyejA49</a>
+		</div>
+		
+		<div class="body_bold_16 inline-button-box button" id="livelyhood-home-button">
+			LivelyHood
+		</div>
+	</body>
+</html>
