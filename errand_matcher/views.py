@@ -12,6 +12,7 @@ from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from django.utils import timezone
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes
+import inflect
 import math
 import os
 from sendgrid import SendGridAPIClient
@@ -301,10 +302,10 @@ def view_errand(request, errand_id, access_id):
     requestor_number = helper.format_mobile_number(errand.requestor.mobile_number)
     if errand is not None:
         return render(request, 'errand_matcher/errand-view.html', {
+            'access_id': access_id,
+            'errand': errand,
             'errand_number': int(errand.id),
-            'requestor': errand.requestor,
             'time_left': errand_expiration_hours,
-            'additional_info': errand.additional_info,
             'requestor_number': requestor_number,
             'base_url': helper.get_base_url()
             })
@@ -318,8 +319,17 @@ def complete_errand(request, errand_id, access_id):
         if errand is not None:
             # status = 3 if complete
             errand.status = 3
+            errand.completed_time = timezone.now()
             errand.save()
-            return HttpResponse(status=204)
+
+            messages.thank_and_survey(errand.claimed_volunteer)
+
+            errands_completed = len(Errand.objects.filter(claimed_volunteer=errand.claimed_volunteer))
+            p = inflect.engine()
+            ordinal_errands_completed = p.ordinal(errands_completed)
+
+            return render(request, 'errand_matcher/errand-complete.html', 
+                {'errand': errand, 'ordinal_errands_completed': ordinal_errands_completed})
     else:
         return HttpResponseNotAllowed()
 
@@ -532,7 +542,7 @@ def partner_password_reset_confirm(request, uidb64, token):
         try:
             validate_password(password)
         except:
-            return render(request, 'errand_matcher/partner-password-reset-confirm.html', 
+            return render(request, 'errƒand_matcher/partner-password-reset-confirm.html', 
                 {'base_url': helper.get_base_url(), 'warning': 'Your password is not valid.', 'user': user})
 
         user.set_password(password)

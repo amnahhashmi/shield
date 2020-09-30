@@ -422,11 +422,15 @@ textarea {
 	textarea {
 		width: 520px;
 	}
+
+	input[type=button], input[type="submit" i] {
+		width: 520px !important;
+	}
 }
 
 .strong-button {
-	background: #000000;
-	color: #FFFFFF;
+	background: #000000 !important;
+	color: #FFFFFF !important;
 }
 
 .weak-button {

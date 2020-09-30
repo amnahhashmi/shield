@@ -51,7 +51,7 @@ def activate_errands():
 
 
 @shared_task
-def send_errand_completion_messages():
+def complete_errands():
     # ask volunteer to mark in-progress errand (status=2) as done 1 day after due
     errands = Errand.objects.filter(status=2)
     for errand in errands:

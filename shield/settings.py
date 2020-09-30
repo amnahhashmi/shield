@@ -190,7 +190,7 @@ CELERY_BEAT_SCHEDULE = {
         'args': ()
     },
     'remind-volunteers-to-mark-errand-as-done': {
-        'task': 'errand_matcher.tasks.send_errand_completion_messages',
+        'task': 'errand_matcher.tasks.complete_errands',
         'schedule': crontab(minute=0, hour=15)
     }
 }

@@ -23,56 +23,75 @@
         <script src="{% static 'js/errand-accept.js' %}"></script>
 	</head>
 	<body>
-		<div class="h5_32 item">
-    		Delivery # {{errand_number}}
-		</div>
-		<div class="body_16_fontonly subhead item">
-		    Thanks for helping {{requestor.user.first_name}} out! Every little help makes a difference :).
-		</div>
-		<div class="conf-item">
-		    <div class="body-13">Time left to deliver</div>
-		    <div class="body_bold_16">
-		        <div class="body_bold_16">{{ time_left }} hour(s)</div>
-		    </div>
-		</div>
+		{% if errand.status == 2 %}
+			<div class="h5_32 item">
+	    		Delivery # {{errand_number}}
+			</div>
+			<div class="body_16_fontonly subhead item">
+			    Thanks for helping {{errand.requestor.user.first_name}} out! Every little help makes a difference :).
+			</div>
+			<div class="conf-item">
+			
+			    <div class="body-13">Time left to deliver</div>
+			    <div class="body_bold_16">
+			    	{% if time_left >= 0 %}
+			        <div class="body_bold_16">{{ time_left }} hour(s)</div>
+			    	{% else %}
+			    	<div class="body_bold_16">0 hour(s)</div>
+			    	{% endif %}
+			    </div>
+			</div>
 
-		<hr style="width: 100%; height:0px; border: 1px solid rgba(0, 0, 0, 0.1); margin: 0px 10px;"></hr>
+			<hr style="width: 100%; height:0px; border: 1px solid rgba(0, 0, 0, 0.1); margin: 0px 10px;"></hr>
 
-		<div class="conf-item">
-		    <div class="body-13">Name</div>
-		    <div class="body_bold_16">
-		        <span>{{requestor.user.first_name}}</span> <span">{{requestor.user.last_name}}</span>
-		    </div>
-		</div>
+			<div class="conf-item">
+			    <div class="body-13">Name</div>
+			    <div class="body_bold_16">
+			        <span>{{errand.requestor.user.first_name}}</span> <span">{{errand.requestor.user.last_name}}</span>
+			    </div>
+			</div>
 
-		<div class="conf-item">
-		    <div class="body-13">Phone number</div>
-		    <div class="body_bold_16">{{ requestor_number }}</div>
-		</div>
+			<div class="conf-item">
+			    <div class="body-13">Phone number</div>
+			    <div class="body_bold_16">{{ requestor_number }}</div>
+			</div>
 
-		<div class="conf-item">
-		    <div class="body-13">Address</div>
-		    <div class="body_bold_16">{{ requestor.address_str }}</div>
-		</div>
+			<div class="conf-item">
+			    <div class="body-13">Address</div>
+			    <div class="body_bold_16">{{ errand.requestor.address_str }}</div>
+			</div>
 
-		{% if requestor.apt_no %}
-		<div class="conf-item">
-		    <div class="body-13">Apartment</div>
-		    <div class="body_bold_16">{{ requestor.apt_no }}</div>
-		</div>
+			{% if requestor.apt_no %}
+			<div class="conf-item">
+			    <div class="body-13">Apartment</div>
+			    <div class="body_bold_16">{{ errand.requestor.apt_no }}</div>
+			</div>
+			{% endif %}
+
+			{% if additional_info %}
+			<div class="conf-item">
+			    <div class="body-13">Additional details</div>
+			    <div class="body_bold_16">{{ errand.additional_info }}</div>
+			</div>
+			{% endif %}
+		
+			<form id="complete-errand-form" action="{% url 'complete_errand' errand_number access_id%}" method="post">
+				{% csrf_token %}
+				<input type="submit" class="body_bold_16 strong-button inline-button-box button " style="align-items: center; border-width: 0px" id="complete-errand-submit" value="Mark as done"/>
+			</form>
+		{% else %}
+			<div class="h5_32 item">
+	    		Delivery # {{errand_number}}
+			</div>
+			<div class="body_16_fontonly subhead item">
+			    Thanks {{errand.claimed_volunteer.user.first_name}} for helping {{errand.requestor.user.first_name}}! You made someone's day with your gesture. Please take a minute to complete this survey so we continue to help more people. Click here for survey: <a href="https://forms.gle/ZKd5z3obSFvyejA49">https://forms.gle/ZKd5z3obSFvyejA49</a>
+			</div>
+			<div class="conf-item">
+			    <div class="body-13">Completed</div>
+			    <div class="body_bold_16">{{errand.completed_time|date:"M. j, Y"}}</div>
+			</div>
+
 		{% endif %}
-
-		{% if additional_info %}
-		<div class="conf-item">
-		    <div class="body-13">Additional details</div>
-		    <div class="body_bold_16">{{ additional_info }}</div>
-		</div>
-		{% endif %}
-
-		{% csrf_token %}
-		<div class="body_bold_16 inline-button-box button" id="errand-complete-button">
-			Mark as done
-		</div>
 
 		<div class="body_bold_16 inline-button-box button" id="livelyhood-home-button">
 			LivelyHood
