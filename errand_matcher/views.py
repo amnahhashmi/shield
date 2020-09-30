@@ -542,7 +542,7 @@ def partner_password_reset_confirm(request, uidb64, token):
         try:
             validate_password(password)
         except:
-            return render(request, 'errand_matcher/partner-password-reset-confirm.html', 
+            return render(request, 'errƒand_matcher/partner-password-reset-confirm.html', 
                 {'base_url': helper.get_base_url(), 'warning': 'Your password is not valid.', 'user': user})
 
         user.set_password(password)
