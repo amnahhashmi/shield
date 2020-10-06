@@ -33,7 +33,7 @@ frequency_choice_lookup = {
 }
 
 def index(request):
-    return render(request, 'errand_matcher/index.html')
+    return render(request, 'errand_matcher/index.html', {'GMAPS_API_KEY': os.environ.get('GMAPS_API_KEY')})
 
 def health_and_safety(request):
     return render(request, 'errand_matcher/health-and-safety.html')
@@ -56,10 +56,11 @@ def volunteer(request):
 
 def volunteer_signup(request):
     if request.method == 'POST':
-        first_name = request.POST['first_name']
-        last_name = request.POST['last_name']
-        email = request.POST['email']
-        mobile_number = request.POST['mobile_number']
+        import pdb; pdb.set_trace()
+        first_name = request.POST['add-volunteer-first-name']
+        last_name = request.POST['add-volunteer-last-name']
+        email = request.POST['add-volunteer-email']
+        mobile_number = request.POST['add-volunteer-phone']
         frequency = request.POST['frequency']
         language = request.POST.get('language', '')
         transportation = request.POST['transportation']
@@ -121,7 +122,7 @@ def volunteer_signup(request):
 
         return HttpResponse(status=204)
     else:
-        return render(request, 'errand_matcher/volunteer-signup.html',
+        return render(request, 'errand_matcher/volunteer-signup-v2.html',
             {'GMAPS_API_KEY': os.environ.get('GMAPS_API_KEY')})
 
 def requestor(request):
@@ -175,6 +176,7 @@ def requestor_login_otp(request):
 
 def requestor_signup(request):
     if request.method == 'POST':
+        import pdb; pdb.set_trace()
         first_name = request.POST['firstname-review']
         last_name = request.POST['lastname-review']
         mobile_number = request.POST['phone-review']
