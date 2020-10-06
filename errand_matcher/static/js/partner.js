@@ -125,7 +125,7 @@ $(document).ready(function() {
 		$("#edit-requestor-address").val($("#address_str_" + requestorID + "_" + errandID).text())
 		$("#edit-requestor-apartment").val($("#apt_no_" + requestorID + "_" + errandID).text())
 		$("#edit-errand-due-by").val(dueByDate.getFullYear() + "-" + dueByDateMonth + "-" + dueByDateDay)
-		$("#edit-volunteer-instructions").val($("#additional_info_" + requestorID + "_" + errandID).text())
+		$("#edit-volunteer-instructions").val($("#additional_info_full_" + requestorID + "_" + errandID).data("content"))
 		$("#edit-internal-notes").val($("#internal_note_" + requestorID + "_" + errandID).text())
 		$("#edit-requestor-id").val(requestorID)
 		$("#edit-errand-id").val(errandID)

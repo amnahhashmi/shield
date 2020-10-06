@@ -564,7 +564,7 @@ def partner_password_reset_confirm(request, uidb64, token):
 
 @login_required(login_url='/partner/')
 def partner_dashboard(request):
-    errands = Errand.objects.filter(affiliated_partner=request.user.partner).order_by('requested_time')
+    errands = Errand.objects.filter(affiliated_partner=request.user.partner).order_by('-requested_time')
     if timezone.now().hour < 21: 
         min_date = timezone.now().date() + timedelta(days=1)
     else:
