@@ -1,8 +1,6 @@
 // volunteer-signup.js
 // script for 'volunteer_signup' endpoint
 
-// Keeps track of which page is being viewed.
-var pageIndex;
 
 // Google Maps autocomplete widget
 var autocomplete;
@@ -29,7 +27,7 @@ function initAutocomplete() {
   // geographical location types.
 
   autocomplete = new google.maps.places.Autocomplete(
-    document.getElementById('address-input'), {types: ['geocode']});
+    document.getElementById('add-volunteer-address'), {types: ['geocode']});
 
   // Avoid paying for data that you don't need by restricting the set of
   // place fields that are returned to just the address components.
@@ -54,35 +52,28 @@ function initAutocomplete() {
       // User entered the name of a Place that was not suggested and
         // pressed the Enter key, or the Place Details request failed.
       $("#address-warning").show();
-      return;
     } else {
-      $("#address-input").attr("lat",place.geometry.location.lat())
-      $("#address-input").attr("lon",place.geometry.location.lng())
-      $("#address-input").attr("zip",zip)
-      $("#zipcode-review").text(zip)
-  
-      $('body').trigger('pageEvent', pageIndex + 1)
+      $("#address-warning").hide();
+      $("#add-volunteer-address").attr("lat",place.geometry.location.lat())
+      $("#add-volunteer-address").attr("lon",place.geometry.location.lng())
     }
-  })
+  });
+
+
+  // This prevents chrome's address autocomplete feature from interfering with the maps widget.
+  var observer = new MutationObserver(function() {
+      observer.disconnect();
+      $("#add-volunteer-address").attr("autocomplete", "chrome-off");
+  });
+
+  observer.observe($("#add-volunteer-address").get(0), {
+      attributes: true,
+      attributeFilter: ['autocomplete']
+  });
 }
 
-function validateName() {
-  if ($('#firstname-input').val().length > 0 && $('#lastname-input').val().length > 0){
-    $("#name-warning").hide();
-
-    // Set review field to user input
-    $('#firstname-review').text($('#firstname-input').val());
-    $('#lastname-review').text($('#lastname-input').val());
-    $('body').trigger("pageEvent", pageIndex + 1);
-  }
-  else {
-     // Show warning
-     $("#name-warning").show();
-  }
-}
-
-function validatePhone() {
-  phone = $('#phone-input').val();
+function validatePhone(e) {
+  phone = $('#add-volunteer-phone').val();
   phone = phone.replace(/[^0-9]/g,'');
 
   $(this).val(
@@ -93,206 +84,99 @@ function validatePhone() {
 
   if (phone.length==10) {
     $("#phone-warning").hide();
-    // Set review field to user input
-    $('#phone-review').text(phone);
-    $('body').trigger("pageEvent", pageIndex + 1);
   } else {
+    e.preventDefault()
     $("#phone-warning").show();
+    $("#phone-warning").focus();
   }
 }
 
-function validateEmail() {
-  var regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
-  if (regex.test($('#email-input').val())) {
-    // Set review field to user input
-    $("#email-warning").hide()
-    $('#email-review').text($("#email-input").val());
-    $('body').trigger("pageEvent", pageIndex + 1);
+function validateTransport(e) {
+  if ($('.transport-check:checked').length > 0) {
+    $("#transport-warning").hide()
+    var transportations = $.map($("input[name='transport']:checked"), function(item){
+        return $(item).val()
+      })
+    var transportation_as_str = transportations.join(", ")
+    $('#transportationChecked').val(transportation_as_str)
   } else {
-    // Show warning and prevent submit
-    $("#email-warning").show();
+    e.preventDefault()
+    $("#transport-warning").show()
+    return
+  }
+}
+
+function validateLanguage(e) {
+  if ($('.language-check:checked').length > 0) {
+    $("#language-warning").hide()
+    var languages = $.map($("input[name='transport']:checked"), function(item){
+        return $(item).val()
+      })
+    var language_as_str = languages.join(", ")
+    $('#languageChecked').val(language_as_str)
+  } else {
+    e.preventDefault()
+    $("#language-warning").show()
+    return
+  }
+}
+
+function validateFrequency(e) {
+  if ($('.frequency-check:checked').length > 0) {
+    $("#frequency-warning").hide()
+  } else {
+    e.preventDefault()
+    $("#frequency-warning").show()
+    return
+  }
+}
+
+function validateEligibility(e) {
+  if ($('.eligibility-check:checked').length == $('.eligibility-check').length) {
+    $("#eligibility-warning").hide()
+  } else {
+    e.preventDefault()
+    $("#eligibility-warning").show()
+    return
+  }
+}
+
+function validateHealthSafety(e) {
+  if ($('#volunteerHealthSafetyCheck1').is(":checked")) {
+    $("#health-safety-warning").hide()
+  } else {
+    e.preventDefault()
+    $("#health-safety-warning").show()
+    return
+  }
+}
+
+function validateAcknowledgment(e) {
+  if ($('#volunteerAcknowledgmentCheck1').is(":checked")) {
+    $("#acknowledgment-warning").hide()
+  } else {
+    e.preventDefault()
+    $("#acknowledgment-warning").show()
+    return
   }
 }
 
 $(document).ready(function() {
-
-  var pages = $(".page")
-  pageIndex = 0;
-
-  $(".req-input").change(function(){
-    // If all requirements are checked
-      if ($('.req-input:checked').length == $('.req-input').length) {
-
-        // Show acknowledge
-          $('.acknowledge').css('display','flex')
-          $('.acknowledge').focus()
-        }
-        else {
-
-          // Hide affirmative and acknowledge
-          $('.acknowledge').css('display', 'none')
-          $('.affirmative').css('display','none')
-        }
-    });
-
-  $(".acknowledge-input").change(function(){
-    if ($('.acknowledge-input:checked')) {
-
-      // show affirmative
-      $('.affirmative').css('display','flex')
-        $('.affirmative').focus()
-
-        window.setTimeout(function(){
-        // Change page displayed
-          $('body').trigger("pageEvent", pageIndex + 1)
-        }, 2000)
-    }
-    else {
-      // hide affirmative
-      $('.affirmative').css('display','none')
-    }
+  $('#add-volunteer-address').blur(function(e){
+    google.maps.event.trigger(autocomplete, 'place_changed');
   });
 
-  // custom event for toggling between pages of signup form
-  $("body").bind("pageEvent", function(e, index){
-
-    // hide all pages
-    $(pages).hide()
-
-    // show desired page
-    $(pages[index]).show()
-
-    // set pageIndex to reflect shown page 
-    pageIndex = index
-
-    // update progress bar
-    progressBarLocation = (3 + pageIndex)/ pages.length
-
-    $("stop").slice(1,3).attr("offset",progressBarLocation)
-
-  })
-
-  // Progress onBlur or on Enter key pressed
-  $('.text-input').bind('keyup', function(e) {
-    if (e.keyCode === 13) {
-      if (pageIndex == 1) {
-        validateName()
-      }
-      if (pageIndex == 2) {
-        validatePhone()
-      }
-      if (pageIndex == 3) {
-        validateEmail()
-      }
-    }  
-  })
-
-  // button behavior
-  $(".next-button").click(function(){
-    if (pageIndex == 1) {
-      validateName()
-    }
-
-    if (pageIndex == 2) { 
-      validatePhone()
-    }
-
-    if (pageIndex == 3) { 
-      validateEmail()
-    }
-
-    // Set transportation review to user input
-    if (pageIndex == 5) {
-      var transportations = $.map($("input[name='transport']:checked"), function(item){
-        return $(item).val()
-      })
-      var transportation_as_str = transportations.join(", ")
-      $('#transportation-review').text(transportation_as_str)
-    }
-
-    // Set frequencyreview to user input
-    if (pageIndex == 6) {
-      $('#frequency-review').text($("input[name='frequency']:checked").val())
-    }
-
-    // Set language review to user input
-    if (pageIndex == 7) {
-      var languages = $.map($("input[name='languages']:checked"), function(item){
-        return $(item).val()
-      })
-      var languages_as_str = languages.join(", ")
-      $('#language-review').text(languages_as_str)
-    }
-
-    if (pageIndex == 8) {
-      if (!$("#certify-health-safety-protocol-cbox").is(":checked")) {
-        $("#health-safety-warning").show()
-        return;
-      }
-    }
-
-    $('body').trigger("pageEvent", pageIndex + 1)
-  })
-
-
-  $(".back-button").click(function(){
-    if (pageIndex == 0) {
-      // send to landing page
-      window.location.pathname = '/';
-    } else {
-      $('body').trigger("pageEvent", pageIndex - 1)
-    }
-  })
+  $("#add-volunteer-submit").click(function(e){
+    validatePhone(e);
+    validateTransport(e);
+    validateLanguage(e);
+    validateFrequency(e);
+    validateEligibility(e);
+    validateHealthSafety(e);
+    validateAcknowledgment(e);
+  });
 
   $("#livelyhood-home-button").click(function(){
       window.location.pathname = '/';
   })
-
-  $('#address-input').blur(function(e){
-    google.maps.event.trigger(autocomplete, 'place_changed');
-  });
-
-  // Submit volunteer form
-  $(".finish-set-up").click(function(event){
-    event.preventDefault();
-    var csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-    var add_volunteer_url;
-    if (location.port) {
-       add_volunteer_url = window.location.protocol +'//' + document.domain + ':' + location.port + '/volunteer/signup';
-    } else {
-      add_volunteer_url = window.location.protocol +'//' + document.domain + '/volunteer/signup';
-    }
-
-    // make POST ajax call
-        $.ajax({
-            type: 'POST',
-            headers: {'X-CSRFToken': csrftoken},
-            url: add_volunteer_url,
-            data: {
-              "first_name": $("#firstname-review").text(),
-              "last_name": $("#lastname-review").text(),
-              "email": $("#email-review").text(),
-              "mobile_number": $("#phone-review").text(),
-              "frequency": $("#frequency-review").text(),
-              "transportation": $("#transportation-review").text(),
-              "language": $("#language-review").text(),
-              "lat": $("#address-input").attr("lat"),
-              "lon": $("#address-input").attr("lon"),
-            },
-            success: function(response){
-              console.log(response);
-            },
-            error: function(jqHXR, exception){
-              console.log(exception);
-            }
-        })
-        // set welcome field to user name
-        $('#welcome-name').text('Welcome to the team, ' + $('#firstname-review').text());
-        $('body').trigger("pageEvent", pageIndex + 1)
-
-    })
-
-  // display first page
-  $("body").trigger("pageEvent",0)
-
-});
+})
