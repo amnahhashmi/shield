@@ -27,7 +27,7 @@ function initAutocomplete() {
   // geographical location types.
 
   autocomplete = new google.maps.places.Autocomplete(
-    document.getElementById('add-volunteer-address'), {types: ['geocode']});
+    document.getElementById('add-volunteer-address') as HTMLInputElement, {types: ['geocode']});
 
   // Avoid paying for data that you don't need by restricting the set of
   // place fields that are returned to just the address components.
@@ -38,27 +38,18 @@ function initAutocomplete() {
   autocomplete.addListener('place_changed', function(){
 
     var place = autocomplete.getPlace();
-    var zip;
-
-    $.each(place ? place.address_components : [], function(){
-      if (this.types[0] == "postal_code") {
-        zip = this.long_name;
-      }
-    });
-
-
-    // SV Question: What should we do if address is provided with no ZIP code (but valid lat/lng)?
-    if (!place || !place.geometry || !place.address_components || !zip) {
+    
+    if (!place || !place.geometry || !place.address_components ) {
       // User entered the name of a Place that was not suggested and
-        // pressed the Enter key, or the Place Details request failed.
+      // pressed the Enter key, or the Place Details request failed.
+      e.preventDefault()
       $("#address-warning").show();
     } else {
       $("#address-warning").hide();
-      $("#add-volunteer-address").attr("lat",place.geometry.location.lat())
-      $("#add-volunteer-address").attr("lon",place.geometry.location.lng())
+      $("#address-latitude").val(place.geometry.location.lat())
+      $("#address-longitude").val(place.geometry.location.lng())
     }
-  });
-
+    });
 
   // This prevents chrome's address autocomplete feature from interfering with the maps widget.
   var observer = new MutationObserver(function() {
@@ -71,6 +62,17 @@ function initAutocomplete() {
       attributeFilter: ['autocomplete']
   });
 }
+
+function validateAddress(e) {
+
+  autocomplete = new google.maps.places.Autocomplete(
+    document.getElementById('add-volunteer-address'), {types: ['geocode']})
+
+  var place = autocomplete.getPlace();
+
+  
+}
+
 
 function validatePhone(e) {
   phone = $('#add-volunteer-phone').val();
@@ -168,6 +170,7 @@ $(document).ready(function() {
 
   $("#add-volunteer-submit").click(function(e){
     validatePhone(e);
+    validateAddress(e);
     validateTransport(e);
     validateLanguage(e);
     validateFrequency(e);

@@ -9,22 +9,16 @@
 {% block content %}
 	<div class="contents">
 		<h3 class="main-heading">Be a volunteer</h3>
-		<form class="needs-validation" id="add-delivery-form" action="{% url 'volunteer_signup' %}" method="post">
+		<form id="add-delivery-form" action="{% url 'volunteer_signup' %}" method="post">
     		{% csrf_token %}
 			<div class="form-row">
 				<div class="col-md-6 mb-3">
 					<label for="add-volunteer-first-name" class="body_bold_16">First Name</label>
 					<input type="text" class="form-control body_16_fontonly" id="add-volunteer-first-name" name="add-volunteer-first-name" required/>
-					<div class="valid-feedback">
-						Looks good!
-					</div>
 				</div>
 				<div class="col-md-6 mb-3">
 					<label for="add-volunteer-last-name" class="body_bold_16">Last Name</label>
 					<input type="text" class="form-control body_16_fontonly" id="add-volunteer-last-name" name="add-volunteer-last-name" required/>
-					<div class="valid-feedback">
-						Looks good!
-					</div>
 				</div>
 			</div>
 			<div class="form-row">
@@ -40,10 +34,12 @@
 			</div>
 			<div class="form-row">
 				<div class="col-md-12 mb-3">
-					<p class="body_16_fontonly warning" id="address-warning" style="color:red">Please select an address from the drop-down menu.</p> 
 					<label for="add-volunteer-address" class="body_bold_16">Address</label>
 					<p class="b3-11px-font">This helps us match you with the nearest requests.</p>
+					<p class="body_16_fontonly warning" id="address-warning" style="color:red">Please select an address from the drop-down menu.</p> 
 					<input type="text" class="form-control body_16_fontonly" id="add-volunteer-address" name="add-volunteer-address" onFocus="geolocate()" autocomplete="chrome-off" required/>
+					<input type="hidden" name="address-latitude" id="address-latitude"/>
+					<input type="hidden" name="address-longitude" id="address-longitude"/>
 				</div>
 			</div>
 			<div class="form-row">
@@ -90,6 +86,12 @@
 						<input class="form-check-input language-check" type="checkbox" value="Chinese" id="languageCheck3" name="language">
 						<label class="form-check-label body_16_fontonly" for="languageCheck3">
 							Chinese
+						</label>
+					</div>
+					<div id="add-volunteer-language-russian" class="form-check">
+						<input class="form-check-input language-check" type="checkbox" value="Russian" id="languageCheck4" name="language">
+						<label class="form-check-label body_16_fontonly" for="languageCheck4">
+							Russian
 						</label>
 					</div>
 					<div>

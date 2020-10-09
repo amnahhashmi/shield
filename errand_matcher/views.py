@@ -61,11 +61,11 @@ def volunteer_signup(request):
         last_name = request.POST['add-volunteer-last-name']
         email = request.POST['add-volunteer-email']
         mobile_number = request.POST['add-volunteer-phone']
-        frequency = request.POST['frequency']
-        language = request.POST.get('language', '')
-        transportation = request.POST['transportation']
-        lat = request.POST['lat']
-        lon = request.POST['lon']
+        frequency = request.POST['frequencyRadio']
+        language = request.POST['language']
+        transportation = request.POST['transport']
+        lat = request.POST['address-latitude']
+        lon = request.POST['address-longitude']
 
         user = User(username=email, 
             first_name=first_name,
