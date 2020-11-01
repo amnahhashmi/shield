@@ -147,7 +147,6 @@ function validateTransport(e) {
   } else {
     e.preventDefault()
     $("#transport-warning").show()
-    return
   }
 }
 
@@ -162,7 +161,6 @@ function validateLanguage(e) {
   } else {
     e.preventDefault()
     $("#language-warning").show()
-    return
   }
 }
 
@@ -172,7 +170,6 @@ function validateFrequency(e) {
   } else {
     e.preventDefault()
     $("#frequency-warning").show()
-    return
   }
 }
 
@@ -182,7 +179,6 @@ function validateEligibility(e) {
   } else {
     e.preventDefault()
     $("#eligibility-warning").show()
-    return
   }
 }
 
@@ -192,7 +188,6 @@ function validateHealthSafety(e) {
   } else {
     e.preventDefault()
     $("#health-safety-warning").show()
-    return
   }
 }
 
@@ -202,7 +197,6 @@ function validateAcknowledgment(e) {
   } else {
     e.preventDefault()
     $("#acknowledgment-warning").show()
-    return
   }
 }
 
