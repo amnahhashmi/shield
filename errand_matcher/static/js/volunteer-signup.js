@@ -27,7 +27,7 @@ function initAutocomplete() {
   // geographical location types.
 
   autocomplete = new google.maps.places.Autocomplete(
-    document.getElementById('add-volunteer-address') as HTMLInputElement, {types: ['geocode']});
+    document.getElementById('add-volunteer-address'), {types: ['geocode']});
 
   // Avoid paying for data that you don't need by restricting the set of
   // place fields that are returned to just the address components.
@@ -37,19 +37,15 @@ function initAutocomplete() {
   // address fields in the form.
   autocomplete.addListener('place_changed', function(){
 
-    var place = autocomplete.getPlace();
-    
+    const place = autocomplete.getPlace();
     if (!place || !place.geometry || !place.address_components ) {
-      // User entered the name of a Place that was not suggested and
-      // pressed the Enter key, or the Place Details request failed.
-      e.preventDefault()
       $("#address-warning").show();
     } else {
       $("#address-warning").hide();
       $("#address-latitude").val(place.geometry.location.lat())
       $("#address-longitude").val(place.geometry.location.lng())
     }
-    });
+  });
 
   // This prevents chrome's address autocomplete feature from interfering with the maps widget.
   var observer = new MutationObserver(function() {
@@ -64,15 +60,51 @@ function initAutocomplete() {
 }
 
 function validateAddress(e) {
-
-  autocomplete = new google.maps.places.Autocomplete(
-    document.getElementById('add-volunteer-address'), {types: ['geocode']})
-
-  var place = autocomplete.getPlace();
-
-  
+  address = $("#add-volunteer-address").val()
+  if (address.length == 0 || $("#address-warning").is(':visible')){
+    e.preventDefault()
+    $("#address-warning").show();
+    $("#address-warning").focus();
+  }
 }
 
+function validateFirstName(e) {
+  first_name = $('#add-volunteer-first-name').val();
+  if (first_name.length == 0) {
+    e.preventDefault()
+    $("#first-name-warning").show();
+    $("#first-name-warning").focus();
+  } else {
+    first_name_trimmed = first_name.trim();
+    if (first_name_trimmed.length > 0) {
+      $("#first-name-warning").hide()
+      $('#add-volunteer-first-name').val(first_name_trimmed)
+    } else {
+      e.preventDefault()
+      $("#first-name-warning").show();
+      $("#first-name-warning").focus();
+    }
+  }
+}
+
+function validateLastName(e) {
+  last_name = $('#add-volunteer-last-name').val();
+  if (last_name.length == 0) {
+    e.preventDefault()
+    $("#last-name-warning").show();
+    $("#last-name-warning").focus();
+  } else {
+    last_name_trimmed = last_name.trim();
+    if (last_name_trimmed.length > 0) {
+      $("#last-name-warning").hide()
+      $('#add-volunteer-last-name').val(last_name_trimmed)
+    } else {
+      e.preventDefault()
+      $("#last-name-warning").show();
+      $("#last-name-warning").focus();
+    }
+  }
+}
 
 function validatePhone(e) {
   phone = $('#add-volunteer-phone').val();
@@ -93,6 +125,17 @@ function validatePhone(e) {
   }
 }
 
+function validateEmail(e) {
+  email = $('#add-volunteer-email').val();
+  if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    $("#email-warning").hide();
+  } else {
+    e.preventDefault()
+    $("#email-warning").show();
+    $("#email-warning").focus();
+  } 
+}
+
 function validateTransport(e) {
   if ($('.transport-check:checked').length > 0) {
     $("#transport-warning").hide()
@@ -111,7 +154,7 @@ function validateTransport(e) {
 function validateLanguage(e) {
   if ($('.language-check:checked').length > 0) {
     $("#language-warning").hide()
-    var languages = $.map($("input[name='transport']:checked"), function(item){
+    var languages = $.map($("input[name='language']:checked"), function(item){
         return $(item).val()
       })
     var language_as_str = languages.join(", ")
@@ -169,13 +212,56 @@ $(document).ready(function() {
   });
 
   $("#add-volunteer-submit").click(function(e){
+    validateFirstName(e);
+    validateLastName(e);
     validatePhone(e);
+    validateEmail(e);
     validateAddress(e);
     validateTransport(e);
     validateLanguage(e);
     validateFrequency(e);
     validateEligibility(e);
     validateHealthSafety(e);
+    validateAcknowledgment(e);
+  });
+
+  $("#add-volunteer-first-name").change(function(e){
+    validateFirstName(e);
+  });
+
+  $("#add-volunteer-last-name").change(function(e){
+    validateLastName(e);
+  });
+
+  $("#add-volunteer-phone").change(function(e){
+    validatePhone(e);
+  });
+
+  $("#add-volunteer-email").change(function(e){
+    validateEmail(e);
+  });
+
+  $(".transport-check").change(function(e){
+    validateTransport(e);
+  });
+
+  $(".language-check").change(function(e){
+    validateLanguage(e);
+  });
+
+  $(".frequency-check").change(function(e){
+    validateFrequency(e);
+  });
+
+  $(".eligibility-check").change(function(e){
+    validateEligibility(e);
+  });
+
+  $('#volunteerHealthSafetyCheck1').change(function(e){
+    validateHealthSafety(e);
+  });
+
+  $("#volunteerAcknowledgmentCheck1").change(function(e){
     validateAcknowledgment(e);
   });
 

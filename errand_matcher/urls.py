@@ -9,6 +9,7 @@ urlpatterns = [
     path('health', views.health_and_safety, name='health_and_safety'),
     path('volunteer', views.volunteer, name='volunteer'),
     path('volunteer/signup/', views.volunteer_signup, name='volunteer_signup'),
+    path('volunteer/signup/done', views.volunteer_signup_done, name='volunteer_signup_done'),
     path('requestor/', views.requestor, name='requestor'),
     path('requestor/signup/', views.requestor_signup, name='requestor_signup'),
     path('requestor/login/', views.requestor_login, name='requestor_login'),

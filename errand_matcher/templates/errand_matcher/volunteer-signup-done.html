@@ -1,0 +1,32 @@
+{% extends 'templates/errand_matcher/base.html' %}
+{% load static %}
+
+{% block content %}
+	<div class="contents">
+		<div class="h5_32 item" id="welcome-name">
+			Welcome, {{name}}
+		</div>
+		<div class="body_16_fontonly subhead item">
+			We're glad to have you onboard. Every person makes a difference. With your help, you could save lives and help those in need.
+		</div>
+
+		<div class="h5_32 item">What's next?</div>
+
+		<div class="item">
+			<span style="vertical-align: middle;"><img src="{% static 'css/icons/number-1.png' %}"></span>
+			<span class="body_16_fontonly"> When someone nearby needs help, you'll be notified of their request.</span>
+		</div>
+		<div class="item">
+			<span style="vertical-align: middle;"><img src="{% static 'css/icons/number-2.png' %}"></span>
+			<span class="body_16_fontonly"> Confirm if you'll be able to help at that time.</span>
+		</div>
+		<div class="item">
+			<span style="vertical-align: middle;"><img src="{% static 'css/icons/number-3.png' %}"></span>
+			<span class="body_16_fontonly"> Reach out to the direct-service partner or at-risk community member for details on what they need and how you'll be reimbursed.</span>
+		</div>
+		<div class="item">
+			<span style="vertical-align: middle;"><img src="{% static 'css/icons/number-4.png' %}"></span>
+			<span class="body_16_fontonly"> Go shopping for what they need and deliver it to their home, following our <a href="{% url 'health_and_safety' %}">Safety Best Practices</a>.</span>
+		</div>
+	</div>
+{% endblock %}
