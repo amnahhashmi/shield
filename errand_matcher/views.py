@@ -33,7 +33,7 @@ frequency_choice_lookup = {
 }
 
 def index(request):
-    return render(request, 'errand_matcher/index.html')
+    return render(request, 'errand_matcher/index.html', {'GMAPS_API_KEY': os.environ.get('GMAPS_API_KEY')})
 
 def health_and_safety(request):
     return render(request, 'errand_matcher/health-and-safety.html')
@@ -56,16 +56,24 @@ def volunteer(request):
 
 def volunteer_signup(request):
     if request.method == 'POST':
-        first_name = request.POST['first_name']
-        last_name = request.POST['last_name']
-        email = request.POST['email']
-        mobile_number = request.POST['mobile_number']
-        frequency = request.POST['frequency']
-        language = request.POST.get('language', '')
-        transportation = request.POST['transportation']
-        lat = request.POST['lat']
-        lon = request.POST['lon']
+        first_name = request.POST['add-volunteer-first-name']
+        last_name = request.POST['add-volunteer-last-name']
+        email = request.POST['add-volunteer-email']
+        mobile_number = request.POST['add-volunteer-phone']
+        frequency = request.POST['frequencyRadio']
+        language =  request.POST.getlist('language')
+        transportation = request.POST.getlist('transport')
+        lat = request.POST['address-latitude']
+        lon = request.POST['address-longitude']
 
+        # Check to see if any users already exist with this email as a username
+        matches = User.objects.filter(username=email).count()
+        if matches > 0:
+            return render(request, 'errand_matcher/volunteer-signup-v2.html',
+                {'GMAPS_API_KEY': os.environ.get('GMAPS_API_KEY'),
+                'base_url': helper.get_base_url(), 'exists': email})
+
+        # Did not find a user, this is fine
         user = User(username=email, 
             first_name=first_name,
             last_name=last_name,
@@ -79,27 +87,23 @@ def volunteer_signup(request):
         walks = False
         has_bike = False
         has_car = False
-        transportation_arr = transportation.split(', ')
-        if "My own two feet" in transportation_arr:
+        if "My own two feet" in transportation:
             walks = True
-        if "Bike" in transportation_arr:
+        if "Bike" in transportation:
             has_bike = True
-        if "Car" in transportation_arr:
+        if "Car" in transportation:
             has_car = True
 
         speaks_spanish = False
         speaks_russian = False
         speaks_chinese = False
 
-        if len(language) > 0:
-            language_arr = language.split(', ')
-
-            if "Spanish" in language_arr:
-                speaks_spanish = True
-            if "Russian" in language_arr:
-                speaks_russian = True
-            if "Chinese" in language_arr:
-                speaks_chinese = True
+        if "Spanish" in language:
+            speaks_spanish = True
+        if "Russian" in language:
+            speaks_russian = True
+        if "Chinese" in language:
+            speaks_chinese = True
 
         volunteer = Volunteer(
             user=user,
@@ -119,10 +123,16 @@ def volunteer_signup(request):
 
         messages.welcome_new_volunteer(volunteer)
 
-        return HttpResponse(status=204)
+        return render(request, 'errand_matcher/volunteer-signup-done.html', {'base_url': helper.get_base_url(), 
+            'name': first_name})
     else:
-        return render(request, 'errand_matcher/volunteer-signup.html',
-            {'GMAPS_API_KEY': os.environ.get('GMAPS_API_KEY')})
+        return render(request, 'errand_matcher/volunteer-signup-v2.html',
+            {'GMAPS_API_KEY': os.environ.get('GMAPS_API_KEY'),
+            'base_url': helper.get_base_url(),
+            'exists': None})
+
+def volunteer_signup_done(request):
+    return render(request, 'errand_matcher/volunteer-signup-done.html', {'base_url': helper.get_base_url()})
 
 def requestor(request):
     return render(request, 'errand_matcher/requestor-request.html')

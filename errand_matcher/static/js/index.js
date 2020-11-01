@@ -11,26 +11,32 @@ $(document).ready(function() {
         }
     });
 
+    // navbar button behavior
+	var home_url;
+	if (location.port) {
+		home_url = window.location.protocol +'//' + document.domain + ':' + location.port;
+	} else {
+		home_url = window.location.protocol +'//' + document.domain;
+	}
+
 	$('.top-link').click(function(){
-		window.location.replace("#top");
+		window.location.href = home_url + "#top";
 	})
 
 	$('.health-and-safety-link').click(function(){
-		window.location.href = "health";
+		window.location.href = home_url + "/health";
 	})
 
 	$('.faq-link').click(function(){
-		window.location.replace("#above-faq");
-		collapseTopNav();
+		window.location.href = home_url + "#above-faq";
 	})
 
 	$('.about-link').click(function(){
-		window.location.replace("#above-about");
-		collapseTopNav();
+		window.location.href = home_url + "#above-about";
 	})
 
 	$('.partners-link').click(function(){
-		window.location.href = "partner";
+		window.location.href = home_url + "/partner";
 	})
 
 	function collapseTopNav() {

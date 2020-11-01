@@ -84,7 +84,7 @@ ROOT_URLCONF = 'shield.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['errand_matcher'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

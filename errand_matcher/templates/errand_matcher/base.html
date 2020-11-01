@@ -1,0 +1,70 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<!-- import jQuery -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-163861770-1"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+
+	  gtag('config', 'UA-163861770-1');
+	</script>
+
+	<title>LivelyHood</title>
+	<link rel="shortcut icon" type="image/png" href="{% static 'css/icons/favicon.ico' %}"/>
+
+
+	<link href="https://fonts.googleapis.com/css?family=Playfair+Display" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Work+Sans&display=swap" rel="stylesheet">
+	{% block stylesheets %}
+	{% endblock %}
+
+	<!-- CUSTOM STYLESHEETS -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet"/>
+    <link href="{% static 'css/index.css' %}" rel="stylesheet"/>
+
+	<!-- PAGE SOURCE -->
+    <script src="{% static 'js/index.js' %}"></script>
+    <!-- import Google Maps JavaScript API -->
+	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{ GMAPS_API_KEY}}&libraries=places&callback=initAutocomplete" defer></script>
+	{% block scripts %}
+	{% endblock %}
+
+</head>
+
+<body>
+	<div class="topnav" id="topnav">
+		<!-- TODO: Check all links are correct. -->
+		<a class="topnav-item button top-link" id="home-item">LivelyHood</a>
+		<a class="topnav-item-collapsible button health-and-safety-link">Health and safety protocol</a>
+		<a class="topnav-item-collapsible button faq-link">FAQs</a>
+		<a class="topnav-item-collapsible button about-link">About</a>
+		<a class="topnav-item-collapsible button about-link">Contact</a>
+		<a class="topnav-item-collapsible button partners-link">Partners</a>
+		<a class="icon">☰</a>
+	</div>
+	{% block content %}
+	{% endblock %}
+	<div class="footer">
+		<div class="horizontal-container">
+		    <div class="footer-text">
+			    <p class="details-text">Volunteer to make deliveries for the most at-risk community members facing COVID-19.</p>
+		    </div>
+		    <!-- TODO: Add links. -->
+		    <div class="button-box button volunteer-button" id="footer-box">
+			    <p class="button-title">Be a volunteer</p>
+			    <p class="button-text">Currently recruiting volunteers in the Boston area.</p>
+		    </div>
+	    </div>
+	    <p class="footer-copyright">(c) 2020 Shield, All rights reserved</p>
+	</div>
+</body>
+
+</html>
