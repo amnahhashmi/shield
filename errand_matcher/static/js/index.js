@@ -49,11 +49,11 @@ $(document).ready(function() {
 	}
 
 	$('.volunteer-button').click(function(){
-		window.location.href = "volunteer/signup";
+		window.location.href = home_url + "/volunteer/signup";
 	})
 
 	$('.requestor-button').click(function(){
-		window.location.href = "requestor";
+		window.location.href = home_url + "/requestor";
 	})
 
 	$('.collapsible').click(function(){
