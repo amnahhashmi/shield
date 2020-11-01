@@ -56,7 +56,6 @@ def volunteer(request):
 
 def volunteer_signup(request):
     if request.method == 'POST':
-        import pdb; pdb.set_trace()
         first_name = request.POST['add-volunteer-first-name']
         last_name = request.POST['add-volunteer-last-name']
         email = request.POST['add-volunteer-email']
@@ -186,7 +185,6 @@ def requestor_login_otp(request):
 
 def requestor_signup(request):
     if request.method == 'POST':
-        import pdb; pdb.set_trace()
         first_name = request.POST['firstname-review']
         last_name = request.POST['lastname-review']
         mobile_number = request.POST['phone-review']
