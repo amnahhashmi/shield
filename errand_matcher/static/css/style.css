@@ -4,6 +4,7 @@
 	top: 0;
 	width: 100%;
 	background: #FFFFFF;
+	box-shadow: 0 4px 4px rgba(0,0,0,.1);
 }
 
 .topnav a {
@@ -14,7 +15,7 @@
     font-weight: normal;
     font-size: 14px;
     line-height: 150%;
-
+    vertical-align: center;
     text-align: center;
     display: inline-block;
 }
@@ -424,7 +425,7 @@ textarea {
 	}
 
 	input[type=button], input[type="submit" i] {
-		width: 520px !important;
+		width: 540px !important;
 	}
 }
 
