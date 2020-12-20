@@ -39,6 +39,12 @@ $(document).ready(function() {
 		window.location.href = home_url + "/partner";
 	})
 
+	$('.volunteer-login-link').click(function(){
+		window.location.href = home_url + "/volunteer/login/";
+	})
+
+
+
 	function collapseTopNav() {
 		var topnav = document.getElementById("topnav");
         if (topnav.className === "topnav") {

@@ -1,0 +1,20 @@
+{% extends 'templates/errand_matcher/base.html' %}
+{% load static %}
+
+{% block content %}
+	<div class="contents">
+		<h3 class="main-heading">Serve your community</h3>
+		<p class="main-text">Log in to update your volunteer profile or help a neighbor in need.</p>
+		<form action="{% url 'volunteer_login' %}" method="post">
+			{% csrf_token %}
+			<p class="body_16_fontonly">Please enter a 10-digit U.S. phone number to receive a one-time password.</p>
+			{% if warning %}
+			<p class="body_16_fontonly" style="color:red">{{warning}}</p>
+			{% endif %}
+			<input type="tel" class="text-input body_16_fontonly" id="volunteer-login-phone" name="volunteer-login-phone" placeholder="Phone number" required/>
+			<input type="submit" class="inline-button-box body_bold_16" style="align-items: center; border-width: 0px; margin: 0px" value="Submit"/>
+			<p class="body_16_fontonly">SMS may be sent. Message & data rates may apply.</p>
+		</form>
+	</div>
+	</div>
+{% endblock %}

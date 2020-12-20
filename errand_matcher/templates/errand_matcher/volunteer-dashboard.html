@@ -1,0 +1,40 @@
+{% extends 'templates/errand_matcher/base.html' %}
+{% load static %}
+
+{% block content %}
+	<div class="contents">
+		<h4 class="h4-heading">Welcome back, {{user.first_name}}. Deliveries completed: {{ completed_deliveries }}</h4>
+		{% if current_deliveries %}
+			<thead>
+				<tr>
+					<th class="table-header">TIME LEFT TO DELIVER</th>
+					<th class="table-header">NAME</th>
+					<th class="table-header">PHONE</th>
+					<th class="table-header">ADDRESS</th>
+					<th class="table-header">APT</th>
+					<th class="table-header">INSTRUCTIONS</th>
+					<th class="table-header"></th>
+				</tr>
+			</thead>
+			{% for current_delivery in current_deliveries %}
+			{% endfor %}
+		{% endif %}
+
+		{% if nearby_deliveries %}
+		<h4 class="h4-heading">Deliveries near you:</h4>
+		<table id="partner-errands">
+				<thead>
+					<tr>
+						<th class="table-header">NAME</th>
+						<th class="table-header">DELIVERY NEEDED BY</th>
+						<th class="table-header">DISTANCE</th>
+						<th class="table-header">ADDITIONAL DETAILS</th>
+					</tr>
+				</thead>
+				{% for nearby_delivery in nearby_deliveries %}
+				{% endfor %}
+		{% else %}
+			<h5 class="h5-heading">Currently, there are no requests for help in your area. Check back again later.</h5>
+		{% endif %}
+	</div>
+{% endblock %}

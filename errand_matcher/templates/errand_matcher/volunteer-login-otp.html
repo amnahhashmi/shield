@@ -1,0 +1,19 @@
+{% extends 'templates/errand_matcher/base.html' %}
+{% load static %}
+
+{% block content %}
+	<div class="contents">
+		<h3 class="main-heading">Serve your community</h3>
+		<p class="main-text">Log in to update your volunteer profile or help a neighbor in need.</p>
+		<form action="{% url 'volunteer_login_otp' %}" method="post">
+			{% csrf_token %}
+			<p class="body_16_fontonly">Please enter the 6-digit code we sent to you.</p>
+			{% if warning %}
+			<p class="body_16_fontonly" style="color:red">Sorry, we couldn't verify {{warning}}. <a href="{% url 'volunteer_login' %}">Try again</a></p>
+			{% endif %}
+			<input type="text" class="text-input body_16_fontonly" id="volunteer-login-otp" name="volunteer-login-otp" placeholder="6-digit code" required/>
+			<input type="submit" class="inline-button-box body_bold_16" style="align-items: center; width: 540px !important; border-width: 0px; margin: 0px" value="Submit"/>
+		</form>
+	</div>
+	</div>
+{% endblock %}

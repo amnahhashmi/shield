@@ -25,6 +25,8 @@ from errand_matcher.models import SiteConfiguration
 import phonenumbers
 import uuid
 from datetime import timedelta
+import random
+import string
 
 frequency_choice_lookup = {
     'Anytime': 1,
@@ -50,9 +52,6 @@ def sms_inbound(request):
     message = '{}: {}'.format(from_number, body)
     helper.send_sms(helper.format_mobile_number(helper.get_support_mobile_number()), message)
     return
-
-def volunteer(request):
-    return render(request, 'errand_matcher/volunteer.html')
 
 def volunteer_signup(request):
     if request.method == 'POST':
@@ -134,27 +133,74 @@ def volunteer_signup(request):
 def volunteer_signup_done(request):
     return render(request, 'errand_matcher/volunteer-signup-done.html', {'base_url': helper.get_base_url()})
 
+def volunteer_login(request):
+    if request.method == 'POST':
+        mobile_number_str = request.POST.get('volunteer-login-phone')
+        volunteer = helper.get_user_from_mobile_number_str(mobile_number_str, user_type='volunteer')
+        if volunteer is not None:
+            user_otp = UserOTP.objects.create(mobile_number = volunteer.mobile_number)
+            messages.send_otp(user_otp)
+            return redirect('volunteer_login_otp')
+        else:
+            return render(request, 'errand_matcher/volunteer-login.html', 
+                {'warning': "Sorry, we couldn't find a volunteer associated with {}. Please try again.".format(mobile_number_str)})
+    else:
+        return render(request, 'errand_matcher/volunteer-login.html')
+
+def volunteer_login_otp(request):
+    if request.method == 'POST':
+        otp_input = request.POST.get('volunteer-login-otp').strip()
+        user_otp = UserOTP.objects.filter(token=otp_input).first()
+
+        if user_otp is not None:
+            volunteer = Volunteer.objects.filter(mobile_number=user_otp.mobile_number).first()
+            if volunteer is not None:
+                temp_password = ''.join(random.choice(string.ascii_lowercase + string.ascii_uppercase + string.digits) for i in range(12))
+                volunteer.user.set_password(temp_password)
+                volunteer.user.save()
+                user = authenticate(request, username=volunteer.user.username, password=temp_password)
+                login(request, user)
+                return redirect('volunteer_dashboard')
+            else:
+                return redirect('error')
+        else:
+            return render(request, 'errand_matcher/volunteer-login-otp.html', {
+                'warning': "Sorry, we couldn't find a volunteer associated with {}. Please try again.".format(otp_input)})
+    else:
+        return render(request, 'errand_matcher/volunteer-login-otp.html')
+
+@login_required(login_url='/volunteer/login/')
+def volunteer_dashboard(request):
+    completed_deliveries = len(Errand.objects.filter(claimed_volunteer=request.user.volunteer, status=3))
+
+    current_deliveries = Errand.objects.filter(claimed_volunteer=request.user.volunteer).order_by('-requested_time')
+
+    return render(request, 'errand_matcher/volunteer-dashboard.html', 
+        {'completed_deliveries': completed_deliveries,
+
+        'errands': errands,
+        'GMAPS_API_KEY': os.environ.get('GMAPS_API_KEY'),
+        'min_date': min_date.isoformat(),
+        'max_date': max_date.isoformat()})
+
+    return render(request, 'errand_matcher/volunteer-dashboard.html')
+
 def requestor(request):
     return render(request, 'errand_matcher/requestor-request.html')
 
 def requestor_login(request):
     if request.method == 'POST':
         mobile_number_str = request.POST.get('phone-input')
-
         # Is mobile number associated with Requestor?
         requestor = helper.get_user_from_mobile_number_str(mobile_number_str, user_type='requestor')
-
-        # If Volunteer found, create OTP
+        # If Requestor found, create OTP
         if requestor is not None:
             user_otp = UserOTP.objects.create(mobile_number = requestor.mobile_number)
-
             # deliver OTP
             messages.send_otp(user_otp)
-        
             return redirect('requestor_login_otp')
         # If no Requestor found, show warning and redirect back to signup
         else:
-
             return render(request, 'errand_matcher/requestor-login.html', {
                 'warning': "Sorry, we couldn't find a user associated with {}".format(mobile_number_str)})
     else:
