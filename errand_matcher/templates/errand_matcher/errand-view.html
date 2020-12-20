@@ -61,14 +61,14 @@
 			    <div class="body_bold_16">{{ errand.requestor.address_str }}</div>
 			</div>
 
-			{% if requestor.apt_no %}
+			{% if errand.requestor.apt_no %}
 			<div class="conf-item">
 			    <div class="body-13">Apartment</div>
 			    <div class="body_bold_16">{{ errand.requestor.apt_no }}</div>
 			</div>
 			{% endif %}
 
-			{% if additional_info %}
+			{% if errand.additional_info %}
 			<div class="conf-item">
 			    <div class="body-13">Additional details</div>
 			    <div class="body_bold_16">{{ errand.additional_info }}</div>
