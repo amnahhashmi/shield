@@ -1,23 +1,29 @@
 {% extends 'templates/errand_matcher/base.html' %}
 {% load static %}
+{% block stylesheets %}
+	<!-- import bootstrap -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+{% endblock %}
 
 {% block content %}
 	<div class="contents">
-		<h4 class="h4-heading">Welcome back, {{user.first_name}}. Deliveries completed: {{ completed_deliveries }}</h4>
+		<h4 class="h4-heading">Welcome back, {{user.first_name}}</h4>
+		<p class="title-text">Deliveries completed: {{ completed_deliveries }}</p>
+		
 		{% if current_deliveries %}
-			<thead>
-				<tr>
-					<th class="table-header">TIME LEFT TO DELIVER</th>
-					<th class="table-header">NAME</th>
-					<th class="table-header">PHONE</th>
-					<th class="table-header">ADDRESS</th>
-					<th class="table-header">APT</th>
-					<th class="table-header">INSTRUCTIONS</th>
-					<th class="table-header"></th>
-				</tr>
-			</thead>
+		<h5 class="h5-heading">You have {{ current_deliveries|length}}{% if current_deliveries|length > 1 %} deliveries {% else %} delivery {% endif %}in progress.</h5>
+		<div class="horizontal-container">
 			{% for current_delivery in current_deliveries %}
+			<div class="step-box button">
+				<p class="body_23"><a href="{{ base_url }}/errand/{{ current_delivery.id }}/status/{{ current_delivery.access_id }}">See details</a>
+				<div class="body-13">Name</div>
+				<div class="body_bold_16"><span>{{current_delivery.requestor.user.first_name}}</span> <span>{{current_delivery.requestor.user.last_name}}</div>
+				<div class="body-13">Deliver by</div>
+				<div class="body_bold_16">{{current_delivery.due_by|date:"M. j, Y"}}</div>
+			</div>
 			{% endfor %}
+		</div>
+
 		{% endif %}
 
 		{% if nearby_deliveries %}
@@ -29,6 +35,7 @@
 						<th class="table-header">DELIVERY NEEDED BY</th>
 						<th class="table-header">DISTANCE</th>
 						<th class="table-header">ADDITIONAL DETAILS</th>
+						<th class="table-header"></th>
 					</tr>
 				</thead>
 				{% for nearby_delivery in nearby_deliveries %}

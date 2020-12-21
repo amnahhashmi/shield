@@ -48,11 +48,13 @@
 		<a class="topnav-item-collapsible button about-link">About</a>
 		<a class="topnav-item-collapsible button about-link">Contact</a>
 		<a class="topnav-item-collapsible button partners-link">Partners</a>
+		{% if not user.is_authenticated %}
 		<div style="float: right; background-color: black; border-radius:12px; margin: 12px">
 			<a class="topnav-item-collapsible button volunteer-login-link" style="color: white; font-weight: bold; margin: 12px 28px">
 				Log in
 			</a>
 		</div>
+		{% endif %}
 		<a class="icon">☰</a>
 	</div>
 	{% block content %}

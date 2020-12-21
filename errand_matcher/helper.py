@@ -150,6 +150,12 @@ def match_errand_to_volunteers(errand):
 
     return by_distance[:5] if len(by_distance) > 5 else by_distance
 
+def get_k_closest_errands_to_volunteer(volunteer, k=5):
+    open_errands = Errand.objects.filter(status=1)
+    # sort open errands by distance to volunteer, from smallest to largest
+    sorted_open_errands = sorted(open_errands, key=lambda x: distance((x.requestor.lat, x.requestor.lon),(volunteer.lat,volunteer.lon)))
+    return sorted_open_errands[:k] if len(sorted_open_errands) > k else sorted_open_errands
+
 
 def distance(origin, destination):
     lat1, lon1 = origin
@@ -195,3 +201,28 @@ def gmaps_distance(origin, destination, modes):
         distance_result.append((mode, mode_duration))
 
     return distance_result
+
+def get_volunteer_distance_to_errand(errand, volunteer):
+    # TO DO: failure case if no modes
+    modes = []
+    if volunteer.walks:
+        modes.append('walking')
+    if volunteer.has_bike:
+        modes.append('bicycling')
+    if volunteer.has_car:
+        modes.append('driving')
+
+    distances = gmaps_distance((volunteer.lat, volunteer.lon), 
+        (errand.requestor.lat, errand.requestor.lon), modes)
+    if len(distances) == 1:
+        distance_str = distances[0][1] + ' ' + distances[0][0]
+    else:
+        last_item = distances.pop()
+        distance_str = ''
+        for distance_mode, distance_duration in distances:
+            distance_str = distance_str + distance_duration + ' ' + distance_mode + ', '
+        distance_str = distance_str + 'or ' + last_item[1] + ' ' + last_item[0]
+
+    return distance_str
+
+        
