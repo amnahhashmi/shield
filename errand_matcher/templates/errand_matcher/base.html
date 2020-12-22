@@ -7,19 +7,8 @@
 	<!-- import jQuery -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
-	<!-- Global site tag (gtag.js) - Google Analytics -->
-	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-163861770-1"></script>
-	<script>
-	  window.dataLayer = window.dataLayer || [];
-	  function gtag(){dataLayer.push(arguments);}
-	  gtag('js', new Date());
-
-	  gtag('config', 'UA-163861770-1');
-	</script>
-
 	<title>LivelyHood</title>
 	<link rel="shortcut icon" type="image/png" href="{% static 'css/icons/favicon.ico' %}"/>
-
 
 	<link href="https://fonts.googleapis.com/css?family=Playfair+Display" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css?family=Work+Sans&display=swap" rel="stylesheet">
@@ -47,30 +36,25 @@
 		<a class="topnav-item-collapsible button faq-link">FAQs</a>
 		<a class="topnav-item-collapsible button about-link">About</a>
 		<a class="topnav-item-collapsible button about-link">Contact</a>
+		{% if user.is_authenticated and user.volunteer %}
+		<a class="topnav-item-collapsible button volunteers-link">Volunteers</a>
+		<a class="topnav-item-collapsible" id="user-menu-button" style="float:right"><img src="{% static 'css/icons/account_circle-black-36dp.svg' %}">{{user.first_name}} {{user.last_name}}</a>
+		{% else %}
 		<a class="topnav-item-collapsible button partners-link">Partners</a>
-		{% if not user.is_authenticated %}
 		<div style="float: right; background-color: black; border-radius:12px; margin: 12px">
 			<a class="topnav-item-collapsible button volunteer-login-link" style="color: white; font-weight: bold; margin: 12px 28px">
 				Log in
 			</a>
 		</div>
 		{% endif %}
+
 		<a class="icon">☰</a>
 	</div>
 	{% block content %}
 	{% endblock %}
 	<div class="footer">
 		<div class="horizontal-container">
-		    <div class="footer-text">
-			    <p class="details-text">Volunteer to make deliveries for the most at-risk community members facing COVID-19.</p>
-		    </div>
-		    <!-- TODO: Add links. -->
-		    <div class="button-box button volunteer-button" id="footer-box">
-			    <p class="button-title">Be a volunteer</p>
-			    <p class="button-text">Currently recruiting volunteers in the Boston area.</p>
-		    </div>
-	    </div>
-	    <p class="footer-copyright">(c) 2020 Shield, All rights reserved</p>
+	    <p class="footer-copyright">(c) 2020 LivelyHood, All rights reserved</p>
 	</div>
 </body>
 

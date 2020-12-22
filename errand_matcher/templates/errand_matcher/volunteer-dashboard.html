@@ -1,14 +1,153 @@
 {% extends 'templates/errand_matcher/base.html' %}
 {% load static %}
-{% block stylesheets %}
-	<!-- import bootstrap -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+{% block scripts %}
+	    <script src="{% static 'js/volunteer-dashboard.js' %}"></script>
+	    <script src="{% static 'js/volunteer-signup.js' %}"></script>
 {% endblock %}
-
+{% block stylesheets %}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+{% endblock %}
 {% block content %}
 	<div class="contents">
+		<div id="edit-profile-modal" class="modal">
+			<div class="modal-content" style="margin: 5% auto; height: unset">
+		    	<h5 class="h5_32">Edit Profile</h5>
+		    	<form id="edit-volunteer-form" action="{% url 'volunteer_signup' %}" method="post">
+		    		{% csrf_token %}
+					<div class="form-row">
+						<div class="col-md-6 mb-3">
+							<label for="volunteer-first-name" class="body_bold_16">First Name</label>
+							<input type="text" class="form-control body_16_fontonly" id="volunteer-first-name" name="volunteer-first-name" value="{{ user.first_name }}" required/>
+							<p class="body_16_fontonly warning" id="first-name-warning" style="color:red">Please enter your first name.</p>
+						</div>
+						<div class="col-md-6 mb-3">
+							<label for="volunteer-last-name" class="body_bold_16">Last Name</label>
+							<input type="text" class="form-control body_16_fontonly" id="volunteer-last-name" name="volunteer-last-name" value="{{ user.last_name }}" required/>
+							<p class="body_16_fontonly warning" id="last-name-warning" style="color:red">Please enter your last name.</p>
+						</div>
+						<input type="hidden" name="user-id" id="user-id" value="{{user.id}}"/>
+					</div>
+					<div class="form-row">
+						<div class="col-md-12 mb-3">
+							<label for="volunteer-address" class="body_bold_16">Address</label>
+							<p class="b3-11px-font">This helps us match you with the nearest requests.</p>
+							<p class="body_16_fontonly warning" id="address-warning" style="color:red">Please select an address from the drop-down menu. You can always enter a landmark nearby!</p> 
+							<input type="text" class="form-control body_16_fontonly" id="volunteer-address" name="volunteer-address" value="{{volunteer_address}}" onFocus="geolocate()" autocomplete="chrome-off" required/>
+							<input type="hidden" name="address-latitude" id="address-latitude" value="{{user.volunteer.lat}}"/>
+							<input type="hidden" name="address-longitude" id="address-longitude" value="{{user.volunteer.lon}}"/>
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="col-md-4 mb-3">
+							<p class="body_bold_16">How can you get around?</p>
+							<p id="transport-instructions" class="b3-11px-font">This helps us match you with the nearest requests.</p>
+							<div id="volunteer-transport-walk" class="form-check">
+								<input class="form-check-input transport-check" type="checkbox" value="My own two feet" id="transportCheck1" name="transport" {% if user.volunteer.walks %}checked{% endif%}>
+								<label class="form-check-label body_16_fontonly" for="transportCheck1">
+									My own two feet!
+								</label>
+							</div>
+							<div id="volunteer-transport-bike" class="form-check">
+								<input class="form-check-input transport-check" type="checkbox" value="Bike" id="transportCheck2" name="transport" {% if user.volunteer.has_bike %}checked{% endif%}>
+								<label class="form-check-label body_16_fontonly" for="transportCheck2">
+									Bike
+								</label>
+							</div>
+							<div id="volunteer-transport-car" class="form-check">
+								<input class="form-check-input transport-check" type="checkbox" value="Car" id="transportCheck3" name="transport" {% if user.volunteer.has_car %}checked{% endif%}>
+								<label class="form-check-label body_16_fontonly" for="transportCheck3">
+									Car
+								</label>
+							</div>
+							<div>
+								<input type="hidden" id="transportChecked"/>
+							</div>
+							<p class="body_16_fontonly warning" id="transport-warning" style="color:red">Please select at least one transportation method.</p>
+						</div>
+						<div class="col-md-4 mb-3">
+							<p class="body_bold_16">What languages can you speak?</p>
+							<p id="language-instructions" class="b3-11px-font">
+							If you feel comfortable speaking another language, you can help non-English speakers during this time of need.</p>
+							<div id="volunteer-language-english" class="form-check">
+								<input class="form-check-input language-check" type="checkbox" value="English" id="languageCheck1" name="language" checked>
+								<label class="form-check-label body_16_fontonly" for="languageCheck1">
+									English
+								</label>
+							</div>
+							<div id="volunteer-language-spanish" class="form-check">
+								<input class="form-check-input language-check" type="checkbox" value="Spanish" id="languageCheck2" name="language">
+								<label class="form-check-label body_16_fontonly" for="languageCheck2" {% if user.volunteer.speaks_spanish %}checked{% endif%}>
+									Spanish
+								</label>
+							</div>
+							<div id="volunteer-language-chinese" class="form-check">
+								<input class="form-check-input language-check" type="checkbox" value="Chinese" id="languageCheck3" name="language">
+								<label class="form-check-label body_16_fontonly" for="languageCheck3" {% if user.volunteer.speaks_chinese %}checked{% endif%}>
+									Chinese
+								</label>
+							</div>
+							<div id="volunteer-language-russian" class="form-check">
+								<input class="form-check-input language-check" type="checkbox" value="Russian" id="languageCheck4" name="language">
+								<label class="form-check-label body_16_fontonly" for="languageCheck4" {% if user.volunteer.speaks_russian %}checked{% endif%}>
+									Russian
+								</label>
+							</div>
+							<div>
+								<input type="hidden" id="languageChecked"/>
+							</div>
+							<p class="body_16_fontonly warning" id="language-warning" style="color:red">Please select at least one language.</p>
+						</div>
+						<div class="col-md-4 mb-3">
+							<p class="body_bold_16">How often can you make deliveries?</p>
+							<p id="frequency-instructions" class="b3-11px-font">The more often, the merrier :). Don't worry, you'll get to choose what to accept when the time comes.</p>
+							<div id="volunteer-frequency-anytime" class="form-check">
+								<input class="form-check-input frequency-check" type="radio" value="Anytime" id="frequencyRadio1" name="frequencyRadio" {% if user.volunteer.frequency == 1 %}checked{% endif%}>
+								<label class="form-check-label body_16_fontonly" for="frequencyRadio1">
+									Anytime
+								</label>
+							</div>
+							<div id="volunteer-frequency-two-to-three" class="form-check">
+								<input class="form-check-input frequency-check" type="radio" value="2-3 times a week" id="frequencyRadio2" name="frequencyRadio" {% if user.volunteer.frequency == 2 %}checked{% endif%}>
+								<label class="form-check-label body_16_fontonly" for="frequencyRadio2">
+									2-3 times a week
+								</label>
+							</div>
+							<div id="volunteer-frequency-once" class="form-check">
+								<input class="form-check-input frequency-check" type="radio" value="Once a week" id="frequencyRadio3" name="frequencyRadio" {% if user.volunteer.frequency == 3 %}checked{% endif%}>
+								<label class="form-check-label body_16_fontonly" for="frequencyRadio3">
+									Once a week
+								</label>
+							</div>
+							<p class="body_16_fontonly warning" id="frequency-warning" style="color:red">Please select one.</p>
+						</div>
+					</div>
+					<div>
+						<input type="submit" class="inline-button-box body_bold_16" style="align-items: center; width: 25%; border-width: 0px;float: right; margin: 16px 24px" id="edit-profile-submit" value="Save"/>
+						<div class="inline-button-box weak-button body_bold_16" id="cancel-edit-profile-button" style="align-items: center; width: 25%; float:right; margin: 16px 24px">Cancel</div>
+					</div>
+				</form>
+			</div>
+		</div>
+
+		<div class="modal-right-sidebar modal" id="user-sidebar">
+			<div class="modal-content" style="margin: unset; width: 100%">
+				<div>
+					<span id="close-user-menu" style="vertical-align: middle;" ><img src="{% static 'css/icons/criss-cross.svg' %}" style="float: right; height: 24px; width: 24px"></span>
+				</div>
+				<div class="h5_32" style="align-self:; left"> Hello, {{user.first_name}} {{user.last_name}}!</div>
+				<div class="body_bold_16">You've been a partner since {{user.date_joined|date:"F Y"}}</div>
+				</br>
+				<div class="body_bold_16">Account Settings</div>
+				<div><a class="b3-11px-font" href="/volunteer/signout/">Sign out</a></div>
+			</div>
+		</div>
+
 		<h4 class="h4-heading">Welcome back, {{user.first_name}}</h4>
 		<p class="title-text">Deliveries completed: {{ completed_deliveries }}</p>
+
+		<div class="inline-button-box button button-title" id="edit-profile-button" style="color: white; margin: 34px 0px; background: black">
+			Edit Profile
+		</div>
 		
 		{% if current_deliveries %}
 		<h5 class="h5-heading">You have {{ current_deliveries|length}}{% if current_deliveries|length > 1 %} deliveries {% else %} delivery {% endif %}in progress.</h5>
@@ -23,25 +162,34 @@
 			</div>
 			{% endfor %}
 		</div>
-
 		{% endif %}
 
-		{% if nearby_deliveries %}
-		<h4 class="h4-heading">Deliveries near you:</h4>
-		<table id="partner-errands">
-				<thead>
-					<tr>
-						<th class="table-header">NAME</th>
-						<th class="table-header">DELIVERY NEEDED BY</th>
-						<th class="table-header">DISTANCE</th>
-						<th class="table-header">ADDITIONAL DETAILS</th>
-						<th class="table-header"></th>
-					</tr>
-				</thead>
-				{% for nearby_delivery in nearby_deliveries %}
-				{% endfor %}
+		<!--{% if nearby_deliveries %}
+		<h4 class="h5-heading">Deliveries near you:</h4>
+		<table id="nearby-errands">
+			<thead>
+				<tr>
+					<th class="table-header">NAME</th>
+					<th class="table-header">DELIVER BY</th>
+					<th class="table-header">DISTANCE</th>
+					<th class="table-header">ADDITIONAL DETAILS</th>
+					<th class="table-header"></th>
+				</tr>
+			</thead>
+			<tbody>
+			{% for nearby_delivery in nearby_deliveries %}
+				<tr>
+					<td class="table-item"><span style="vertical-align: middle;"><img src="{% static 'css/icons/account_circle-black-36dp.svg' %}"></span>{{nearby_delivery.name}}</td>
+					<td class="table-item">{{nearby_delivery.delivery_needed_by}}</td>
+					<td class="table-item">{{nearby_delivery.distance}}</td>
+					<td class="table-item">{{nearby_delivery.additional_details|truncatechars:64}}</td>
+					<td class="table-item"><a href="{{nearby_delivery.url}}">Accept request</a></td>
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
 		{% else %}
 			<h5 class="h5-heading">Currently, there are no requests for help in your area. Check back again later.</h5>
-		{% endif %}
+		{% endif %}-->
 	</div>
 {% endblock %}

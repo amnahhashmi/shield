@@ -9,20 +9,20 @@
 {% block content %}
 	<div class="contents">
 		<h3 class="main-heading">Be a volunteer</h3>
-		<form id="add-delivery-form" action="{% url 'volunteer_signup' %}" method="post">
+		<form id="add-volunteer-form" action="{% url 'volunteer_signup' %}" method="post">
 			{% if exists is not None %}
 			<p class="h5_32 warning" id="user-exists-warning" style="color:red">A volunteer already exists with email address {{exists}}</p>
 			{% endif %}
     		{% csrf_token %}
 			<div class="form-row">
 				<div class="col-md-6 mb-3">
-					<label for="add-volunteer-first-name" class="body_bold_16">First Name</label>
-					<input type="text" class="form-control body_16_fontonly" id="add-volunteer-first-name" name="add-volunteer-first-name" required/>
+					<label for="volunteer-first-name" class="body_bold_16">First Name</label>
+					<input type="text" class="form-control body_16_fontonly" id="volunteer-first-name" name="volunteer-first-name" required/>
 					<p class="body_16_fontonly warning" id="first-name-warning" style="color:red">Please enter your first name.</p>
 				</div>
 				<div class="col-md-6 mb-3">
-					<label for="add-volunteer-last-name" class="body_bold_16">Last Name</label>
-					<input type="text" class="form-control body_16_fontonly" id="add-volunteer-last-name" name="add-volunteer-last-name" required/>
+					<label for="volunteer-last-name" class="body_bold_16">Last Name</label>
+					<input type="text" class="form-control body_16_fontonly" id="volunteer-last-name" name="volunteer-last-name" required/>
 					<p class="body_16_fontonly warning" id="last-name-warning" style="color:red">Please enter your last name.</p>
 				</div>
 			</div>
@@ -40,10 +40,10 @@
 			</div>
 			<div class="form-row">
 				<div class="col-md-12 mb-3">
-					<label for="add-volunteer-address" class="body_bold_16">Address</label>
+					<label for="volunteer-address" class="body_bold_16">Address</label>
 					<p class="b3-11px-font">This helps us match you with the nearest requests.</p>
 					<p class="body_16_fontonly warning" id="address-warning" style="color:red">Please select an address from the drop-down menu. You can always enter a landmark nearby!</p> 
-					<input type="text" class="form-control body_16_fontonly" id="add-volunteer-address" name="add-volunteer-address" onFocus="geolocate()" autocomplete="chrome-off" required/>
+					<input type="text" class="form-control body_16_fontonly" id="volunteer-address" name="volunteer-address" onFocus="geolocate()" autocomplete="chrome-off" required/>
 					<input type="hidden" name="address-latitude" id="address-latitude"/>
 					<input type="hidden" name="address-longitude" id="address-longitude"/>
 				</div>
@@ -52,19 +52,19 @@
 				<div class="col-md-4 mb-3">
 					<p class="body_bold_16">How can you get around?</p>
 					<p id="transport-instructions" class="b3-11px-font">This helps us match you with the nearest requests.</p>
-					<div id="add-volunteer-transport-walk" class="form-check">
+					<div id="volunteer-transport-walk" class="form-check">
 						<input class="form-check-input transport-check" type="checkbox" value="My own two feet" id="transportCheck1" name="transport">
 						<label class="form-check-label body_16_fontonly" for="transportCheck1">
 							My own two feet!
 						</label>
 					</div>
-					<div id="add-volunteer-transport-bike" class="form-check">
+					<div id="volunteer-transport-bike" class="form-check">
 						<input class="form-check-input transport-check" type="checkbox" value="Bike" id="transportCheck2" name="transport">
 						<label class="form-check-label body_16_fontonly" for="transportCheck2">
 							Bike
 						</label>
 					</div>
-					<div id="add-volunteer-transport-car" class="form-check">
+					<div id="volunteer-transport-car" class="form-check">
 						<input class="form-check-input transport-check" type="checkbox" value="Car" id="transportCheck3" name="transport">
 						<label class="form-check-label body_16_fontonly" for="transportCheck3">
 							Car
@@ -79,25 +79,25 @@
 					<p class="body_bold_16">What languages can you speak?</p>
 					<p id="language-instructions" class="b3-11px-font">
 					If you feel comfortable speaking another language, you can help non-English speakers during this time of need.</p>
-					<div id="add-volunteer-language-english" class="form-check">
+					<div id="volunteer-language-english" class="form-check">
 						<input class="form-check-input language-check" type="checkbox" value="English" id="languageCheck1" name="language">
 						<label class="form-check-label body_16_fontonly" for="languageCheck1">
 							English
 						</label>
 					</div>
-					<div id="add-volunteer-language-spanish" class="form-check">
+					<div id="volunteer-language-spanish" class="form-check">
 						<input class="form-check-input language-check" type="checkbox" value="Spanish" id="languageCheck2" name="language">
 						<label class="form-check-label body_16_fontonly" for="languageCheck2">
 							Spanish
 						</label>
 					</div>
-					<div id="add-volunteer-language-chinese" class="form-check">
+					<div id="volunteer-language-chinese" class="form-check">
 						<input class="form-check-input language-check" type="checkbox" value="Chinese" id="languageCheck3" name="language">
 						<label class="form-check-label body_16_fontonly" for="languageCheck3">
 							Chinese
 						</label>
 					</div>
-					<div id="add-volunteer-language-russian" class="form-check">
+					<div id="volunteer-language-russian" class="form-check">
 						<input class="form-check-input language-check" type="checkbox" value="Russian" id="languageCheck4" name="language">
 						<label class="form-check-label body_16_fontonly" for="languageCheck4">
 							Russian
@@ -111,19 +111,19 @@
 				<div class="col-md-4 mb-3">
 					<p class="body_bold_16">How often can you make deliveries?</p>
 					<p id="frequency-instructions" class="b3-11px-font">The more often, the merrier :). Don't worry, you'll get to choose what to accept when the time comes.</p>
-					<div id="add-volunteer-frequency-anytime" class="form-check">
+					<div id="volunteer-frequency-anytime" class="form-check">
 						<input class="form-check-input frequency-check" type="radio" value="Anytime" id="frequencyRadio1" name="frequencyRadio">
 						<label class="form-check-label body_16_fontonly" for="frequencyRadio1">
 							Anytime
 						</label>
 					</div>
-					<div id="add-volunteer-frequency-two-to-three" class="form-check">
+					<div id="volunteer-frequency-two-to-three" class="form-check">
 						<input class="form-check-input frequency-check" type="radio" value="2-3 times a week" id="frequencyRadio2" name="frequencyRadio">
 						<label class="form-check-label body_16_fontonly" for="frequencyRadio2">
 							2-3 times a week
 						</label>
 					</div>
-					<div id="add-volunteer-frequency-once" class="form-check">
+					<div id="volunteer-frequency-once" class="form-check">
 						<input class="form-check-input frequency-check" type="radio" value="Once a week" id="frequencyRadio3" name="frequencyRadio">
 						<label class="form-check-label body_16_fontonly" for="frequencyRadio3">
 							Once a week

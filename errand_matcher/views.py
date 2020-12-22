@@ -55,31 +55,15 @@ def sms_inbound(request):
 
 def volunteer_signup(request):
     if request.method == 'POST':
-        first_name = request.POST['add-volunteer-first-name']
-        last_name = request.POST['add-volunteer-last-name']
-        email = request.POST['add-volunteer-email']
-        mobile_number = request.POST['add-volunteer-phone']
+        user_id = request.POST.get('user-id')
+
+        first_name = request.POST['volunteer-first-name']
+        last_name = request.POST['volunteer-last-name']
         frequency = request.POST['frequencyRadio']
         language =  request.POST.getlist('language')
         transportation = request.POST.getlist('transport')
         lat = request.POST['address-latitude']
         lon = request.POST['address-longitude']
-
-        # Check to see if any users already exist with this email as a username
-        matches = User.objects.filter(username=email).count()
-        if matches > 0:
-            return render(request, 'errand_matcher/volunteer-signup-v2.html',
-                {'GMAPS_API_KEY': os.environ.get('GMAPS_API_KEY'),
-                'base_url': helper.get_base_url(), 'exists': email})
-
-        # Did not find a user, this is fine
-        user = User(username=email, 
-            first_name=first_name,
-            last_name=last_name,
-            email=email,
-            password=BaseUserManager().make_random_password(),
-            user_type=1)
-        user.save()
 
         freq_no = frequency_choice_lookup[frequency]
 
@@ -104,26 +88,66 @@ def volunteer_signup(request):
         if "Chinese" in language:
             speaks_chinese = True
 
-        volunteer = Volunteer(
-            user=user,
-            # PhoneNumberField requires country code
-            mobile_number='+1' + mobile_number,
-            lon=lon,
-            lat=lat,
-            frequency=freq_no,
-            walks=walks,
-            has_bike = has_bike,
-            has_car = has_car,
-            speaks_spanish = speaks_spanish,
-            speaks_russian = speaks_russian,
-            speaks_chinese = speaks_chinese,
-            consented = True)
-        volunteer.save()
+        if user_id is None:
+            # creating a new volunteer
+            email = request.POST['add-volunteer-email']
+            mobile_number = request.POST['add-volunteer-phone']
 
-        messages.welcome_new_volunteer(volunteer)
+            # Check to see if any users already exist with this email as a username
+            matches = User.objects.filter(username=email).count()
+            if matches > 0:
+                return render(request, 'errand_matcher/volunteer-signup-v2.html',
+                    {'GMAPS_API_KEY': os.environ.get('GMAPS_API_KEY'),
+                    'base_url': helper.get_base_url(), 'exists': email})
 
-        return render(request, 'errand_matcher/volunteer-signup-done.html', {'base_url': helper.get_base_url(), 
-            'name': first_name})
+            # Did not find a user, this is fine
+            user = User(username=email, 
+                first_name=first_name,
+                last_name=last_name,
+                email=email,
+                password=BaseUserManager().make_random_password(),
+                user_type=1)
+            user.save()
+
+            volunteer = Volunteer(
+                user=user,
+                # PhoneNumberField requires country code
+                mobile_number='+1' + mobile_number,
+                lon=lon,
+                lat=lat,
+                frequency=freq_no,
+                walks=walks,
+                has_bike = has_bike,
+                has_car = has_car,
+                speaks_spanish = speaks_spanish,
+                speaks_russian = speaks_russian,
+                speaks_chinese = speaks_chinese,
+                consented = True)
+            volunteer.save()
+
+            messages.welcome_new_volunteer(volunteer)
+
+            return render(request, 'errand_matcher/volunteer-signup-done.html', {'base_url': helper.get_base_url(), 'name': first_name})
+
+        else:
+            # editing an existing volunteer
+            user = User.objects.get(id=user_id)
+            user.first_name = first_name
+            user.last_name = last_name
+            user.save()
+            
+            user.volunteer.lon = lon
+            user.volunteer.lat = lat
+            user.volunteer.frequency = freq_no
+            user.volunteer.walks = walks
+            user.volunteer.has_bike = has_bike
+            user.volunteer.has_car = has_car
+            user.volunteer.speaks_spanish = speaks_spanish
+            user.volunteer.speaks_russian = speaks_russian
+            user.volunteer.speaks_chinese = speaks_chinese
+            user.volunteer.save()
+            return redirect('/volunteer/dashboard/')
+
     else:
         return render(request, 'errand_matcher/volunteer-signup-v2.html',
             {'GMAPS_API_KEY': os.environ.get('GMAPS_API_KEY'),
@@ -179,7 +203,8 @@ def volunteer_dashboard(request):
     nearby_errands = []
     for k_closest_errand in k_closest_errands:
         nearby_errands.append(
-            {'name': '{} {}'.format(
+            {'id': k_closest_errand.id,
+            'name': '{} {}'.format(
                 k_closest_errand.requestor.user.first_name,
                 k_closest_errand.requestor.user.last_name),
             'delivery_needed_by': helper.convert_errand_deadline_to_str(k_closest_errand),
@@ -195,10 +220,15 @@ def volunteer_dashboard(request):
         {'completed_deliveries': completed_deliveries,
         'current_deliveries': current_errands,
         'nearby_deliveries': nearby_errands,
+        'volunteer_address': helper.gmaps_reverse_geocode((request.user.volunteer.lat, request.user.volunteer.lon)),
         'base_url': helper.get_base_url(),
         'GMAPS_API_KEY': os.environ.get('GMAPS_API_KEY')})
 
     return render(request, 'errand_matcher/volunteer-dashboard.html')
+
+def volunteer_signout(request):
+    logout(request)
+    return redirect('/')
 
 def requestor(request):
     return render(request, 'errand_matcher/requestor-request.html')

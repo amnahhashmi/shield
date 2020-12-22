@@ -43,6 +43,10 @@ $(document).ready(function() {
 		window.location.href = home_url + "/volunteer/login/";
 	})
 
+	$('.volunteers-link').click(function(){
+		window.location.href = home_url + "/volunteer/dashboard/";
+	})
+
 
 
 	function collapseTopNav() {

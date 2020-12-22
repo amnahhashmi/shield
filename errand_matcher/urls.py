@@ -12,6 +12,7 @@ urlpatterns = [
     path('volunteer/login/', views.volunteer_login, name='volunteer_login'),
     path('volunteer/login/otp', views.volunteer_login_otp, name='volunteer_login_otp'),
     path('volunteer/dashboard/', views.volunteer_dashboard, name='volunteer_dashboard'),
+    path('volunteer/signout/', views.volunteer_signout, name='volunteer_signout'),
     path('requestor/', views.requestor, name='requestor'),
     path('requestor/signup/', views.requestor_signup, name='requestor_signup'),
     path('requestor/login/', views.requestor_login, name='requestor_login'),
