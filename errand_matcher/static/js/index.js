@@ -47,8 +47,6 @@ $(document).ready(function() {
 		window.location.href = home_url + "/volunteer/dashboard/";
 	})
 
-
-
 	function collapseTopNav() {
 		var topnav = document.getElementById("topnav");
         if (topnav.className === "topnav") {
