@@ -75,20 +75,20 @@
 								</label>
 							</div>
 							<div id="volunteer-language-spanish" class="form-check">
-								<input class="form-check-input language-check" type="checkbox" value="Spanish" id="languageCheck2" name="language">
-								<label class="form-check-label body_16_fontonly" for="languageCheck2" {% if user.volunteer.speaks_spanish %}checked{% endif%}>
+								<input class="form-check-input language-check" type="checkbox" value="Spanish" id="languageCheck2" name="language" {% if user.volunteer.speaks_spanish %}checked{% endif%}>
+								<label class="form-check-label body_16_fontonly" for="languageCheck2">
 									Spanish
 								</label>
 							</div>
 							<div id="volunteer-language-chinese" class="form-check">
-								<input class="form-check-input language-check" type="checkbox" value="Chinese" id="languageCheck3" name="language">
-								<label class="form-check-label body_16_fontonly" for="languageCheck3" {% if user.volunteer.speaks_chinese %}checked{% endif%}>
+								<input class="form-check-input language-check" type="checkbox" value="Chinese" id="languageCheck3" name="language" {% if user.volunteer.speaks_chinese %}checked{% endif%}>
+								<label class="form-check-label body_16_fontonly" for="languageCheck3" >
 									Chinese
 								</label>
 							</div>
 							<div id="volunteer-language-russian" class="form-check">
-								<input class="form-check-input language-check" type="checkbox" value="Russian" id="languageCheck4" name="language">
-								<label class="form-check-label body_16_fontonly" for="languageCheck4" {% if user.volunteer.speaks_russian %}checked{% endif%}>
+								<input class="form-check-input language-check" type="checkbox" value="Russian" id="languageCheck4" name="language" {% if user.volunteer.speaks_russian %}checked{% endif%}>
+								<label class="form-check-label body_16_fontonly" for="languageCheck4">
 									Russian
 								</label>
 							</div>
@@ -135,7 +135,7 @@
 					<span id="close-user-menu" style="vertical-align: middle;" ><img src="{% static 'css/icons/criss-cross.svg' %}" style="float: right; height: 24px; width: 24px"></span>
 				</div>
 				<div class="h5_32" style="align-self:; left"> Hello, {{user.first_name}} {{user.last_name}}!</div>
-				<div class="body_bold_16">You've been a partner since {{user.date_joined|date:"F Y"}}</div>
+				<div class="body_bold_16">You've been a volunteer since {{user.date_joined|date:"F Y"}}</div>
 				</br>
 				<div class="body_bold_16">Account Settings</div>
 				<div><a class="b3-11px-font" href="/volunteer/signout/">Sign out</a></div>

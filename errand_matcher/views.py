@@ -189,7 +189,7 @@ def volunteer_login_otp(request):
                 return redirect('error')
         else:
             return render(request, 'errand_matcher/volunteer-login-otp.html', {
-                'warning': "Sorry, we couldn't find a volunteer associated with {}. Please try again.".format(otp_input)})
+                'warning': otp_input})
     else:
         return render(request, 'errand_matcher/volunteer-login-otp.html')
 

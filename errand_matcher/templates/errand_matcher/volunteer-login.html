@@ -1,6 +1,8 @@
 {% extends 'templates/errand_matcher/base.html' %}
 {% load static %}
-
+{% block scripts %}
+    <script src="{% static 'js/volunteer-login.js' %}"></script>
+{% endblock %}
 {% block content %}
 	<div class="contents">
 		<h3 class="main-heading">Serve your community</h3>
@@ -11,8 +13,12 @@
 			{% if warning %}
 			<p class="body_16_fontonly" style="color:red">{{warning}}</p>
 			{% endif %}
+			<div class="body_16_fontonly subhead warning" id="phone-warning" style="color: red">
+				You have entered an invalid phone number. Please try again.
+			</div>
 			<input type="tel" class="text-input body_16_fontonly" id="volunteer-login-phone" name="volunteer-login-phone" placeholder="Phone number" required/>
-			<input type="submit" class="inline-button-box body_bold_16" style="align-items: center; border-width: 0px; margin: 0px" value="Submit"/>
+			
+			<input type="submit" class="inline-button-box body_bold_16" id="volunteer-login-button" style="align-items: center; border-width: 0px; margin: 0px" value="Submit"/>
 			<p class="body_16_fontonly">SMS may be sent. Message & data rates may apply.</p>
 		</form>
 	</div>
