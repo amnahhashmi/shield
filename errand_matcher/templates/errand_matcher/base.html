@@ -39,9 +39,9 @@
 		{% if user.is_authenticated and user.volunteer %}
 		<a class="topnav-item-collapsible button volunteers-link">Volunteers</a>
 		<a class="topnav-item-collapsible" id="user-menu-button" style="float:right"><img src="{% static 'css/icons/account_circle-black-36dp.svg' %}">{{user.first_name}} {{user.last_name}}</a>
-		{% else %}
+		{% elif user.is_authenticated and user.partner %}
 		<a class="topnav-item-collapsible button partners-link">Partners</a>
-		{% if not user.is_authenticated %}
+		{% else %}
 		<div style="float: right; background-color: black; border-radius:12px; margin: 12px">
 			<a class="topnav-item-collapsible button volunteer-login-link" style="color: white; font-weight: bold; margin: 12px 28px">
 				Log in
