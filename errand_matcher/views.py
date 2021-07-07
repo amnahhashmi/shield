@@ -25,6 +25,8 @@ from errand_matcher.models import SiteConfiguration
 import phonenumbers
 import uuid
 from datetime import timedelta
+import random
+import string
 
 frequency_choice_lookup = {
     'Anytime': 1,
@@ -51,36 +53,17 @@ def sms_inbound(request):
     helper.send_sms(helper.format_mobile_number(helper.get_support_mobile_number()), message)
     return
 
-def volunteer(request):
-    return render(request, 'errand_matcher/volunteer.html')
-
 def volunteer_signup(request):
     if request.method == 'POST':
-        first_name = request.POST['add-volunteer-first-name']
-        last_name = request.POST['add-volunteer-last-name']
-        email = request.POST['add-volunteer-email']
-        mobile_number = request.POST['add-volunteer-phone']
+        user_id = request.POST.get('user-id')
+
+        first_name = request.POST['volunteer-first-name']
+        last_name = request.POST['volunteer-last-name']
         frequency = request.POST['frequencyRadio']
         language =  request.POST.getlist('language')
         transportation = request.POST.getlist('transport')
         lat = request.POST['address-latitude']
         lon = request.POST['address-longitude']
-
-        # Check to see if any users already exist with this email as a username
-        matches = User.objects.filter(username=email).count()
-        if matches > 0:
-            return render(request, 'errand_matcher/volunteer-signup-v2.html',
-                {'GMAPS_API_KEY': os.environ.get('GMAPS_API_KEY'),
-                'base_url': helper.get_base_url(), 'exists': email})
-
-        # Did not find a user, this is fine
-        user = User(username=email, 
-            first_name=first_name,
-            last_name=last_name,
-            email=email,
-            password=BaseUserManager().make_random_password(),
-            user_type=1)
-        user.save()
 
         freq_no = frequency_choice_lookup[frequency]
 
@@ -105,26 +88,66 @@ def volunteer_signup(request):
         if "Chinese" in language:
             speaks_chinese = True
 
-        volunteer = Volunteer(
-            user=user,
-            # PhoneNumberField requires country code
-            mobile_number='+1' + mobile_number,
-            lon=lon,
-            lat=lat,
-            frequency=freq_no,
-            walks=walks,
-            has_bike = has_bike,
-            has_car = has_car,
-            speaks_spanish = speaks_spanish,
-            speaks_russian = speaks_russian,
-            speaks_chinese = speaks_chinese,
-            consented = True)
-        volunteer.save()
+        if user_id is None:
+            # creating a new volunteer
+            email = request.POST['add-volunteer-email']
+            mobile_number = request.POST['add-volunteer-phone']
 
-        messages.welcome_new_volunteer(volunteer)
+            # Check to see if any users already exist with this email as a username
+            matches = User.objects.filter(username=email).count()
+            if matches > 0:
+                return render(request, 'errand_matcher/volunteer-signup-v2.html',
+                    {'GMAPS_API_KEY': os.environ.get('GMAPS_API_KEY'),
+                    'base_url': helper.get_base_url(), 'exists': email})
 
-        return render(request, 'errand_matcher/volunteer-signup-done.html', {'base_url': helper.get_base_url(), 
-            'name': first_name})
+            # Did not find a user, this is fine
+            user = User(username=email, 
+                first_name=first_name,
+                last_name=last_name,
+                email=email,
+                password=BaseUserManager().make_random_password(),
+                user_type=1)
+            user.save()
+
+            volunteer = Volunteer(
+                user=user,
+                # PhoneNumberField requires country code
+                mobile_number='+1' + mobile_number,
+                lon=lon,
+                lat=lat,
+                frequency=freq_no,
+                walks=walks,
+                has_bike = has_bike,
+                has_car = has_car,
+                speaks_spanish = speaks_spanish,
+                speaks_russian = speaks_russian,
+                speaks_chinese = speaks_chinese,
+                consented = True)
+            volunteer.save()
+
+            messages.welcome_new_volunteer(volunteer)
+
+            return render(request, 'errand_matcher/volunteer-signup-done.html', {'base_url': helper.get_base_url(), 'name': first_name})
+
+        else:
+            # editing an existing volunteer
+            user = User.objects.get(id=user_id)
+            user.first_name = first_name
+            user.last_name = last_name
+            user.save()
+            
+            user.volunteer.lon = lon
+            user.volunteer.lat = lat
+            user.volunteer.frequency = freq_no
+            user.volunteer.walks = walks
+            user.volunteer.has_bike = has_bike
+            user.volunteer.has_car = has_car
+            user.volunteer.speaks_spanish = speaks_spanish
+            user.volunteer.speaks_russian = speaks_russian
+            user.volunteer.speaks_chinese = speaks_chinese
+            user.volunteer.save()
+            return redirect('/volunteer/dashboard/')
+
     else:
         return render(request, 'errand_matcher/volunteer-signup-v2.html',
             {'GMAPS_API_KEY': os.environ.get('GMAPS_API_KEY'),
@@ -134,27 +157,95 @@ def volunteer_signup(request):
 def volunteer_signup_done(request):
     return render(request, 'errand_matcher/volunteer-signup-done.html', {'base_url': helper.get_base_url()})
 
+def volunteer_login(request):
+    if request.method == 'POST':
+        mobile_number_str = request.POST.get('volunteer-login-phone')
+        volunteer = helper.get_user_from_mobile_number_str(mobile_number_str, user_type='volunteer')
+        if volunteer is not None:
+            user_otp = UserOTP.objects.create(mobile_number = volunteer.mobile_number)
+            messages.send_otp(user_otp)
+            return redirect('volunteer_login_otp')
+        else:
+            return render(request, 'errand_matcher/volunteer-login.html', 
+                {'warning': "Sorry, we couldn't find a volunteer associated with {}. Please try again.".format(mobile_number_str)})
+    else:
+        return render(request, 'errand_matcher/volunteer-login.html')
+
+def volunteer_login_otp(request):
+    if request.method == 'POST':
+        otp_input = request.POST.get('volunteer-login-otp').strip()
+        user_otp = UserOTP.objects.filter(token=otp_input).first()
+
+        if user_otp is not None:
+            volunteer = Volunteer.objects.filter(mobile_number=user_otp.mobile_number).first()
+            if volunteer is not None:
+                temp_password = ''.join(random.choice(string.ascii_lowercase + string.ascii_uppercase + string.digits) for i in range(12))
+                volunteer.user.set_password(temp_password)
+                volunteer.user.save()
+                user = authenticate(request, username=volunteer.user.username, password=temp_password)
+                login(request, user)
+                return redirect('volunteer_dashboard')
+            else:
+                return redirect('error')
+        else:
+            return render(request, 'errand_matcher/volunteer-login-otp.html', {
+                'warning': otp_input})
+    else:
+        return render(request, 'errand_matcher/volunteer-login-otp.html')
+
+@login_required(login_url='/volunteer/login/')
+def volunteer_dashboard(request):
+    completed_deliveries = len(Errand.objects.filter(claimed_volunteer=request.user.volunteer, status=3))
+
+    current_errands = Errand.objects.filter(claimed_volunteer=request.user.volunteer).order_by('-requested_time')
+
+    k_closest_errands = helper.get_k_closest_errands_to_volunteer(request.user.volunteer)
+    nearby_errands = []
+    for k_closest_errand in k_closest_errands:
+        nearby_errands.append(
+            {'id': k_closest_errand.id,
+            'name': '{} {}'.format(
+                k_closest_errand.requestor.user.first_name,
+                k_closest_errand.requestor.user.last_name),
+            'delivery_needed_by': helper.convert_errand_deadline_to_str(k_closest_errand),
+            'distance': helper.get_volunteer_distance_to_errand(k_closest_errand, request.user.volunteer),
+            'additional_details': k_closest_errand.additional_info,
+            'url': "{}/errand/{}/accept/{}".format(
+                helper.get_base_url(), 
+                k_closest_errand.id, 
+                helper.strip_mobile_number(request.user.volunteer.mobile_number))
+        })
+
+    return render(request, 'errand_matcher/volunteer-dashboard.html', 
+        {'completed_deliveries': completed_deliveries,
+        'current_deliveries': current_errands,
+        'nearby_deliveries': nearby_errands,
+        'volunteer_address': helper.gmaps_reverse_geocode((request.user.volunteer.lat, request.user.volunteer.lon)),
+        'base_url': helper.get_base_url(),
+        'GMAPS_API_KEY': os.environ.get('GMAPS_API_KEY')})
+
+    return render(request, 'errand_matcher/volunteer-dashboard.html')
+
+def volunteer_signout(request):
+    logout(request)
+    return redirect('/')
+
 def requestor(request):
     return render(request, 'errand_matcher/requestor-request.html')
 
 def requestor_login(request):
     if request.method == 'POST':
         mobile_number_str = request.POST.get('phone-input')
-
         # Is mobile number associated with Requestor?
         requestor = helper.get_user_from_mobile_number_str(mobile_number_str, user_type='requestor')
-
-        # If Volunteer found, create OTP
+        # If Requestor found, create OTP
         if requestor is not None:
             user_otp = UserOTP.objects.create(mobile_number = requestor.mobile_number)
-
             # deliver OTP
             messages.send_otp(user_otp)
-        
             return redirect('requestor_login_otp')
         # If no Requestor found, show warning and redirect back to signup
         else:
-
             return render(request, 'errand_matcher/requestor-login.html', {
                 'warning': "Sorry, we couldn't find a user associated with {}".format(mobile_number_str)})
     else:
@@ -266,26 +357,8 @@ def accept_errand(request, errand_id, volunteer_number):
         # TO DO: verify that volunteer is associated with errand        
         volunteer = helper.get_user_from_mobile_number_str(str(volunteer_number))
         
-        # TO DO: failure case if no modes
-        modes = []
-        if volunteer.walks:
-            modes.append('walking')
-        if volunteer.has_bike:
-            modes.append('bicycling')
-        if volunteer.has_car:
-            modes.append('driving')
-
-        distances = helper.gmaps_distance((volunteer.lat, volunteer.lon), 
-            (errand.requestor.lat, errand.requestor.lon), modes)
-        if len(distances) == 1:
-            distance_str = distances[0][1] + ' ' + distances[0][0]
-        else:
-            last_item = distances.pop()
-            distance_str = ''
-            for distance_mode, distance_duration in distances:
-                distance_str = distance_str + distance_duration + ' ' + distance_mode + ', '
-            distance_str = distance_str + 'or ' + last_item[1] + ' ' + last_item[0]
-
+        distance_str = helper.get_volunteer_distance_to_errand(errand, volunteer)
+        
         deadline_str = helper.convert_errand_deadline_to_str(errand)
 
         requestor_number = helper.format_mobile_number(errand.requestor.mobile_number)
